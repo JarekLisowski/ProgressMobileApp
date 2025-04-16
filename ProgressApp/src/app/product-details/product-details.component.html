@@ -1,0 +1,76 @@
+<div class="row">
+    <div class="col-md-5 col-xl-6">
+       <!-- img slide -->
+       <ngx-slick-carousel class="carousel" 
+       #slickModal="slick-carousel" 
+       [config]="slideConfig">
+        @for (slide of slides; track slide.img) {
+            <div ngxSlickItem class="slide">
+                <img src='{{ slide.img }}' alt="" width="100%">
+            </div>
+        }
+        </ngx-slick-carousel>
+
+       <div class="product" id="product">
+          
+       </div>
+       <!-- product tools -->
+       <div class="product-tools">
+          <div class="thumbnails row g-3" id="productThumbnails">
+             
+          </div>
+       </div>
+    </div>
+    <div class="col-md-7 col-xl-6">
+       <div class="ps-lg-10 mt-6 mt-md-0">
+          <!-- content -->
+          <a href="/category/{{product?.categoryId}}" class="mb-4 d-block">{{product?.categoryName}}</a>
+          <!-- heading -->
+          <h2 class="mb-2">{{product?.name}}</h2>          
+          <div class="fs-6">
+             <!-- price -->
+            <div>
+               <span>Netto: </span>
+               <span class="fw-bold text-dark">{{product?.price?.priceNet}} {{product?.price?.currencyName}}</span>
+            </div>
+            <div> 
+               <span>Brutto: </span>
+               <span class="fw-bold text-dark">{{product?.price?.priceGross}}  {{product?.price?.currencyName}}</span>
+               <span class="float-end">{{product?.code}}</span>
+            </div>
+          </div>
+          <!-- hr -->
+          <hr class="my-6" />
+          <div class="mt-3 row justify-content-start g-2 align-items-center">
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-6 d-grid">
+
+               <!-- input -->
+               <div class="input-group input-spinner">
+                  <input type="button" value="-" class="button-minus btn btn-sm" data-field="quantity" (click)="amountDecrement()" />
+                  <input type="number" step="1" max="10"[(ngModel)]="quantity" name="quantity" class="quantity-field form-control-sm form-input" />
+                  <input type="button" value="+" class="button-plus btn btn-sm" data-field="quantity" (click)="amountIncrement()"/>
+               </div>
+            </div>
+             
+             <div class="col-xxl-4 col-lg-4 col-md-6 col-6 d-grid">
+                <!-- button -->
+                <!-- btn -->
+                <button type="button" class="btn btn-primary">
+                   <i class="feather-icon icon-shopping-bag me-2"></i>
+                   Do Koszyka
+                </button>
+             </div>
+          </div>
+          <div class="mt-3">
+             <span>Dostępność: </span>
+             <span>{{product?.stock}}</span>
+          </div>
+          <hr class="my-6" />
+       </div>
+    </div>
+ </div>
+ <div>
+   {{product?.description}}
+ </div>
+
+ <app-added-to-cart-modal></app-added-to-cart-modal>
