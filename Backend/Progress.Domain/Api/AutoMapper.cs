@@ -7,9 +7,13 @@ namespace Progress.Domain.Api
 	{
 		public AutoMapper()
 		{
-			CreateMap<Model.Product, Product>().ReverseMap();
+			CreateMap<Model.Product, Product>();
 			CreateMap<Model.ProductImage, ProductImage>();
 			CreateMap<Model.ProductCategory, ProductCategory>();
+			CreateMap<Model.Price, Price>();
+
+			CreateMap<Model.PromoSet, PromoSet>();
+			CreateMap<Model.PromoItem, PromoItem>();
 		}
 	}
 }

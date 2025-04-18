@@ -15,7 +15,8 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.TwOpis))
 				.ForMember(dst => dst.Unit, opt => opt.MapFrom(src => src.TwJednMiary))
 				.ForMember(dst => dst.Prices, opt => opt.MapFrom((src, dst) => CreatePriceDictionary(src.TwCena)))
-				.ForMember(dst => dst.Stock, opt => opt.MapFrom((src, dst) => GetStan(src)));
+				.ForMember(dst => dst.Stock, opt => opt.MapFrom((src, dst) => GetStan(src)))
+				;
 
 			CreateMap<TwZdjecieTw, ProductImage>()
 				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ZdId))
@@ -27,7 +28,7 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.CtwId))
 				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.CtwNazwa));
 
-			CreateMap<IfxApiPromocjaZestaw, DiscountSet>()
+			CreateMap<IfxApiPromocjaZestaw, PromoSet>()
 				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
 				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Nazwa))
 				.ForMember(dst => dst.ValidFrom, opt => opt.MapFrom(src => src.DataOd))
@@ -35,11 +36,11 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Image, opt => opt.MapFrom(src => src.Img))
 				.ForMember(dst => dst.Items, opt => opt.MapFrom(src => src.IfxApiPromocjaPozycjas));
 
-			CreateMap<IfxApiPromocjaPozycja, DiscountItem>()
+			CreateMap<IfxApiPromocjaPozycja, PromoItem>()
 				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
-				.ForMember(dst => dst.Number, opt => opt.MapFrom(src => src.Ilosc))
-				.ForMember(dst => dst.TaxPercent, opt => opt.MapFrom(src => src.StawkaVat))
-				.ForMember(dst => dst.PriceNet, opt => opt.MapFrom(src => src.CenaNetto))
+				.ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.Ilosc))
+        .ForPath(dst => dst.Price.TaxPercent, opt => opt.MapFrom(src => src.StawkaVat))
+				.ForPath(dst => dst.Price.PriceNet, opt => opt.MapFrom(src => src.CenaNetto))
 				.ForMember(dst => dst.MinimumPrice, opt => opt.MapFrom(src => src.MinCena))
 				.ForMember(dst => dst.DiscountPercent, opt => opt.MapFrom(src => src.Rabat))
 				.ForMember(dst => dst.Gratis, opt => opt.MapFrom(src => src.Gratis))
@@ -48,9 +49,10 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Products, opt => opt.MapFrom(src => src.IfxApiPromocjaPozycjaTowars))
 				;
 
-			CreateMap<IfxApiPromocjaPozycjaTowar, DiscountItemProduct>()
+			CreateMap<IfxApiPromocjaPozycjaTowar, PromoItemProduct>()
 				.ForMember(dst => dst.ProductCode, opt => opt.MapFrom(src => src.TwSymbol))
-				.ForMember(dst => dst.ItemId, opt => opt.MapFrom(src => src.PozycjaId));
+				.ForMember(dst => dst.PromoItemId, opt => opt.MapFrom(src => src.PozycjaId));
+
 		}
 
 		private decimal GetStan(TwTowar towar)
@@ -58,13 +60,13 @@ namespace Progress.Infrastructure.Database
 			return towar.TwStans.FirstOrDefault()?.StStan ?? 0;
 		}
 
-		private Dictionary<int, ProductPrice> CreatePriceDictionary(TwCena? src)
+		private Dictionary<int, Price> CreatePriceDictionary(TwCena? src)
 		{
 			if (src == null)
-				return new Dictionary<int, ProductPrice>();
+				return new Dictionary<int, Price>();
 
 			var priceIndex = 0;
-			var result = new Dictionary<int, ProductPrice>()
+			var result = new Dictionary<int, Price>()
 			{
 				{ priceIndex++, CreateProductPrice(src, tc => tc.TcCenaNetto0, tc => tc.TcCenaBrutto0) },
 				{ priceIndex++, CreateProductPrice(src, tc => tc.TcCenaNetto1, tc => tc.TcCenaBrutto1) },
@@ -81,9 +83,9 @@ namespace Progress.Infrastructure.Database
 			return result;
 		}
 
-		private ProductPrice CreateProductPrice(TwCena src, Func<TwCena, decimal?> funcNetto, Func<TwCena, decimal?> funcBrutto)
+		private Price CreateProductPrice(TwCena src, Func<TwCena, decimal?> funcNetto, Func<TwCena, decimal?> funcBrutto)
 		{
-			return new ProductPrice()
+			return new Price()
 			{
 				Id = src.TcId,
 				PriceNet = funcNetto(src),

@@ -31,6 +31,7 @@ namespace Progress.Api
 			builder.Services.AddAutoMapper(typeof(Domain.Api.AutoMapper));
 			builder.Services.RegisterRepositories();
 			builder.Services.AddScoped<ProductManager>();
+			builder.Services.AddScoped<PromoManager>();
 
 			var app = builder.Build();
 

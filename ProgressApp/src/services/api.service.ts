@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RESTClientService } from "./RESTClient.service";
 import { Observable } from "rxjs";
-import { IProductListRequest, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse } from "../domain/generated/apimodel";
+import { IProductListRequest, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoSetListResponse } from "../domain/generated/apimodel";
 
 @Injectable({
     providedIn: 'root'
@@ -35,5 +35,9 @@ import { IProductListRequest, ProductCategoryInfoResponse, ProductCategoryListRe
   
     getCategoryInfo(id: number): Observable<ProductCategoryInfoResponse>{
       return this.apiSerivce.post<ProductCategoryInfoResponse>(`api/product/category/info/${id}`, {});
+    }
+
+    getPromoList(): Observable<PromoSetListResponse>{
+      return this.apiSerivce.post<PromoSetListResponse>("api/promo/list", {});
     }
 }

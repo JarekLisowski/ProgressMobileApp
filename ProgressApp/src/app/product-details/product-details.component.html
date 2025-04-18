@@ -47,7 +47,7 @@
                <!-- input -->
                <div class="input-group input-spinner">
                   <input type="button" value="-" class="button-minus btn btn-sm" data-field="quantity" (click)="amountDecrement()" />
-                  <input type="number" step="1" max="10"[(ngModel)]="quantity" name="quantity" class="quantity-field form-control-sm form-input" />
+                  <input type="number" step="1" max="10" [(ngModel)]="quantity" name="quantity" class="quantity-field form-control-sm form-input" />
                   <input type="button" value="+" class="button-plus btn btn-sm" data-field="quantity" (click)="amountIncrement()"/>
                </div>
             </div>
@@ -55,7 +55,7 @@
              <div class="col-xxl-4 col-lg-4 col-md-6 col-6 d-grid">
                 <!-- button -->
                 <!-- btn -->
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" (click)="addToCart()">
                    <i class="feather-icon icon-shopping-bag me-2"></i>
                    Do Koszyka
                 </button>

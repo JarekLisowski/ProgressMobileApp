@@ -1,5 +1,4 @@
 export class CartItem {
-    id: number = 0;
     productId: number = 0;
     name: string = "";
     code: string = "";

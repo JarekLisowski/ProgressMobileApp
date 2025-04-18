@@ -1,1 +1,30 @@
-<p>cart works!</p>
+<ul class="nav nav-underline mb-4" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products-tab-pane" type="button" role="tab" aria-controls="products-tab-pane" aria-selected="true">Produkty</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#customer-tab-pane" type="button" role="tab" aria-controls="customer-tab-pane" aria-selected="false">Kontrahent</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#sell-tab-pane" type="button" role="tab" aria-controls="sell-tab-pane" aria-selected="false">Sprzedaż</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+
+    <div class="tab-pane fade show active" id="products-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+        <ul class="cart-list">
+            <app-cart-item *ngFor="let item of cartItems" [cartItem]="item"></app-cart-item>
+        </ul>
+    </div>
+
+    <div class="tab-pane fade show active" id="customer-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="0">
+        <h5>Kontrahent</h5>
+    </div>
+
+    <div class="tab-pane fade show active" id="sell-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="0">
+        <h5>Sprzedaż</h5>
+    </div>
+
+</div>
+

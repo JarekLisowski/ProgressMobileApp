@@ -81,7 +81,8 @@ export class ProductDetailsComponent implements OnInit {
       return;
     }
     this.cartService.addItemToCart(this.product, this.quantity).subscribe(x => { 
-      console.log('Added to cart: ' + x);
+      console.log('Added to cart: ');
+      console.dir(x);
 //      const myModalAlternative = new bootstrap.Modal('#myModal', options)
     });
   }

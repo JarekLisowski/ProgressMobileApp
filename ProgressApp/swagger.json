@@ -684,10 +684,153 @@
           }
         }
       }
+    },
+    "/api/Promo/list": {
+      "post": {
+        "tags": [
+          "Promo"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoSetListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoSetListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoSetListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "post": {
+        "tags": [
+          "Promo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Promo/image/{promoId}": {
+      "get": {
+        "tags": [
+          "Promo"
+        ],
+        "parameters": [
+          {
+            "name": "promoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "number",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "Price": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "priceNet": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "priceGross": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "currencyName": {
+            "type": "string",
+            "nullable": true
+          },
+          "taxPercent": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "taxName": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Product": {
         "type": "object",
         "properties": {
@@ -712,22 +855,14 @@
             "format": "double"
           },
           "price": {
-            "$ref": "#/components/schemas/ProductPrice"
+            "$ref": "#/components/schemas/Price"
           },
           "prices": {
             "type": "object",
             "additionalProperties": {
-              "$ref": "#/components/schemas/ProductPrice"
+              "$ref": "#/components/schemas/Price"
             },
             "nullable": true
-          },
-          "taxRate": {
-            "type": "number",
-            "format": "double"
-          },
-          "taxName": {
-            "type": "number",
-            "format": "double"
           },
           "categoryName": {
             "type": "string",
@@ -744,6 +879,14 @@
           "imagesCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "imgUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -890,39 +1033,6 @@
         },
         "additionalProperties": false
       },
-      "ProductPrice": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "priceNet": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "priceGross": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "currencyName": {
-            "type": "string",
-            "nullable": true
-          },
-          "currencyId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "ProductRequest": {
         "type": "object",
         "properties": {
@@ -958,6 +1068,193 @@
           },
           "data": {
             "$ref": "#/components/schemas/Product"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromoItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "setId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gratis": {
+            "type": "boolean"
+          },
+          "price": {
+            "$ref": "#/components/schemas/Price"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "discountPercent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minimumPrice": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "discountSetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromoItemProduct"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromoItemProduct": {
+        "type": "object",
+        "properties": {
+          "promoItemId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "promoItem": {
+            "$ref": "#/components/schemas/PromoItem"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromoResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PromoItem"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromoSet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataChange": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "groupChangeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "image": {
+            "type": "string",
+            "nullable": true
+          },
+          "img": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "typ": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromoItem"
+            },
+            "nullable": true
+          },
+          "imgUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromoSetListResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromoSet"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Product5Component } from "./product-5/product-5.component";
 import { NgFor } from '@angular/common';
-import { Product } from '../../domain/generated/apimodel';
+import { IProduct, Product } from '../../domain/generated/apimodel';
 
 @Component({
   selector: 'app-product-grid-5',
@@ -12,5 +12,5 @@ import { Product } from '../../domain/generated/apimodel';
 })
 export class ProductGrid5Component {
 
-  @Input() items : Product[] | undefined;
+  @Input() items : IProduct[] | undefined;
 }

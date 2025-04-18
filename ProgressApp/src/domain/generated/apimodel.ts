@@ -10,20 +10,84 @@
 
 
 
+export class Price implements IPrice {
+    id?: number;
+    name?: string | undefined;
+    priceNet?: number | undefined;
+    priceGross?: number | undefined;
+    currencyName?: string | undefined;
+    taxPercent?: number | undefined;
+    taxName?: string | undefined;
+    currencyId?: number | undefined;
+
+    constructor(data?: IPrice) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.priceNet = _data["priceNet"];
+            this.priceGross = _data["priceGross"];
+            this.currencyName = _data["currencyName"];
+            this.taxPercent = _data["taxPercent"];
+            this.taxName = _data["taxName"];
+            this.currencyId = _data["currencyId"];
+        }
+    }
+
+    static fromJS(data: any): Price {
+        data = typeof data === 'object' ? data : {};
+        let result = new Price();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["priceNet"] = this.priceNet;
+        data["priceGross"] = this.priceGross;
+        data["currencyName"] = this.currencyName;
+        data["taxPercent"] = this.taxPercent;
+        data["taxName"] = this.taxName;
+        data["currencyId"] = this.currencyId;
+        return data;
+    }
+}
+
+export interface IPrice {
+    id?: number;
+    name?: string | undefined;
+    priceNet?: number | undefined;
+    priceGross?: number | undefined;
+    currencyName?: string | undefined;
+    taxPercent?: number | undefined;
+    taxName?: string | undefined;
+    currencyId?: number | undefined;
+}
+
 export class Product implements IProduct {
     id?: number;
     code?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
     stock?: number;
-    price?: ProductPrice;
-    prices?: { [key: string]: ProductPrice; } | undefined;
-    taxRate?: number;
-    taxName?: number;
+    price?: Price;
+    prices?: { [key: string]: Price; } | undefined;
     categoryName?: string | undefined;
     categoryId?: number;
     barCode?: string | undefined;
     imagesCount?: number;
+    unit?: string | undefined;
+    imgUrl?: string | undefined;
 
     constructor(data?: IProduct) {
         if (data) {
@@ -31,13 +95,13 @@ export class Product implements IProduct {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-            this.price = data.price && !(<any>data.price).toJSON ? new ProductPrice(data.price) : <ProductPrice>this.price;
+            this.price = data.price && !(<any>data.price).toJSON ? new Price(data.price) : <Price>this.price;
             if (data.prices) {
                 this.prices = {};
                 for (let key in data.prices) {
                     if (data.prices.hasOwnProperty(key)) {
                         let item = data.prices[key];
-                        this.prices[key] = item && !(<any>item).toJSON ? new ProductPrice(item) : <ProductPrice>item;
+                        this.prices[key] = item && !(<any>item).toJSON ? new Price(item) : <Price>item;
                     }
                 }
             }
@@ -51,20 +115,20 @@ export class Product implements IProduct {
             this.name = _data["name"];
             this.description = _data["description"];
             this.stock = _data["stock"];
-            this.price = _data["price"] ? ProductPrice.fromJS(_data["price"]) : <any>undefined;
+            this.price = _data["price"] ? Price.fromJS(_data["price"]) : <any>undefined;
             if (_data["prices"]) {
                 this.prices = {} as any;
                 for (let key in _data["prices"]) {
                     if (_data["prices"].hasOwnProperty(key))
-                        (<any>this.prices)![key] = _data["prices"][key] ? ProductPrice.fromJS(_data["prices"][key]) : new ProductPrice();
+                        (<any>this.prices)![key] = _data["prices"][key] ? Price.fromJS(_data["prices"][key]) : new Price();
                 }
             }
-            this.taxRate = _data["taxRate"];
-            this.taxName = _data["taxName"];
             this.categoryName = _data["categoryName"];
             this.categoryId = _data["categoryId"];
             this.barCode = _data["barCode"];
             this.imagesCount = _data["imagesCount"];
+            this.unit = _data["unit"];
+            this.imgUrl = _data["imgUrl"];
         }
     }
 
@@ -90,12 +154,12 @@ export class Product implements IProduct {
                     (<any>data["prices"])[key] = this.prices[key] ? this.prices[key].toJSON() : <any>undefined;
             }
         }
-        data["taxRate"] = this.taxRate;
-        data["taxName"] = this.taxName;
         data["categoryName"] = this.categoryName;
         data["categoryId"] = this.categoryId;
         data["barCode"] = this.barCode;
         data["imagesCount"] = this.imagesCount;
+        data["unit"] = this.unit;
+        data["imgUrl"] = this.imgUrl;
         return data;
     }
 }
@@ -106,14 +170,14 @@ export interface IProduct {
     name?: string | undefined;
     description?: string | undefined;
     stock?: number;
-    price?: IProductPrice;
-    prices?: { [key: string]: IProductPrice; } | undefined;
-    taxRate?: number;
-    taxName?: number;
+    price?: IPrice;
+    prices?: { [key: string]: IPrice; } | undefined;
     categoryName?: string | undefined;
     categoryId?: number;
     barCode?: string | undefined;
     imagesCount?: number;
+    unit?: string | undefined;
+    imgUrl?: string | undefined;
 }
 
 export class ProductCategory implements IProductCategory {
@@ -422,62 +486,6 @@ export interface IProductListResponse {
     data?: IProduct[] | undefined;
 }
 
-export class ProductPrice implements IProductPrice {
-    id?: number;
-    name?: string | undefined;
-    priceNet?: number | undefined;
-    priceGross?: number | undefined;
-    currencyName?: string | undefined;
-    currencyId?: number | undefined;
-
-    constructor(data?: IProductPrice) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.priceNet = _data["priceNet"];
-            this.priceGross = _data["priceGross"];
-            this.currencyName = _data["currencyName"];
-            this.currencyId = _data["currencyId"];
-        }
-    }
-
-    static fromJS(data: any): ProductPrice {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProductPrice();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["priceNet"] = this.priceNet;
-        data["priceGross"] = this.priceGross;
-        data["currencyName"] = this.currencyName;
-        data["currencyId"] = this.currencyId;
-        return data;
-    }
-}
-
-export interface IProductPrice {
-    id?: number;
-    name?: string | undefined;
-    priceNet?: number | undefined;
-    priceGross?: number | undefined;
-    currencyName?: string | undefined;
-    currencyId?: number | undefined;
-}
-
 export class ProductRequest implements IProductRequest {
     productId?: number;
 
@@ -569,4 +577,360 @@ export interface IProductResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: IProduct;
+}
+
+export class PromoItem implements IPromoItem {
+    id?: number;
+    name?: string | undefined;
+    setId?: number;
+    gratis?: boolean;
+    price?: Price;
+    quantity?: number;
+    discountPercent?: number;
+    minimumPrice?: number | undefined;
+    discountSetId?: number;
+    products?: PromoItemProduct[] | undefined;
+
+    constructor(data?: IPromoItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.price = data.price && !(<any>data.price).toJSON ? new Price(data.price) : <Price>this.price;
+            if (data.products) {
+                this.products = [];
+                for (let i = 0; i < data.products.length; i++) {
+                    let item = data.products[i];
+                    this.products[i] = item && !(<any>item).toJSON ? new PromoItemProduct(item) : <PromoItemProduct>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.setId = _data["setId"];
+            this.gratis = _data["gratis"];
+            this.price = _data["price"] ? Price.fromJS(_data["price"]) : <any>undefined;
+            this.quantity = _data["quantity"];
+            this.discountPercent = _data["discountPercent"];
+            this.minimumPrice = _data["minimumPrice"];
+            this.discountSetId = _data["discountSetId"];
+            if (Array.isArray(_data["products"])) {
+                this.products = [] as any;
+                for (let item of _data["products"])
+                    this.products!.push(PromoItemProduct.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PromoItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new PromoItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["setId"] = this.setId;
+        data["gratis"] = this.gratis;
+        data["price"] = this.price ? this.price.toJSON() : <any>undefined;
+        data["quantity"] = this.quantity;
+        data["discountPercent"] = this.discountPercent;
+        data["minimumPrice"] = this.minimumPrice;
+        data["discountSetId"] = this.discountSetId;
+        if (Array.isArray(this.products)) {
+            data["products"] = [];
+            for (let item of this.products)
+                data["products"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPromoItem {
+    id?: number;
+    name?: string | undefined;
+    setId?: number;
+    gratis?: boolean;
+    price?: IPrice;
+    quantity?: number;
+    discountPercent?: number;
+    minimumPrice?: number | undefined;
+    discountSetId?: number;
+    products?: IPromoItemProduct[] | undefined;
+}
+
+export class PromoItemProduct implements IPromoItemProduct {
+    promoItemId?: number;
+    productCode?: string | undefined;
+    promoItem?: PromoItem;
+
+    constructor(data?: IPromoItemProduct) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.promoItem = data.promoItem && !(<any>data.promoItem).toJSON ? new PromoItem(data.promoItem) : <PromoItem>this.promoItem;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.promoItemId = _data["promoItemId"];
+            this.productCode = _data["productCode"];
+            this.promoItem = _data["promoItem"] ? PromoItem.fromJS(_data["promoItem"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PromoItemProduct {
+        data = typeof data === 'object' ? data : {};
+        let result = new PromoItemProduct();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["promoItemId"] = this.promoItemId;
+        data["productCode"] = this.productCode;
+        data["promoItem"] = this.promoItem ? this.promoItem.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IPromoItemProduct {
+    promoItemId?: number;
+    productCode?: string | undefined;
+    promoItem?: IPromoItem;
+}
+
+export class PromoResponse implements IPromoResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: PromoItem;
+
+    constructor(data?: IPromoResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.data = data.data && !(<any>data.data).toJSON ? new PromoItem(data.data) : <PromoItem>this.data;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.data = _data["data"] ? PromoItem.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PromoResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PromoResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IPromoResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: IPromoItem;
+}
+
+export class PromoSet implements IPromoSet {
+    id?: number;
+    isDeleted?: boolean;
+    validFrom?: Date | undefined;
+    validUntil?: Date | undefined;
+    name?: string | undefined;
+    dataChange?: Date;
+    groupChangeDate?: Date | undefined;
+    image?: string | undefined;
+    img?: string | undefined;
+    typ?: number;
+    items?: PromoItem[] | undefined;
+    imgUrl?: string | undefined;
+
+    constructor(data?: IPromoSet) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.items) {
+                this.items = [];
+                for (let i = 0; i < data.items.length; i++) {
+                    let item = data.items[i];
+                    this.items[i] = item && !(<any>item).toJSON ? new PromoItem(item) : <PromoItem>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.isDeleted = _data["isDeleted"];
+            this.validFrom = _data["validFrom"] ? new Date(_data["validFrom"].toString()) : <any>undefined;
+            this.validUntil = _data["validUntil"] ? new Date(_data["validUntil"].toString()) : <any>undefined;
+            this.name = _data["name"];
+            this.dataChange = _data["dataChange"] ? new Date(_data["dataChange"].toString()) : <any>undefined;
+            this.groupChangeDate = _data["groupChangeDate"] ? new Date(_data["groupChangeDate"].toString()) : <any>undefined;
+            this.image = _data["image"];
+            this.img = _data["img"];
+            this.typ = _data["typ"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(PromoItem.fromJS(item));
+            }
+            this.imgUrl = _data["imgUrl"];
+        }
+    }
+
+    static fromJS(data: any): PromoSet {
+        data = typeof data === 'object' ? data : {};
+        let result = new PromoSet();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["isDeleted"] = this.isDeleted;
+        data["validFrom"] = this.validFrom ? this.validFrom.toISOString() : <any>undefined;
+        data["validUntil"] = this.validUntil ? this.validUntil.toISOString() : <any>undefined;
+        data["name"] = this.name;
+        data["dataChange"] = this.dataChange ? this.dataChange.toISOString() : <any>undefined;
+        data["groupChangeDate"] = this.groupChangeDate ? this.groupChangeDate.toISOString() : <any>undefined;
+        data["image"] = this.image;
+        data["img"] = this.img;
+        data["typ"] = this.typ;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["imgUrl"] = this.imgUrl;
+        return data;
+    }
+}
+
+export interface IPromoSet {
+    id?: number;
+    isDeleted?: boolean;
+    validFrom?: Date | undefined;
+    validUntil?: Date | undefined;
+    name?: string | undefined;
+    dataChange?: Date;
+    groupChangeDate?: Date | undefined;
+    image?: string | undefined;
+    img?: string | undefined;
+    typ?: number;
+    items?: IPromoItem[] | undefined;
+    imgUrl?: string | undefined;
+}
+
+export class PromoSetListResponse implements IPromoSetListResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: PromoSet[] | undefined;
+
+    constructor(data?: IPromoSetListResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.data) {
+                this.data = [];
+                for (let i = 0; i < data.data.length; i++) {
+                    let item = data.data[i];
+                    this.data[i] = item && !(<any>item).toJSON ? new PromoSet(item) : <PromoSet>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(PromoSet.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PromoSetListResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PromoSetListResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPromoSetListResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: IPromoSet[] | undefined;
 }

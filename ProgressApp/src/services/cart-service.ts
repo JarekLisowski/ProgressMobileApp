@@ -13,7 +13,6 @@ export class CartService {
     addItemToCart(product: Product, quantity: number): Observable<any> {
         var cartItem : CartItem = 
         {
-            id: 0,
             productId: product.id ?? 0,
             name: product.name ?? "",
             code: product.code ?? "",
