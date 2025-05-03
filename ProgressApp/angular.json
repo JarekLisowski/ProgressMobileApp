@@ -33,12 +33,15 @@
             ],
             "styles": [
               "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/slick-carousel/slick/slick.scss",
-              "node_modules/slick-carousel/slick/slick-theme.scss"
+              "node_modules/slick-carousel/slick/slick-theme.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/slick-carousel/slick/slick.min.js"
+              "node_modules/slick-carousel/slick/slick.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {
@@ -97,10 +100,13 @@
             ],
             "styles": [
               "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/slick-carousel/slick/slick.scss",
-              "node_modules/slick-carousel/slick/slick-theme.scss"              
+              "node_modules/slick-carousel/slick/slick-theme.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.min.css"
             ],
             "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/slick-carousel/slick/slick.min.js"
             ]

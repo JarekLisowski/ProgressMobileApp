@@ -18,6 +18,8 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Stock, opt => opt.MapFrom((src, dst) => GetStan(src)))
 				;
 
+			CreateMap<TwTowarShort, TwTowar>();
+
 			CreateMap<TwZdjecieTw, ProductImage>()
 				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ZdId))
 				.ForMember(dst => dst.Primary, opt => opt.MapFrom(src => src.ZdGlowne))

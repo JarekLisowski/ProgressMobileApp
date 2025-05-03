@@ -5,6 +5,7 @@ import { SpecialOfferComponent } from './special-offer/special-offer.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { SpecialOffersComponent } from './special-offers/special-offers.component';
+import { SpecialOfferEditComponent } from './special-offer-edit/special-offer-edit.component';
 
 export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent },
@@ -12,5 +13,6 @@ export const routes: Routes = [
     { path: 'cart', component: CartComponent },
     { path: 'special-offer', component: SpecialOfferComponent },
     { path: 'special-offers', component: SpecialOffersComponent },
+    { path: 'specialOfferEdit/:id', component: SpecialOfferEditComponent },
     { path: 'categories', component: CategoriesComponent }
 ];

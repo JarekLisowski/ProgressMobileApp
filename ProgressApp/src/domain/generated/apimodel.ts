@@ -777,11 +777,9 @@ export class PromoSet implements IPromoSet {
     name?: string | undefined;
     dataChange?: Date;
     groupChangeDate?: Date | undefined;
-    image?: string | undefined;
-    img?: string | undefined;
+    imgUrl?: string | undefined;
     typ?: number;
     items?: PromoItem[] | undefined;
-    imgUrl?: string | undefined;
 
     constructor(data?: IPromoSet) {
         if (data) {
@@ -808,15 +806,13 @@ export class PromoSet implements IPromoSet {
             this.name = _data["name"];
             this.dataChange = _data["dataChange"] ? new Date(_data["dataChange"].toString()) : <any>undefined;
             this.groupChangeDate = _data["groupChangeDate"] ? new Date(_data["groupChangeDate"].toString()) : <any>undefined;
-            this.image = _data["image"];
-            this.img = _data["img"];
+            this.imgUrl = _data["imgUrl"];
             this.typ = _data["typ"];
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
                     this.items!.push(PromoItem.fromJS(item));
             }
-            this.imgUrl = _data["imgUrl"];
         }
     }
 
@@ -836,15 +832,13 @@ export class PromoSet implements IPromoSet {
         data["name"] = this.name;
         data["dataChange"] = this.dataChange ? this.dataChange.toISOString() : <any>undefined;
         data["groupChangeDate"] = this.groupChangeDate ? this.groupChangeDate.toISOString() : <any>undefined;
-        data["image"] = this.image;
-        data["img"] = this.img;
+        data["imgUrl"] = this.imgUrl;
         data["typ"] = this.typ;
         if (Array.isArray(this.items)) {
             data["items"] = [];
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
-        data["imgUrl"] = this.imgUrl;
         return data;
     }
 }
@@ -857,11 +851,9 @@ export interface IPromoSet {
     name?: string | undefined;
     dataChange?: Date;
     groupChangeDate?: Date | undefined;
-    image?: string | undefined;
-    img?: string | undefined;
+    imgUrl?: string | undefined;
     typ?: number;
     items?: IPromoItem[] | undefined;
-    imgUrl?: string | undefined;
 }
 
 export class PromoSetListResponse implements IPromoSetListResponse {
@@ -933,4 +925,61 @@ export interface IPromoSetListResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: IPromoSet[] | undefined;
+}
+
+export class PromoSetResponse implements IPromoSetResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: PromoSet;
+
+    constructor(data?: IPromoSetResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.data = data.data && !(<any>data.data).toJSON ? new PromoSet(data.data) : <PromoSet>this.data;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.data = _data["data"] ? PromoSet.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PromoSetResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PromoSetResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IPromoSetResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: IPromoSet;
 }

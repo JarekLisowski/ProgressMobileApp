@@ -19,6 +19,14 @@ const dbConfig: DBConfig  = {
     storeConfig: { keyPath: 'id', autoIncrement: true },
     storeSchema: [
       { name: 'code', keypath: 'code', options: { unique: false } },
+      { name: 'promoSetId', keypath: 'promoSetId', options: { unique: false } },
+    ]
+  },
+  {
+    store: 'promoSet',
+    storeConfig: { keyPath: 'id', autoIncrement: true },
+    storeSchema: [
+      { name: 'promoSetId', keypath: 'promoSetId', options: { unique: false } },
     ]
   }
   ]

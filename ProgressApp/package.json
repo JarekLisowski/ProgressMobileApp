@@ -21,6 +21,8 @@
     "@angular/router": "^18.2.0",
     "@types/jquery": "^3.5.32",
     "@types/slick-carousel": "^1.6.40",
+    "bootstrap": "^5.3.5",
+    "bootstrap-icons": "^1.11.3",
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
     "ngx-indexed-db": "^20.0.0",
@@ -28,12 +30,14 @@
     "rxjs": "~7.8.0",
     "slick-carousel": "^1.8.1",
     "tslib": "^2.3.0",
+    "uuid": "^11.1.0",
     "zone.js": "^0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.3",
     "@angular/cli": "^18.2.3",
     "@angular/compiler-cli": "^18.2.0",
+    "@types/bootstrap": "^5.2.10",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.2.0",
     "karma": "~6.4.0",

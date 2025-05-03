@@ -93,5 +93,18 @@ namespace Progress.BusinessLogic
       }
       return null;
     }
+
+    public Product[] GetProductsForPromoItem(int id)
+    {
+      var sql = @"
+select * from tw__Towar tw
+inner join IFx_ApiPromocjaPozycjaTowar promtw on tw.tw_Symbol = promtw.TwSymbol
+inner join tw_Cena tc on tc.tc_IdTowar = tw.tw_Id
+where promtw.PozycjaId={0}";
+      var data = _promoRepository.DbContext.Database.SqlQueryRaw<Database.TwTowarShort>(sql, id).ToArray();
+      var data2 = _autoMapper.Map<TwTowar[]>(data);
+      var products = _autoMapper.Map<Product[]>(data2);
+      return products;
+    }
   }
 }

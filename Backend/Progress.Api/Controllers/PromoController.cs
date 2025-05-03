@@ -33,8 +33,19 @@ namespace Progress.Api.Controllers
       };
     }
 
-    [HttpPost("/{id}")]
-    public PromoResponse Details(int id)
+    [HttpPost("{id}")]
+    public PromoSetResponse Details(int id)
+    {
+      var dbData = _promoManager.GetPromoSet(id);
+      var data = _mapper.Map<PromoSet>(dbData);
+      return new PromoSetResponse
+      {
+        Data = data
+      };
+    }
+
+    [HttpPost("Item/{id}")]
+    public PromoResponse PromoItemDetails(int id)
     {
       var dbData = _promoManager.GetPromoItemDetials(id);
       var data = _mapper.Map<PromoItem>(dbData);
@@ -54,6 +65,16 @@ namespace Progress.Api.Controllers
         return File(image, "image/jpeg");
       }
       return NotFound();
+    }
+
+    [HttpPost("productsForPromoItem/{id}")]
+    public ProductListResponse GetProductsForPromoItem(int id)
+    {
+      var data = _promoManager.GetProductsForPromoItem(id);
+      return new ProductListResponse
+      {
+        Data = _mapper.Map<Product[]>(data)
+      };
     }
   }
 }

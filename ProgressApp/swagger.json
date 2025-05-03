@@ -736,6 +736,46 @@
             "content": {
               "text/plain": {
                 "schema": {
+                  "$ref": "#/components/schemas/PromoSetResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoSetResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromoSetResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Item/{id}": {
+      "post": {
+        "tags": [
+          "Promo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
                   "$ref": "#/components/schemas/PromoResponse"
                 }
               },
@@ -767,15 +807,6 @@
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
-          },
-          {
-            "name": "number",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
             }
           }
         ],
@@ -1199,13 +1230,8 @@
             "format": "date-time",
             "nullable": true
           },
-          "image": {
+          "imgUrl": {
             "type": "string",
-            "nullable": true
-          },
-          "img": {
-            "type": "string",
-            "format": "byte",
             "nullable": true
           },
           "typ": {
@@ -1217,10 +1243,6 @@
             "items": {
               "$ref": "#/components/schemas/PromoItem"
             },
-            "nullable": true
-          },
-          "imgUrl": {
-            "type": "string",
             "nullable": true
           }
         },
@@ -1255,6 +1277,35 @@
               "$ref": "#/components/schemas/PromoSet"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromoSetResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PromoSet"
           }
         },
         "additionalProperties": false

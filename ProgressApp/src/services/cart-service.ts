@@ -3,11 +3,14 @@ import { Observable } from "rxjs";
 import { Product } from "../domain/generated/apimodel";
 import { CartItem } from "../domain/cartItem";
 import { inject, Injectable } from "@angular/core";
+import { SpecialOfferEdit } from "../domain/specialOfferEdit";
+import { CartPromoItem } from "../domain/cartPromoItem";
 
 @Injectable({
     providedIn: 'root'
   })
 export class CartService {
+
     constructor(private dbService: NgxIndexedDBService) {}
 
     addItemToCart(product: Product, quantity: number): Observable<any> {
@@ -18,7 +21,9 @@ export class CartService {
             code: product.code ?? "",
             priceNet: product.price?.priceNet ?? 0,
             priceGross: product.price?.priceGross ?? 0,
-            quantity: quantity
+            quantity: quantity,
+            promoSetId: 0,
+            promoItemId: 0
         };
         return this.dbService.add('cart', cartItem);
     }
@@ -37,5 +42,12 @@ export class CartService {
 
     clearCart(): Observable<any> {
         return this.dbService.clear('cart');
+    }
+
+    addPromoSetToCart(promoSet: SpecialOfferEdit): Observable<any> {       
+        var cartPromoItem: CartPromoItem = {
+            promoSetId: promoSet.promoSetId,
+        }
+        this.dbService.add('promoSet', promoSet).subscribe((result) => {  
     }
 }

@@ -36,9 +36,7 @@ namespace Progress.Infrastructure.Database.Repository
       var data = EntitySet
         .AsNoTracking()
         .Include(it => it.IfxApiPromocjaPozycjas)
-        .Where(it => it.Id == id && it.DataOd <= today && it.DataDo >= today)
-        .ToArray();
-      
+        .FirstOrDefault(it => it.Id == id && it.DataOd <= today && it.DataDo >= today);      
       if (data == null) 
         return null;
       
