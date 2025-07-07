@@ -29,6 +29,8 @@ public partial class NavireoDbContext : DbContext
 
     public virtual DbSet<DokVat> DokVats { get; set; }
 
+    public virtual DbSet<IfVwKontrahent> IfVwKontrahents { get; set; }
+
     public virtual DbSet<IfxApiFormaPlatnosci> IfxApiFormaPlatnoscis { get; set; }
 
     public virtual DbSet<IfxApiPromocjaGrupa> IfxApiPromocjaGrupas { get; set; }
@@ -1104,6 +1106,138 @@ public partial class NavireoDbContext : DbContext
                 .HasForeignKey(d => d.VtVatId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_dok_Vat_sl_StawkaVAT");
+        });
+
+        modelBuilder.Entity<IfVwKontrahent>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("IF_vwKontrahent");
+
+            entity.Property(e => e.AdrKod)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("adr_Kod");
+            entity.Property(e => e.AdrMiejscowosc)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("adr_Miejscowosc");
+            entity.Property(e => e.AdrNazwa)
+                .HasMaxLength(53)
+                .IsUnicode(false)
+                .HasColumnName("adr_Nazwa");
+            entity.Property(e => e.AdrNazwaPelna)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("adr_NazwaPelna");
+            entity.Property(e => e.AdrNip)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("adr_NIP");
+            entity.Property(e => e.AdrNrDomu)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("adr_NrDomu");
+            entity.Property(e => e.AdrNrLokalu)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("adr_NrLokalu");
+            entity.Property(e => e.AdrPaId).HasColumnName("adrPa_Id");
+            entity.Property(e => e.AdrPaKod)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("adrPa_Kod");
+            entity.Property(e => e.AdrPaNazwa)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("adrPa_Nazwa");
+            entity.Property(e => e.AdrTelefon)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("adr_Telefon");
+            entity.Property(e => e.AdrUlica)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("adr_Ulica");
+            entity.Property(e => e.DostKod)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("dost_Kod");
+            entity.Property(e => e.DostMiejscowosc)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("dost_Miejscowosc");
+            entity.Property(e => e.DostNazwa)
+                .HasMaxLength(53)
+                .IsUnicode(false)
+                .HasColumnName("dost_Nazwa");
+            entity.Property(e => e.DostNip)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("dost_Nip");
+            entity.Property(e => e.DostNrDomu)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("dost_NrDomu");
+            entity.Property(e => e.DostNrLokalu)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("dost_NrLokalu");
+            entity.Property(e => e.DostPaId).HasColumnName("dostPa_Id");
+            entity.Property(e => e.DostPaKod)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("dostPa_Kod");
+            entity.Property(e => e.DostPaNazwa)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("dostPa_Nazwa");
+            entity.Property(e => e.DostSymbol)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("dost_Symbol");
+            entity.Property(e => e.DostTelefon)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("dost_Telefon");
+            entity.Property(e => e.DostUlica)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("dost_Ulica");
+            entity.Property(e => e.FpTermin).HasColumnName("fp_Termin");
+            entity.Property(e => e.KhCena).HasColumnName("kh_Cena");
+            entity.Property(e => e.KhEmail)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("kh_EMail");
+            entity.Property(e => e.KhId).HasColumnName("kh_Id");
+            entity.Property(e => e.KhIdOpiekun).HasColumnName("kh_IdOpiekun");
+            entity.Property(e => e.KhJednorazowy).HasColumnName("kh_Jednorazowy");
+            entity.Property(e => e.KhMaxDokKred).HasColumnName("kh_MaxDokKred");
+            entity.Property(e => e.KhPlatOdroczone).HasColumnName("kh_PlatOdroczone");
+            entity.Property(e => e.KhPracownik)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("kh_Pracownik");
+            entity.Property(e => e.KhRegon)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("kh_REGON");
+            entity.Property(e => e.KhSymbol)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("kh_Symbol");
+            entity.Property(e => e.KhWww)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("kh_WWW");
+            entity.Property(e => e.KhZablokowany).HasColumnName("kh_Zablokowany");
+            entity.Property(e => e.ZmCecha)
+                .HasColumnType("datetime")
+                .HasColumnName("zm_Cecha");
+            entity.Property(e => e.ZmData)
+                .HasColumnType("datetime")
+                .HasColumnName("zm_Data");
         });
 
         modelBuilder.Entity<IfxApiFormaPlatnosci>(entity =>

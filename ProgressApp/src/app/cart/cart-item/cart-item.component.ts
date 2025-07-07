@@ -1,17 +1,21 @@
 import { Component, Input } from '@angular/core';
 import { CartItem } from '../../../domain/cartItem';
 import { FormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-cart-item',
+  selector: 'cart-item',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgIf, RouterModule],
   templateUrl: './cart-item.component.html',
   styleUrl: './cart-item.component.scss'
 })
 export class CartItemComponent {
 
   @Input() cartItem: CartItem | undefined;
+
+  @Input() readonly: boolean = false;
 
   get quantity(): number {
     return this.cartItem?.quantity ?? 0;

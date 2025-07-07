@@ -5,6 +5,141 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/customer/{id}": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/search/{pattern}": {
+      "get": {
+        "tags": [
+          "Customer"
+        ],
+        "parameters": [
+          {
+            "name": "pattern",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer": {
+      "post": {
+        "tags": [
+          "Customer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Customer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/document/invoice/{id}": {
       "get": {
         "tags": [
@@ -344,141 +479,6 @@
         }
       }
     },
-    "/api/customer/{id}": {
-      "get": {
-        "tags": [
-          "Kontrahenci"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/customer/search/{pattern}": {
-      "get": {
-        "tags": [
-          "Kontrahenci"
-        ],
-        "parameters": [
-          {
-            "name": "pattern",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/customer": {
-      "post": {
-        "tags": [
-          "Kontrahenci"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Kontrahenci"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/product/list": {
       "post": {
         "tags": [
@@ -714,7 +714,7 @@
         }
       }
     },
-    "/{id}": {
+    "/api/Promo/{id}": {
       "post": {
         "tags": [
           "Promo"
@@ -754,7 +754,7 @@
         }
       }
     },
-    "/Item/{id}": {
+    "/api/Promo/Item/{id}": {
       "post": {
         "tags": [
           "Promo"
@@ -816,10 +816,272 @@
           }
         }
       }
+    },
+    "/api/Promo/productsForPromoItem/{id}": {
+      "post": {
+        "tags": [
+          "Promo"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "regon": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "idOpiekun": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "adrName": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrNameFull": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrNip": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrTel": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrStreet": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrStreetNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrZipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrCountryId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "adrCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "adrCountryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivName": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivNip": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivTel": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivStreet": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivStreetNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivZipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivCountryId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "delivCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "delivCountryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "blocked": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "changeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "oneTime": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "custEmploee": {
+            "type": "string",
+            "nullable": true
+          },
+          "payTermin": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "payDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "www": {
+            "type": "string",
+            "nullable": true
+          },
+          "priceId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerListResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Customer"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/Customer"
+          }
+        },
+        "additionalProperties": false
+      },
       "Price": {
         "type": "object",
         "properties": {

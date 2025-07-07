@@ -35,7 +35,4 @@ export class SpecialOfferProductItemComponent {
       console.log("Quantity changed: " + this.data.quantity);
     }
   } 
-
-  public addToCart() {
-  }
 }

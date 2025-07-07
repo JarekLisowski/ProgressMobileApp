@@ -16,96 +16,113 @@ import { PromoItemEdit } from '../../../domain/specialOfferEdit';
 })
 export class SpecialOfferEditItemComponent implements AfterViewInit {
 
-  @Input() promoItem!: PromoItemEdit;
+  @Input() promoItemEdit!: PromoItemEdit;
 
   @ViewChild('selectProductModal') myModalRef!: ElementRef;
 
   @Output() cartChangedEvent = new EventEmitter<void>();
-  
+
 
   private readonly api = inject(ApiService);
 
   selectedItemsQuantity: number = 0;
-  
-  modal!: Modal;
-  idCouner : number = -1;
-  
-  promoProductSelection: ProductPromoItem[] = [];
-  maxQuantity: number = 1;
-  selectedPromoItemId?: number;
 
-  get isReady() : boolean {
-    return this.selectedItemsQuantity == this.promoItem?.quantity;
-  } 
-  
-  ngAfterViewInit(): void {
-    console.log(this.myModalRef);
-    this.modal = new Modal(this.myModalRef.nativeElement);
-    this.myModalRef.nativeElement.addEventListener("hidden.bs.modal", () => {  
-      if (this.selectedPromoItemId != undefined) {
-        this.promoItem.cartItems = this.promoProductSelection.filter(x => {
-          return x.quantity > 0
-        }).map(x => {
-          return {
-            ...x,
-            id: 0,
-            productId: x.productId ?? 0,
-            quantity: x.quantity,
-            promoItemId: this.promoItem.id ?? 0,
-            priceNet: x.price?.priceNet ?? 0,
-            priceGross: x.price?.priceGross ?? 0,
-            promoSetId: 0
-          }
-        });
-        //console.log(this.promoItem.cartItems);
-        this.cartChangedEvent.emit();
-      }
-    });
+  modal!: Modal;
+  idCouner: number = -1;
+
+  promoProduct: ProductPromoItem[] = [];
+  maxQuantity: number = 1;
+  isModified: boolean = false;
+
+  get isReady(): boolean {
+    return this.selectedItemsQuantity == this.promoItemEdit?.quantity;
   }
 
-  showProductSelectionForPromoItem(selectedPromoItem: IPromoItem) {    
-    this.selectedPromoItemId = selectedPromoItem.id;
-    if (selectedPromoItem.id == null) {
+  ngAfterViewInit(): void {
+    console.log(this.promoItemEdit);
+    this.modal = new Modal(this.myModalRef.nativeElement);
+    this.myModalRef.nativeElement.addEventListener("hidden.bs.modal", () => {
+      if (this.isModified)
+        this.addSelectdItemsToPromoCart();
+    });
+    this.loadPromoItems();
+  }
+
+  addSelectdItemsToPromoCart() {
+    this.promoItemEdit.cartItems = this.promoProduct.filter(x => {
+      return x.quantity > 0;
+    }).map(x => {
+      return {
+        ...x,
+        id: 0,
+        productId: x.productId ?? 0,
+        quantity: x.quantity,
+        promoItemId: this.promoItemEdit.id ?? 0,
+        priceNet: x.price?.priceNet ?? 0,
+        priceGross: x.price?.priceGross ?? 0,
+        promoSetId: 0
+      };
+    });
+    this.calculateTotalQuantity();
+    this.cartChangedEvent.emit();
+  }
+
+  loadPromoItems() {
+    if (this.promoItemEdit == null || this.promoItemEdit.id == null)
       return;
-    }
-    //this.promoProductSelection = [];
-    this.api.getPromoProductsForPromoItem(selectedPromoItem.id).subscribe(x => {
+    this.api.getPromoProductsForPromoItem(this.promoItemEdit.id).subscribe(x => {
       if (x.data != null) {
         x.data.forEach(promoProduct => {
-          var existingItem = this.promoProductSelection.find(x => {
+          var existingItem = this.promoProduct.find(x => {
             return x.code == promoProduct.code;
           });
-          if (existingItem == null) {
-            var productPromoToAdd : ProductPromoItem = {
+          if (existingItem == null && this.promoItemEdit?.id != null) {
+            var productPromoToAdd: ProductPromoItem = {
               ...promoProduct,
               productId: promoProduct.id ?? 0,
               id: this.idCouner,
               quantity: 0,
-              promoItemId: selectedPromoItem.id ?? 0,
-              //maxQuantity: selectedPromoItem.quantity ?? 1,
+              promoItemId: this.promoItemEdit.id,
             }
-            this.promoProductSelection.push(productPromoToAdd);
+            this.promoProduct.push(productPromoToAdd);
             this.idCouner--;
           }
-          else {
-            //this.promoProductSelection.push(existingItem);
-          }
-          
         });
-        this.maxQuantity = selectedPromoItem.quantity ?? 1;
-        this.modal.show();
+        this.maxQuantity = this.promoItemEdit?.quantity ?? 1;
+        this.updateQuantity();
+        this.isModified = false;
       }
     });
   }
 
+  showProductSelectionForPromoItem() {
+    this.modal.show();
+  }
+
+  updateQuantity() {
+    this.promoProduct.forEach(item => {
+      var existingItem = this.promoItemEdit.cartItems.find(x => {
+        return x.productId == item.productId;
+      });
+      if (existingItem != null) {
+        item.quantity = existingItem.quantity;
+      }
+      else {
+        item.quantity = 0;
+      }
+    });
+    this.quantityChanged();
+  }
+
   quantityChanged() {
     console.log("Quantity changed");
+    this.isModified = true;
     this.calculateTotalQuantity();
   }
 
   calculateTotalQuantity() {
     this.selectedItemsQuantity = 0;
-    this.promoProductSelection.forEach(item => {
+    this.promoProduct.forEach(item => {
       this.selectedItemsQuantity += item.quantity;
     });
   }

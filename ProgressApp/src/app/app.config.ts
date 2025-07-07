@@ -6,7 +6,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 const dbConfig: DBConfig  = {
   name: 'ProgressDb',
-  version: 1,
+  version: 2,
   objectStoresMeta: [{
     store: 'user',
     storeConfig: { keyPath: 'id', autoIncrement: false },
@@ -28,6 +28,11 @@ const dbConfig: DBConfig  = {
     storeSchema: [
       { name: 'promoSetId', keypath: 'promoSetId', options: { unique: false } },
     ]
+  },
+  {
+    store: 'transaction',
+    storeConfig: { keyPath: 'id', autoIncrement: true },
+    storeSchema: []
   }
   ]
 };

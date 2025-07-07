@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using System.Xml;
 
 namespace Progress.Domain.Api
 {
@@ -14,6 +13,9 @@ namespace Progress.Domain.Api
 
 			CreateMap<Model.PromoSet, PromoSet>();
 			CreateMap<Model.PromoItem, PromoItem>();
+
+			CreateMap<Model.Addres, Addres>();
+			CreateMap<Model.Customer, Customer>();
 		}
 	}
 }

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { IProduct } from '../../../domain/generated/apimodel';
 
 @Component({
   selector: 'app-product-5',
@@ -9,5 +10,5 @@ import { Component, Input } from '@angular/core';
 })
 export class Product5Component {
   
-  @Input() data: any = null;  
+  @Input() data: IProduct | null = null;  
 }

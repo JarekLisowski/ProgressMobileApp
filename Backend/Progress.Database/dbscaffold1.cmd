@@ -40,3 +40,4 @@ dotnet ef dbcontext scaffold "Server=localhost;Trusted_Connection=True;Database=
 --table IFx_ApiSposobDostawy			^
 --table IFx_ApiUzytkownik				^
 --table IFx_ApiUzytkownik_PoziomyCenowe	^
+--table IF_vwKontrahent ^

@@ -8,6 +8,7 @@ namespace Progress.Infrastructure.Database.Repository
   public class PromoRepository : DatabaseRepository<PromoSet, IfxApiPromocjaZestaw>
   {
     IMapper _mapper;
+    DateTime? overrideToday = new DateTime(2025, 4, 1);
 
     public PromoRepository(NavireoDbContext dbContext, IConfigurationProvider automapperConfiguration, IMapper mapper)
       : base(dbContext, automapperConfiguration, nameof(IfxApiPromocjaZestaw.Id), x => x.Id, x => x.Id)
@@ -17,7 +18,7 @@ namespace Progress.Infrastructure.Database.Repository
 
     public IEnumerable<PromoSet> GetPromoSetList()
     {
-      var today = DateTime.Today;
+      var today = overrideToday ?? DateTime.Today;
       var data = EntitySet
         .AsNoTracking()
         .Where(it => it.DataOd <= today && it.DataDo >= today)
@@ -32,7 +33,7 @@ namespace Progress.Infrastructure.Database.Repository
 
     public PromoSet? GetPromoSet(int id)
     {
-      var today = DateTime.Today;
+      var today = overrideToday ?? DateTime.Today;
       var data = EntitySet
         .AsNoTracking()
         .Include(it => it.IfxApiPromocjaPozycjas)

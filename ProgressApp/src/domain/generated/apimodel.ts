@@ -10,6 +10,314 @@
 
 
 
+export class Customer implements ICustomer {
+    id?: number;
+    code?: string | undefined;
+    regon?: string | undefined;
+    email?: string | undefined;
+    idOpiekun?: number | undefined;
+    adrName?: string | undefined;
+    adrNameFull?: string | undefined;
+    adrNip?: string | undefined;
+    adrTel?: string | undefined;
+    adrStreet?: string | undefined;
+    adrStreetNo?: string | undefined;
+    adrNumber?: string | undefined;
+    adrZipCode?: string | undefined;
+    adrCity?: string | undefined;
+    adrCountryId?: number | undefined;
+    adrCountry?: string | undefined;
+    adrCountryCode?: string | undefined;
+    delivName?: string | undefined;
+    delivCode?: string | undefined;
+    delivNip?: string | undefined;
+    delivTel?: string | undefined;
+    delivStreet?: string | undefined;
+    delivStreetNo?: string | undefined;
+    delivNumber?: string | undefined;
+    delivZipCode?: string | undefined;
+    delivCity?: string | undefined;
+    delivCountryId?: number | undefined;
+    delivCountry?: string | undefined;
+    delivCountryCode?: string | undefined;
+    blocked?: boolean | undefined;
+    changeDate?: Date | undefined;
+    oneTime?: boolean | undefined;
+    custEmploee?: string | undefined;
+    payTermin?: boolean | undefined;
+    payDays?: number | undefined;
+    www?: string | undefined;
+    priceId?: number | undefined;
+
+    constructor(data?: ICustomer) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.code = _data["code"];
+            this.regon = _data["regon"];
+            this.email = _data["email"];
+            this.idOpiekun = _data["idOpiekun"];
+            this.adrName = _data["adrName"];
+            this.adrNameFull = _data["adrNameFull"];
+            this.adrNip = _data["adrNip"];
+            this.adrTel = _data["adrTel"];
+            this.adrStreet = _data["adrStreet"];
+            this.adrStreetNo = _data["adrStreetNo"];
+            this.adrNumber = _data["adrNumber"];
+            this.adrZipCode = _data["adrZipCode"];
+            this.adrCity = _data["adrCity"];
+            this.adrCountryId = _data["adrCountryId"];
+            this.adrCountry = _data["adrCountry"];
+            this.adrCountryCode = _data["adrCountryCode"];
+            this.delivName = _data["delivName"];
+            this.delivCode = _data["delivCode"];
+            this.delivNip = _data["delivNip"];
+            this.delivTel = _data["delivTel"];
+            this.delivStreet = _data["delivStreet"];
+            this.delivStreetNo = _data["delivStreetNo"];
+            this.delivNumber = _data["delivNumber"];
+            this.delivZipCode = _data["delivZipCode"];
+            this.delivCity = _data["delivCity"];
+            this.delivCountryId = _data["delivCountryId"];
+            this.delivCountry = _data["delivCountry"];
+            this.delivCountryCode = _data["delivCountryCode"];
+            this.blocked = _data["blocked"];
+            this.changeDate = _data["changeDate"] ? new Date(_data["changeDate"].toString()) : <any>undefined;
+            this.oneTime = _data["oneTime"];
+            this.custEmploee = _data["custEmploee"];
+            this.payTermin = _data["payTermin"];
+            this.payDays = _data["payDays"];
+            this.www = _data["www"];
+            this.priceId = _data["priceId"];
+        }
+    }
+
+    static fromJS(data: any): Customer {
+        data = typeof data === 'object' ? data : {};
+        let result = new Customer();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["code"] = this.code;
+        data["regon"] = this.regon;
+        data["email"] = this.email;
+        data["idOpiekun"] = this.idOpiekun;
+        data["adrName"] = this.adrName;
+        data["adrNameFull"] = this.adrNameFull;
+        data["adrNip"] = this.adrNip;
+        data["adrTel"] = this.adrTel;
+        data["adrStreet"] = this.adrStreet;
+        data["adrStreetNo"] = this.adrStreetNo;
+        data["adrNumber"] = this.adrNumber;
+        data["adrZipCode"] = this.adrZipCode;
+        data["adrCity"] = this.adrCity;
+        data["adrCountryId"] = this.adrCountryId;
+        data["adrCountry"] = this.adrCountry;
+        data["adrCountryCode"] = this.adrCountryCode;
+        data["delivName"] = this.delivName;
+        data["delivCode"] = this.delivCode;
+        data["delivNip"] = this.delivNip;
+        data["delivTel"] = this.delivTel;
+        data["delivStreet"] = this.delivStreet;
+        data["delivStreetNo"] = this.delivStreetNo;
+        data["delivNumber"] = this.delivNumber;
+        data["delivZipCode"] = this.delivZipCode;
+        data["delivCity"] = this.delivCity;
+        data["delivCountryId"] = this.delivCountryId;
+        data["delivCountry"] = this.delivCountry;
+        data["delivCountryCode"] = this.delivCountryCode;
+        data["blocked"] = this.blocked;
+        data["changeDate"] = this.changeDate ? this.changeDate.toISOString() : <any>undefined;
+        data["oneTime"] = this.oneTime;
+        data["custEmploee"] = this.custEmploee;
+        data["payTermin"] = this.payTermin;
+        data["payDays"] = this.payDays;
+        data["www"] = this.www;
+        data["priceId"] = this.priceId;
+        return data;
+    }
+}
+
+export interface ICustomer {
+    id?: number;
+    code?: string | undefined;
+    regon?: string | undefined;
+    email?: string | undefined;
+    idOpiekun?: number | undefined;
+    adrName?: string | undefined;
+    adrNameFull?: string | undefined;
+    adrNip?: string | undefined;
+    adrTel?: string | undefined;
+    adrStreet?: string | undefined;
+    adrStreetNo?: string | undefined;
+    adrNumber?: string | undefined;
+    adrZipCode?: string | undefined;
+    adrCity?: string | undefined;
+    adrCountryId?: number | undefined;
+    adrCountry?: string | undefined;
+    adrCountryCode?: string | undefined;
+    delivName?: string | undefined;
+    delivCode?: string | undefined;
+    delivNip?: string | undefined;
+    delivTel?: string | undefined;
+    delivStreet?: string | undefined;
+    delivStreetNo?: string | undefined;
+    delivNumber?: string | undefined;
+    delivZipCode?: string | undefined;
+    delivCity?: string | undefined;
+    delivCountryId?: number | undefined;
+    delivCountry?: string | undefined;
+    delivCountryCode?: string | undefined;
+    blocked?: boolean | undefined;
+    changeDate?: Date | undefined;
+    oneTime?: boolean | undefined;
+    custEmploee?: string | undefined;
+    payTermin?: boolean | undefined;
+    payDays?: number | undefined;
+    www?: string | undefined;
+    priceId?: number | undefined;
+}
+
+export class CustomerListResponse implements ICustomerListResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: Customer[] | undefined;
+
+    constructor(data?: ICustomerListResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.data) {
+                this.data = [];
+                for (let i = 0; i < data.data.length; i++) {
+                    let item = data.data[i];
+                    this.data[i] = item && !(<any>item).toJSON ? new Customer(item) : <Customer>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(Customer.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CustomerListResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomerListResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICustomerListResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: ICustomer[] | undefined;
+}
+
+export class CustomerResponse implements ICustomerResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: Customer;
+
+    constructor(data?: ICustomerResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.data = data.data && !(<any>data.data).toJSON ? new Customer(data.data) : <Customer>this.data;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.data = _data["data"] ? Customer.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CustomerResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomerResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ICustomerResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: ICustomer;
+}
+
 export class Price implements IPrice {
     id?: number;
     name?: string | undefined;

@@ -1,4 +1,4 @@
-import { CartItemEdit } from "./cartItem";
+import { CartItem, CartItemEdit } from "./cartItem";
 import { IPrice, IPromoItem, IPromoItemProduct, IPromoSet, Price } from "./generated/apimodel";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -15,6 +15,11 @@ export class SpecialOfferEdit {
     //items: Map<number, CartItemEdit[]> = new Map<number, CartItemEdit[]>();
     totalPrice: Price = new Price();
     promoItemsEdit: PromoItemEdit[] = [];
+
+    getAllCartItems(newPromoSetId: number | undefined = undefined): CartItem[] {
+        var res = this.promoItemsEdit.flatMap(x => x.getAllCartItems(newPromoSetId));
+        return res;
+    }
 }
 
 export class PromoItemEdit implements IPromoItem {
@@ -60,5 +65,25 @@ export class PromoItemEdit implements IPromoItem {
         });
         return sum;
     }
+
+    getAllCartItems(newPromoSetId: number | undefined = undefined): CartItem[] {
+        var res = this.cartItems.map(x => {
+            var cartItem: CartItem = {
+                productId: x.productId,
+                name: x.name,
+                code: x.code,
+                priceNet: x.priceNet,
+                priceGross: x.priceGross,
+                quantity: x.quantity,
+                promoSetId: newPromoSetId ?? x.promoSetId,
+                promoItemId: x.promoItemId,
+            };
+            return cartItem;
+        });
+        return res;
+    }
+
+
+
 
 }

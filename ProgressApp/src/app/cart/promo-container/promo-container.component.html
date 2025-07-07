@@ -1,0 +1,11 @@
+<div class="promo-group">
+    <div class="promo-header">
+        <div class="promo-header-title">
+            Zestaw promocyjny: {{cartPromoItem?.name}}
+            <a class="ms-2" [routerLink]="['/promoEdit', cartPromoItem?.id]">Edytuj</a>
+        </div>
+    </div>
+    <div class="promo-items">
+        <cart-item *ngFor="let item of cartItems" [cartItem]="item" [readonly]="true"></cart-item>
+    </div>        
+</div>

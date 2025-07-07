@@ -32,6 +32,7 @@ namespace Progress.Api
 			builder.Services.RegisterRepositories();
 			builder.Services.AddScoped<ProductManager>();
 			builder.Services.AddScoped<PromoManager>();
+			builder.Services.AddScoped<CustomerManager>();
 
 			var app = builder.Build();
 

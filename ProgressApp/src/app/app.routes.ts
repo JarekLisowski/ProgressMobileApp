@@ -11,8 +11,9 @@ export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent },
     { path: 'product/:name', component: ProductDetailsComponent },
     { path: 'cart', component: CartComponent },
-    { path: 'special-offer', component: SpecialOfferComponent },
-    { path: 'special-offers', component: SpecialOffersComponent },
-    { path: 'specialOfferEdit/:id', component: SpecialOfferEditComponent },
+    { path: 'promo', component: SpecialOfferComponent },
+    { path: 'promos', component: SpecialOffersComponent },
+    { path: 'promoEdit/:editId', component: SpecialOfferEditComponent },
+    { path: 'promoCreate/:id', component: SpecialOfferEditComponent },
     { path: 'categories', component: CategoriesComponent }
 ];
