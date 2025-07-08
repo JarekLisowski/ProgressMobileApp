@@ -1,5 +1,6 @@
 dotnet ef dbcontext scaffold "Server=localhost;Trusted_Connection=True;Database=PH_Progress;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer ^
 --context NavireoDbContext --force ^
+--no-build				  ^
 --table adr__Ewid		  ^
 --table adr_Email		  ^
 --table adr_Historia      ^
@@ -7,13 +8,14 @@ dotnet ef dbcontext scaffold "Server=localhost;Trusted_Connection=True;Database=
 --table dok__Dokument	  ^
 --table dok_Pozycja		  ^
 --table dok_Vat			  ^
---table kh__Kontrahent	  ^
+--table dbo.kh__Kontrahent	  ^
 --table kh_AdresyDostawy  ^
 --table kh_CechaKh		  ^
 --table kh_Pracownik	  ^
 --table pd__Podmiot		  ^
 --table pd_Uzytkownik	  ^
 --table tw__Towar 		  ^
+--table tw_Parametr		  ^
 --table tw_CechaTw		  ^
 --table tw_Cena			  ^
 --table tw_JednMiary	  ^
@@ -40,4 +42,5 @@ dotnet ef dbcontext scaffold "Server=localhost;Trusted_Connection=True;Database=
 --table IFx_ApiSposobDostawy			^
 --table IFx_ApiUzytkownik				^
 --table IFx_ApiUzytkownik_PoziomyCenowe	^
---table IF_vwKontrahent ^
+--table IFx_ApiUstawienia				^
+--table IF_vwKontrahent

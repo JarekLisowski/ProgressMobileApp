@@ -6,7 +6,7 @@
 		public string Name { get; set; } = string.Empty;
 		public decimal? PriceNet { get; set; }
 		public decimal? PriceGross { get; set; }
-		public string CurrencyName { get; set; } = "PLN";
+		public string Curency { get; set; } = "PLN";
 		public decimal? TaxPercent { get; set; }
 		public int? CurrencyId { get; set; }
 	}

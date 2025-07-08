@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Progress.Database;
 using Progress.Domain.Model;
+using Progress.Domain.Navireo;
+using System;
 
 namespace Progress.Infrastructure.Database
 {
@@ -69,7 +71,7 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.AdrStreetNo, opt => opt.MapFrom(src => src.AdrNrDomu))
 				.ForMember(dst => dst.AdrTel, opt => opt.MapFrom(src => src.AdrTelefon))
 				.ForMember(dst => dst.AdrZipCode, opt => opt.MapFrom(src => src.AdrKod))
-				.ForMember(dst => dst.Blocked, opt => opt.MapFrom(src => src.KhZablokowany))
+				.ForMember(dst => dst.Active, opt => opt.MapFrom(src => src.KhZablokowany == false))
 				.ForMember(dst => dst.ChangeDate, opt => opt.MapFrom(src => src.ZmData))
 				.ForMember(dst => dst.Code, opt => opt.MapFrom(src => src.KhSymbol))
 				.ForMember(dst => dst.CustEmploee, opt => opt.MapFrom(src => src.KhPracownik))
@@ -91,7 +93,11 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.PayDays, opt => opt.MapFrom(src => src.FpTermin))
 				.ForMember(dst => dst.PriceId, opt => opt.MapFrom(src => src.KhCena))
 				.ForMember(dst => dst.Regon, opt => opt.MapFrom(src => src.KhRegon))
-				.ForMember(dst => dst.www, opt => opt.MapFrom(src => src.KhWww));
+				.ForMember(dst => dst.www, opt => opt.MapFrom(src => src.KhWww))
+				.ForMember(dst => dst.DeferredPayment, opt => opt.MapFrom((kontrahent, dst) => (kontrahent.KhPlatOdroczone != null && kontrahent.KhPlatOdroczone == true) && (((kontrahent.KhMaxDokKred ?? 0) > (kontrahent.IloscDokNierozliczonych ?? 0)) || kontrahent.KhMaxDokKred == null || kontrahent.KhMaxDokKred == 0) ? true : false))
+        .ForMember(dst => dst.SpecialPayment, opt => opt.MapFrom((kontrahent, dst) => (kontrahent.KhPlatOdroczone != null && kontrahent.KhPlatOdroczone == true) && (((kontrahent.KhMaxDokKred ?? 0) > (kontrahent.IloscDokNierozliczonych ?? 0)) || kontrahent.KhMaxDokKred == null || kontrahent.KhMaxDokKred == 0) ? true : false))
+        .ForMember(dst => dst.PaymentDeadline, opt => opt.MapFrom((kontrahent, dst) =>  kontrahent.KhPlatOdroczone != null && kontrahent.KhPlatOdroczone == true ? (kontrahent.FpTermin != null ? (int)kontrahent.FpTermin : -1) : 0))
+				;
 		}
 
 		private decimal GetStan(TwTowar towar)

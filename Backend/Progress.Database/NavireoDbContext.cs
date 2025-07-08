@@ -45,6 +45,8 @@ public partial class NavireoDbContext : DbContext
 
     public virtual DbSet<IfxApiSposobDostawy> IfxApiSposobDostawies { get; set; }
 
+    public virtual DbSet<IfxApiUstawienium> IfxApiUstawienia { get; set; }
+
     public virtual DbSet<IfxApiUzytkownik> IfxApiUzytkowniks { get; set; }
 
     public virtual DbSet<IfxApiUzytkownikPoziomyCenowe> IfxApiUzytkownikPoziomyCenowes { get; set; }
@@ -90,6 +92,8 @@ public partial class NavireoDbContext : DbContext
     public virtual DbSet<TwKodKreskowy> TwKodKreskowies { get; set; }
 
     public virtual DbSet<TwKomplet> TwKomplets { get; set; }
+
+    public virtual DbSet<TwParametr> TwParametrs { get; set; }
 
     public virtual DbSet<TwStan> TwStans { get; set; }
 
@@ -1338,6 +1342,36 @@ public partial class NavireoDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.TwId).HasColumnName("tw_Id");
+        });
+
+        modelBuilder.Entity<IfxApiUstawienium>(entity =>
+        {
+            entity.ToTable("IFx_ApiUstawienia");
+
+            entity.Property(e => e.BusinessCodeNumerationFormat)
+                .HasMaxLength(40)
+                .IsUnicode(false);
+            entity.Property(e => e.KatalogPaczek)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasDefaultValue("");
+            entity.Property(e => e.NavHaslo)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.NavireoIdleMinutes).HasColumnType("decimal(9, 2)");
+            entity.Property(e => e.PlatnoscKredytKupiecki).HasColumnName("Platnosc_KredytKupiecki");
+            entity.Property(e => e.PlatnoscPrzelew).HasColumnName("Platnosc_Przelew");
+            entity.Property(e => e.PrzesylkaSymbol)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("Przesylka_Symbol");
+            entity.Property(e => e.QuartzNetTriggerName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasDefaultValue("Develop_SqlitePackageTrigger");
+            entity.Property(e => e.TokenValidMinutes).HasColumnType("decimal(9, 2)");
+            entity.Property(e => e.UstawieniaData).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<IfxApiUzytkownik>(entity =>
@@ -3228,6 +3262,346 @@ public partial class NavireoDbContext : DbContext
                 .HasForeignKey(d => d.KplIdSkladnik)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_tw_Komplet_tw__Towar");
+        });
+
+        modelBuilder.Entity<TwParametr>(entity =>
+        {
+            entity.HasKey(e => e.TwpId);
+
+            entity.ToTable("tw_Parametr", tb => tb.HasTrigger("tr_TwParametr_Update"));
+
+            entity.Property(e => e.TwpId)
+                .ValueGeneratedNever()
+                .HasColumnName("twp_Id");
+            entity.Property(e => e.TwpArchiwizujCeny).HasColumnName("twp_ArchiwizujCeny");
+            entity.Property(e => e.TwpAutoOozPkwiU).HasColumnName("twp_AutoOOzPKWiU");
+            entity.Property(e => e.TwpCechyTylkoUnikalneWlasciwosci).HasColumnName("twp_CechyTylkoUnikalneWlasciwosci");
+            entity.Property(e => e.TwpCzyDzialanieDodaj).HasColumnName("twp_CzyDzialanieDodaj");
+            entity.Property(e => e.TwpCzyDzialanieEdycja).HasColumnName("twp_CzyDzialanieEdycja");
+            entity.Property(e => e.TwpDaneSynchronizacji)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("twp_DaneSynchronizacji");
+            entity.Property(e => e.TwpDlugoscAuto).HasColumnName("twp_DlugoscAuto");
+            entity.Property(e => e.TwpDomNarzut1)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut1");
+            entity.Property(e => e.TwpDomNarzut10)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut10");
+            entity.Property(e => e.TwpDomNarzut2)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut2");
+            entity.Property(e => e.TwpDomNarzut3)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut3");
+            entity.Property(e => e.TwpDomNarzut4)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut4");
+            entity.Property(e => e.TwpDomNarzut5)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut5");
+            entity.Property(e => e.TwpDomNarzut6)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut6");
+            entity.Property(e => e.TwpDomNarzut7)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut7");
+            entity.Property(e => e.TwpDomNarzut8)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut8");
+            entity.Property(e => e.TwpDomNarzut9)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomNarzut9");
+            entity.Property(e => e.TwpDomWartNarzutu1)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomWartNarzutu1");
+            entity.Property(e => e.TwpDomWartNarzutu2)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomWartNarzutu2");
+            entity.Property(e => e.TwpDomWartNarzutu3)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomWartNarzutu3");
+            entity.Property(e => e.TwpDomWartNarzutu4)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomWartNarzutu4");
+            entity.Property(e => e.TwpDomWartNarzutu5)
+                .HasColumnType("money")
+                .HasColumnName("twp_DomWartNarzutu5");
+            entity.Property(e => e.TwpGrupa).HasColumnName("twp_Grupa");
+            entity.Property(e => e.TwpGrupaJpkVat).HasColumnName("twp_GrupaJpkVat");
+            entity.Property(e => e.TwpGrupaJpkVatUj).HasColumnName("twp_GrupaJpkVatUJ");
+            entity.Property(e => e.TwpInfRuchTowAuto)
+                .HasDefaultValue(true)
+                .HasColumnName("twp_InfRuchTowAuto");
+            entity.Property(e => e.TwpInfRuchTowBezNarast).HasColumnName("twp_InfRuchTowBezNarast");
+            entity.Property(e => e.TwpJednMiary)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_JednMiary");
+            entity.Property(e => e.TwpKodNumeryczny)
+                .HasDefaultValue(true)
+                .HasColumnName("twp_KodNumeryczny");
+            entity.Property(e => e.TwpKodUnikalny)
+                .HasDefaultValue(true)
+                .HasColumnName("twp_KodUnikalny");
+            entity.Property(e => e.TwpKodUsunPoczZera).HasColumnName("twp_KodUsunPoczZera");
+            entity.Property(e => e.TwpKolejny).HasColumnName("twp_Kolejny");
+            entity.Property(e => e.TwpKolejnyWolny).HasColumnName("twp_KolejnyWolny");
+            entity.Property(e => e.TwpKreatorPkwiU2015przypomnij)
+                .HasColumnType("datetime")
+                .HasColumnName("twp_KreatorPKWiU2015Przypomnij");
+            entity.Property(e => e.TwpKreatorTowarowPpprzypominaj)
+                .HasDefaultValueSql("('24191031')")
+                .HasColumnType("datetime")
+                .HasColumnName("twp_KreatorTowarowPPPrzypominaj");
+            entity.Property(e => e.TwpKreatorZmianyStawekVatPrzypominaj)
+                .HasDefaultValueSql("('20220201')")
+                .HasColumnType("datetime")
+                .HasColumnName("twp_KreatorZmianyStawekVatPrzypominaj");
+            entity.Property(e => e.TwpKursCeny1).HasColumnName("twp_KursCeny1");
+            entity.Property(e => e.TwpKursCeny10).HasColumnName("twp_KursCeny10");
+            entity.Property(e => e.TwpKursCeny2).HasColumnName("twp_KursCeny2");
+            entity.Property(e => e.TwpKursCeny3).HasColumnName("twp_KursCeny3");
+            entity.Property(e => e.TwpKursCeny4).HasColumnName("twp_KursCeny4");
+            entity.Property(e => e.TwpKursCeny5).HasColumnName("twp_KursCeny5");
+            entity.Property(e => e.TwpKursCeny6).HasColumnName("twp_KursCeny6");
+            entity.Property(e => e.TwpKursCeny7).HasColumnName("twp_KursCeny7");
+            entity.Property(e => e.TwpKursCeny8).HasColumnName("twp_KursCeny8");
+            entity.Property(e => e.TwpKursCeny9).HasColumnName("twp_KursCeny9");
+            entity.Property(e => e.TwpMarzaCombo1).HasColumnName("twp_MarzaCombo1");
+            entity.Property(e => e.TwpMarzaCombo2).HasColumnName("twp_MarzaCombo2");
+            entity.Property(e => e.TwpMechanizmPodzielonejPlatnosci).HasColumnName("twp_MechanizmPodzielonejPlatnosci");
+            entity.Property(e => e.TwpMechanizmPodzielonejPlatnosciUj).HasColumnName("twp_MechanizmPodzielonejPlatnosciUJ");
+            entity.Property(e => e.TwpMontPwkatId).HasColumnName("twp_MontPWKatId");
+            entity.Property(e => e.TwpMontRwkatId).HasColumnName("twp_MontRWKatId");
+            entity.Property(e => e.TwpNarzutRosnacy1).HasColumnName("twp_NarzutRosnacy1");
+            entity.Property(e => e.TwpNarzutRosnacy2).HasColumnName("twp_NarzutRosnacy2");
+            entity.Property(e => e.TwpNarzutRosnacy3).HasColumnName("twp_NarzutRosnacy3");
+            entity.Property(e => e.TwpNarzutRosnacy4).HasColumnName("twp_NarzutRosnacy4");
+            entity.Property(e => e.TwpNarzutRosnacy5).HasColumnName("twp_NarzutRosnacy5");
+            entity.Property(e => e.TwpNazwa1)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_Nazwa1");
+            entity.Property(e => e.TwpNazwa2)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_Nazwa2");
+            entity.Property(e => e.TwpNazwa3)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_Nazwa3");
+            entity.Property(e => e.TwpNazwa4)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_Nazwa4");
+            entity.Property(e => e.TwpNazwa5)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_Nazwa5");
+            entity.Property(e => e.TwpNazwa6)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_Nazwa6");
+            entity.Property(e => e.TwpNazwa7)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_Nazwa7");
+            entity.Property(e => e.TwpNazwa8)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_Nazwa8");
+            entity.Property(e => e.TwpNazwaCeny1)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny1");
+            entity.Property(e => e.TwpNazwaCeny10)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny10");
+            entity.Property(e => e.TwpNazwaCeny2)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny2");
+            entity.Property(e => e.TwpNazwaCeny3)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny3");
+            entity.Property(e => e.TwpNazwaCeny4)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny4");
+            entity.Property(e => e.TwpNazwaCeny5)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny5");
+            entity.Property(e => e.TwpNazwaCeny6)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny6");
+            entity.Property(e => e.TwpNazwaCeny7)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny7");
+            entity.Property(e => e.TwpNazwaCeny8)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny8");
+            entity.Property(e => e.TwpNazwaCeny9)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaCeny9");
+            entity.Property(e => e.TwpNazwaNarzutu1)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaNarzutu1");
+            entity.Property(e => e.TwpNazwaNarzutu2)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaNarzutu2");
+            entity.Property(e => e.TwpNazwaNarzutu3)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaNarzutu3");
+            entity.Property(e => e.TwpNazwaNarzutu4)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaNarzutu4");
+            entity.Property(e => e.TwpNazwaNarzutu5)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("twp_NazwaNarzutu5");
+            entity.Property(e => e.TwpObrotMarza).HasColumnName("twp_ObrotMarza");
+            entity.Property(e => e.TwpOdwrotneObciazenie).HasColumnName("twp_OdwrotneObciazenie");
+            entity.Property(e => e.TwpOstrzegajVatZakInnyVatSprz)
+                .HasDefaultValue(true)
+                .HasColumnName("twp_OstrzegajVatZakInnyVatSprz");
+            entity.Property(e => e.TwpProgKwotowyOo).HasColumnName("twp_ProgKwotowyOO");
+            entity.Property(e => e.TwpPrzepisujNazwe).HasColumnName("twp_PrzepisujNazwe");
+            entity.Property(e => e.TwpPrzepisujSymbol)
+                .HasDefaultValue(true)
+                .HasColumnName("twp_PrzepisujSymbol");
+            entity.Property(e => e.TwpRodzajDzialanieDodaj)
+                .HasDefaultValue(1)
+                .HasColumnName("twp_RodzajDzialanieDodaj");
+            entity.Property(e => e.TwpRodzajDzialanieEdycja)
+                .HasDefaultValue(1)
+                .HasColumnName("twp_RodzajDzialanieEdycja");
+            entity.Property(e => e.TwpRodzajKartoteki)
+                .HasDefaultValue(1)
+                .HasColumnName("twp_RodzajKartoteki");
+            entity.Property(e => e.TwpRozmontPwkatId).HasColumnName("twp_RozmontPWKatId");
+            entity.Property(e => e.TwpRozmontRwkatId).HasColumnName("twp_RozmontRWKatId");
+            entity.Property(e => e.TwpStalaCena1).HasColumnName("twp_StalaCena1");
+            entity.Property(e => e.TwpStalaCena10).HasColumnName("twp_StalaCena10");
+            entity.Property(e => e.TwpStalaCena2).HasColumnName("twp_StalaCena2");
+            entity.Property(e => e.TwpStalaCena3).HasColumnName("twp_StalaCena3");
+            entity.Property(e => e.TwpStalaCena4).HasColumnName("twp_StalaCena4");
+            entity.Property(e => e.TwpStalaCena5).HasColumnName("twp_StalaCena5");
+            entity.Property(e => e.TwpStalaCena6).HasColumnName("twp_StalaCena6");
+            entity.Property(e => e.TwpStalaCena7).HasColumnName("twp_StalaCena7");
+            entity.Property(e => e.TwpStalaCena8).HasColumnName("twp_StalaCena8");
+            entity.Property(e => e.TwpStalaCena9).HasColumnName("twp_StalaCena9");
+            entity.Property(e => e.TwpStawkaVat).HasColumnName("twp_StawkaVAT");
+            entity.Property(e => e.TwpSymbolAuto).HasColumnName("twp_SymbolAuto");
+            entity.Property(e => e.TwpSynchNazwaNazwaUrz).HasColumnName("twp_SynchNazwaNazwaUrz");
+            entity.Property(e => e.TwpSynchSymbolKodKresk).HasColumnName("twp_SynchSymbolKodKresk");
+            entity.Property(e => e.TwpSzablonDzialanieDodaj).HasColumnName("twp_SzablonDzialanieDodaj");
+            entity.Property(e => e.TwpSzablonDzialanieEdycja).HasColumnName("twp_SzablonDzialanieEdycja");
+            entity.Property(e => e.TwpUstawiajZdjecia)
+                .HasDefaultValue(true)
+                .HasColumnName("twp_UstawiajZdjecia");
+            entity.Property(e => e.TwpWalutaCeny1)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny1");
+            entity.Property(e => e.TwpWalutaCeny10)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny10");
+            entity.Property(e => e.TwpWalutaCeny2)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny2");
+            entity.Property(e => e.TwpWalutaCeny3)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny3");
+            entity.Property(e => e.TwpWalutaCeny4)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny4");
+            entity.Property(e => e.TwpWalutaCeny5)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny5");
+            entity.Property(e => e.TwpWalutaCeny6)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny6");
+            entity.Property(e => e.TwpWalutaCeny7)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny7");
+            entity.Property(e => e.TwpWalutaCeny8)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny8");
+            entity.Property(e => e.TwpWalutaCeny9)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("twp_WalutaCeny9");
+            entity.Property(e => e.TwpWydrukiTypKlasyfikacji).HasColumnName("twp_WydrukiTypKlasyfikacji");
+            entity.Property(e => e.TwpZakupStawkaVat).HasColumnName("twp_ZakupStawkaVAT");
+            entity.Property(e => e.TwpZakupVatjakPrzySpr).HasColumnName("twp_ZakupVATJakPrzySpr");
+            entity.Property(e => e.TwpZmianaSklKpl)
+                .HasDefaultValue(0)
+                .HasColumnName("twp_ZmianaSklKpl");
         });
 
         modelBuilder.Entity<TwStan>(entity =>

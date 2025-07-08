@@ -16,4 +16,5 @@ export const routes: Routes = [
     { path: 'promoEdit/:editId', component: SpecialOfferEditComponent },
     { path: 'promoCreate/:id', component: SpecialOfferEditComponent },
     { path: 'categories', component: CategoriesComponent }
+    { path: 'login', component: LoginComponent }
 ];
