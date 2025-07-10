@@ -1,7 +1,7 @@
 import { NgxIndexedDBService, WithID } from "ngx-indexed-db";
 import { from, map, Observable, of, switchMap, tap } from "rxjs";
 import { Customer, Product } from "../domain/generated/apimodel";
-import { CartItem } from "../domain/cartItem";
+import { CartItem, CartItemWithId } from "../domain/cartItem";
 import { inject, Injectable } from "@angular/core";
 import { SpecialOfferEdit } from "../domain/specialOfferEdit";
 import { CartPromoItem, CartPromoItemWithId } from "../domain/cartPromoItem";
@@ -11,38 +11,59 @@ import { Transaction } from "../domain/transaction";
     providedIn: 'root'
 })
 export class CartService {
+    
 
     constructor(private dbService: NgxIndexedDBService) { }
 
     addItemToCart(product: Product, quantity: number): Observable<any> {
-        var cartItem: CartItem =
-        {
-            productId: product.id ?? 0,
-            name: product.name ?? "",
-            code: product.code ?? "",
-            priceNet: product.price?.priceNet ?? 0,
-            priceGross: product.price?.priceGross ?? 0,
-            quantity: quantity,
-            promoSetId: 0,
-            promoItemId: 0
-        };
-        return this.dbService.add('cart', cartItem);
+        var res = this.dbService.getAllByIndex<CartItemWithId>('cart', 'code', IDBKeyRange.only(product.code)).pipe(
+            tap(x => {
+                console.log(x);
+            }),
+            map(itemsWithCode => itemsWithCode.find(item => item.promoSetId == 0)),
+            switchMap(itemExistsingOrEmpty => {
+                if (itemExistsingOrEmpty) {
+                    return this.updateCartItemQuntity(itemExistsingOrEmpty.id, itemExistsingOrEmpty.quantity + quantity);
+                }
+                else {
+                    var cartItem: CartItem =
+                    {
+                        productId: product.id ?? 0,
+                        name: product.name ?? "",
+                        code: product.code ?? "",
+                        priceNet: product.price?.priceNet ?? 0,
+                        priceGross: product.price?.priceGross ?? 0,
+                        quantity: quantity,
+                        promoSetId: 0,
+                        promoItemId: 0,
+                        imageUrl: ""
+                    };
+                    return this.dbService.add('cart', cartItem);
+                }
+            })
+        );
+        return res;
     }
 
-    addItemsToCart(cartItems: CartItem[]): Observable<any> {
-        return this.dbService.bulkAdd('cart', cartItems);
+    addItemsToCart(cartItems: CartItem[]): Observable<number[]> {
+        return this.dbService.bulkAdd<CartItem>('cart', cartItems);
     }
 
 
-    updateCartItem(id: number, quantity: number): Observable<any> {
-        return this.dbService.update('cart', { id: id, quantity: quantity });
+    updateCartItemQuntity(id: number, quantity: number): Observable<CartItem> {
+        return this.dbService.getByID<CartItem>('cart', id).pipe(
+            switchMap(item => {
+                item.quantity = quantity;
+                return this.dbService.update('cart', item);
+            })
+        );
     }
 
-    getCartItems(): Observable<CartItem[]> {
-        return this.dbService.getAll<CartItem>('cart');
+    getCartItems(): Observable<(CartItem & WithID)[]> {
+        return this.dbService.getAll<CartItem & WithID>('cart');
     }
 
-    getCartItemsForPromoSet(promoSetId: number): Observable<CartItem[]> {
+    getCartItemsForPromoSet(promoSetId: number): Observable<CartItemWithId[]> {
         return this.dbService.getAllByIndex('cart', 'promoSetId', promoSetId);
     }
 
@@ -84,6 +105,14 @@ export class CartService {
             );
         }
         return new Observable<any>();
+    }
+
+    removePromoSetFromCart(promoSetId: number) {
+      return this.dbService.deleteAllByIndex('cart', 'promoSetId', IDBKeyRange.only(promoSetId)).pipe(
+        switchMap(x => {
+          return this.dbService.delete('promoSet', promoSetId);
+        })
+      )
     }
 
     getPromoItems(): Observable<CartPromoItemWithId[]> {

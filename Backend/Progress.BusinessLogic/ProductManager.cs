@@ -38,7 +38,8 @@ namespace Progress.BusinessLogic
 
     public IEnumerable<Product> GetProductsByCategory(int id)
     {
-      return dbProductRepository.GetProductsByCategory(id);
+      var productList = dbProductRepository.GetProductsByCategory(id);
+      return productList;
     }
 
     public IEnumerable<ProductCategory> GetCategoryList(string? search)
@@ -74,6 +75,21 @@ namespace Progress.BusinessLogic
       var result = mapper.Map<ProductImage>(zdjecie);
       return result;
 
+    }
+
+    public Product[] SearchProduct(string searchtext, int topCount)
+    {
+      try
+      {
+        var bycode = dbProduct.SelectWhere(it => it.TwSymbol.StartsWith(searchtext), true).Take(10);
+        var byName = dbProductRepository.SearchProduct(searchtext, topCount - bycode.Count());
+        var result = new List<Product>(bycode);
+        result.AddRange(byName);
+        return result.DistinctBy(it => it.Id).ToArray();
+      } catch(Exception ex)
+      {
+        return [];
+      }
     }
   }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Progress.BusinessLogic;
 using Progress.Domain.Api;
@@ -6,14 +7,16 @@ using Progress.Domain.Api.Response;
 
 namespace Progress.Api.Controllers
 {
+  [Authorize]
   [Route("api/[controller]")]
   [ApiController]
-  public class PromoController : ControllerBase
+  public class PromoController : ApiControllerBase
   {
     IMapper _mapper;
     PromoManager _promoManager;
 
-    public PromoController(IMapper autoMapper, PromoManager promoManager)
+    public PromoController(IMapper autoMapper, PromoManager promoManager, IServiceProvider serviceProvider)
+      : base(serviceProvider)
     {
       _mapper = autoMapper;
       _promoManager = promoManager;

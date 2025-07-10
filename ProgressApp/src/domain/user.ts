@@ -1,11 +1,8 @@
-import { ICreateUserRequestDto, IUpdateUserRequestDto } from "./generated/apimodel";
-
-export class User implements ICreateUserRequestDto, IUpdateUserRequestDto {
+export class User {
         id: string = "";
         userName: string = "";
         email: string = "";
         firstName: string = "";
         lastName: string = "";
-        isActive: boolean = true;
-        password: string = "";
+        
 }

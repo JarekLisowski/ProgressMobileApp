@@ -13,7 +13,7 @@ namespace Progress.Infrastructure.Database.Repository
 		void Delete(T_MODEL model);
 		public void Delete(int id);
 		void DeleteWhere(Expression<Func<T_ENTITY, bool>> expression);
-		IEnumerable<T_MODEL> SelectWhere(Expression<Func<T_ENTITY, bool>> expression);
+		IEnumerable<T_MODEL> SelectWhere(Expression<Func<T_ENTITY, bool>> expression, bool lateConvert = false);
 		void Update(T_MODEL model);
 	}
 }

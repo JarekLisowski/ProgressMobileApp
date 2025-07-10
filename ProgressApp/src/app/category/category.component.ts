@@ -43,9 +43,7 @@ export class CategoryComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(
       x => {
-        //this.categoryName = x['name']
         this.categoryId = Number(x['name']);
-        console.log('Category: ' + this._categoryId);
       }
     );
   }
@@ -56,14 +54,15 @@ export class CategoryComponent implements OnInit {
       if (x.isError == false && x.data != null)
       {
         this.products = x.data;
-        console.log('Products loaded');
+        this.products.forEach(product => {
+          product.imgUrl = this.api.makeUrlImage(product.id!, 0);
+        });
       }
     });
     this.api.getCategoryInfo(this.categoryId).subscribe(x => {
       if (x.isError == false && x.data != null)
       {
         this._categoryName = x.data.name ?? "";
-        console.log('Category name loaded: ' + x.data.name);
       }
     }
     );

@@ -26,6 +26,11 @@
     public string Login { get; set; } = string.Empty;
 
     /// <summary>
+    /// Hasło
+    /// </summary>
+    public string? Password { get; set; }
+
+    /// <summary>
     /// Imie
     /// </summary>
     public string Name { get; set; } = string.Empty;
@@ -96,6 +101,6 @@
 
     public bool DiscountAllowed { get; set; }
     public bool CanExtendPaymentDeadline { get; set; }
-    public int DIscountMax { get; set; }
+    public int DiscountMax { get; set; }
   }
 }

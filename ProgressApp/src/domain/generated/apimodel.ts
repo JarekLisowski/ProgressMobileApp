@@ -48,6 +48,9 @@ export class Customer implements ICustomer {
     payDays?: number | undefined;
     www?: string | undefined;
     priceId?: number | undefined;
+    deferredPayment?: boolean;
+    specialPayment?: boolean;
+    paymentDeadline?: number;
 
     constructor(data?: ICustomer) {
         if (data) {
@@ -97,6 +100,9 @@ export class Customer implements ICustomer {
             this.payDays = _data["payDays"];
             this.www = _data["www"];
             this.priceId = _data["priceId"];
+            this.deferredPayment = _data["deferredPayment"];
+            this.specialPayment = _data["specialPayment"];
+            this.paymentDeadline = _data["paymentDeadline"];
         }
     }
 
@@ -146,6 +152,9 @@ export class Customer implements ICustomer {
         data["payDays"] = this.payDays;
         data["www"] = this.www;
         data["priceId"] = this.priceId;
+        data["deferredPayment"] = this.deferredPayment;
+        data["specialPayment"] = this.specialPayment;
+        data["paymentDeadline"] = this.paymentDeadline;
         return data;
     }
 }
@@ -188,6 +197,9 @@ export interface ICustomer {
     payDays?: number | undefined;
     www?: string | undefined;
     priceId?: number | undefined;
+    deferredPayment?: boolean;
+    specialPayment?: boolean;
+    paymentDeadline?: number;
 }
 
 export class CustomerListResponse implements ICustomerListResponse {
@@ -318,6 +330,148 @@ export interface ICustomerResponse {
     data?: ICustomer;
 }
 
+export class Login implements ILogin {
+    token?: string | undefined;
+    expirationDate?: Date;
+    user?: User;
+
+    constructor(data?: ILogin) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.user = data.user && !(<any>data.user).toJSON ? new User(data.user) : <User>this.user;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.token = _data["token"];
+            this.expirationDate = _data["expirationDate"] ? new Date(_data["expirationDate"].toString()) : <any>undefined;
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Login {
+        data = typeof data === 'object' ? data : {};
+        let result = new Login();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["token"] = this.token;
+        data["expirationDate"] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ILogin {
+    token?: string | undefined;
+    expirationDate?: Date;
+    user?: IUser;
+}
+
+export class LoginRequest implements ILoginRequest {
+    username?: string | undefined;
+    password?: string | undefined;
+
+    constructor(data?: ILoginRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.username = _data["username"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): LoginRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["password"] = this.password;
+        return data;
+    }
+}
+
+export interface ILoginRequest {
+    username?: string | undefined;
+    password?: string | undefined;
+}
+
+export class LoginResponse implements ILoginResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: Login;
+
+    constructor(data?: ILoginResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.data = data.data && !(<any>data.data).toJSON ? new Login(data.data) : <Login>this.data;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.data = _data["data"] ? Login.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): LoginResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ILoginResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: ILogin;
+}
+
 export class Price implements IPrice {
     id?: number;
     name?: string | undefined;
@@ -380,6 +534,54 @@ export interface IPrice {
     taxPercent?: number | undefined;
     taxName?: string | undefined;
     currencyId?: number | undefined;
+}
+
+export class PriceLevel implements IPriceLevel {
+    id?: number;
+    name?: string | undefined;
+    primary?: boolean;
+    checked?: boolean;
+
+    constructor(data?: IPriceLevel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.primary = _data["primary"];
+            this.checked = _data["checked"];
+        }
+    }
+
+    static fromJS(data: any): PriceLevel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PriceLevel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["primary"] = this.primary;
+        data["checked"] = this.checked;
+        return data;
+    }
+}
+
+export interface IPriceLevel {
+    id?: number;
+    name?: string | undefined;
+    primary?: boolean;
+    checked?: boolean;
 }
 
 export class Product implements IProduct {
@@ -1290,4 +1492,201 @@ export interface IPromoSetResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: IPromoSet;
+}
+
+export class SearchResponse implements ISearchResponse {
+    productCategories?: ProductCategory[] | undefined;
+    products?: Product[] | undefined;
+
+    constructor(data?: ISearchResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.productCategories) {
+                this.productCategories = [];
+                for (let i = 0; i < data.productCategories.length; i++) {
+                    let item = data.productCategories[i];
+                    this.productCategories[i] = item && !(<any>item).toJSON ? new ProductCategory(item) : <ProductCategory>item;
+                }
+            }
+            if (data.products) {
+                this.products = [];
+                for (let i = 0; i < data.products.length; i++) {
+                    let item = data.products[i];
+                    this.products[i] = item && !(<any>item).toJSON ? new Product(item) : <Product>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["productCategories"])) {
+                this.productCategories = [] as any;
+                for (let item of _data["productCategories"])
+                    this.productCategories!.push(ProductCategory.fromJS(item));
+            }
+            if (Array.isArray(_data["products"])) {
+                this.products = [] as any;
+                for (let item of _data["products"])
+                    this.products!.push(Product.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SearchResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.productCategories)) {
+            data["productCategories"] = [];
+            for (let item of this.productCategories)
+                data["productCategories"].push(item.toJSON());
+        }
+        if (Array.isArray(this.products)) {
+            data["products"] = [];
+            for (let item of this.products)
+                data["products"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ISearchResponse {
+    productCategories?: IProductCategory[] | undefined;
+    products?: IProduct[] | undefined;
+}
+
+export class User implements IUser {
+    id?: number;
+    login?: string | undefined;
+    name?: string | undefined;
+    surname?: string | undefined;
+    storeName?: string | undefined;
+    kasa?: string | undefined;
+    cechaId?: number | undefined;
+    cechaNazwa?: string | undefined;
+    defaultPrice?: number;
+    priceLevelList?: PriceLevel[] | undefined;
+    specialPayment?: boolean;
+    specialPaymentExtendDeadline?: boolean;
+    maxSpecialPayment?: number;
+    minSpecialPayment?: number;
+    promocjaGrupaId?: number;
+    discountAllowed?: boolean;
+    canExtendPaymentDeadline?: boolean;
+    discountMax?: number;
+    token?: string | undefined;
+    expirationDate?: Date;
+
+    constructor(data?: IUser) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.priceLevelList) {
+                this.priceLevelList = [];
+                for (let i = 0; i < data.priceLevelList.length; i++) {
+                    let item = data.priceLevelList[i];
+                    this.priceLevelList[i] = item && !(<any>item).toJSON ? new PriceLevel(item) : <PriceLevel>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.login = _data["login"];
+            this.name = _data["name"];
+            this.surname = _data["surname"];
+            this.storeName = _data["storeName"];
+            this.kasa = _data["kasa"];
+            this.cechaId = _data["cechaId"];
+            this.cechaNazwa = _data["cechaNazwa"];
+            this.defaultPrice = _data["defaultPrice"];
+            if (Array.isArray(_data["priceLevelList"])) {
+                this.priceLevelList = [] as any;
+                for (let item of _data["priceLevelList"])
+                    this.priceLevelList!.push(PriceLevel.fromJS(item));
+            }
+            this.specialPayment = _data["specialPayment"];
+            this.specialPaymentExtendDeadline = _data["specialPaymentExtendDeadline"];
+            this.maxSpecialPayment = _data["maxSpecialPayment"];
+            this.minSpecialPayment = _data["minSpecialPayment"];
+            this.promocjaGrupaId = _data["promocjaGrupaId"];
+            this.discountAllowed = _data["discountAllowed"];
+            this.canExtendPaymentDeadline = _data["canExtendPaymentDeadline"];
+            this.discountMax = _data["discountMax"];
+            this.token = _data["token"];
+            this.expirationDate = _data["expirationDate"] ? new Date(_data["expirationDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): User {
+        data = typeof data === 'object' ? data : {};
+        let result = new User();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["login"] = this.login;
+        data["name"] = this.name;
+        data["surname"] = this.surname;
+        data["storeName"] = this.storeName;
+        data["kasa"] = this.kasa;
+        data["cechaId"] = this.cechaId;
+        data["cechaNazwa"] = this.cechaNazwa;
+        data["defaultPrice"] = this.defaultPrice;
+        if (Array.isArray(this.priceLevelList)) {
+            data["priceLevelList"] = [];
+            for (let item of this.priceLevelList)
+                data["priceLevelList"].push(item.toJSON());
+        }
+        data["specialPayment"] = this.specialPayment;
+        data["specialPaymentExtendDeadline"] = this.specialPaymentExtendDeadline;
+        data["maxSpecialPayment"] = this.maxSpecialPayment;
+        data["minSpecialPayment"] = this.minSpecialPayment;
+        data["promocjaGrupaId"] = this.promocjaGrupaId;
+        data["discountAllowed"] = this.discountAllowed;
+        data["canExtendPaymentDeadline"] = this.canExtendPaymentDeadline;
+        data["discountMax"] = this.discountMax;
+        data["token"] = this.token;
+        data["expirationDate"] = this.expirationDate ? this.expirationDate.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IUser {
+    id?: number;
+    login?: string | undefined;
+    name?: string | undefined;
+    surname?: string | undefined;
+    storeName?: string | undefined;
+    kasa?: string | undefined;
+    cechaId?: number | undefined;
+    cechaNazwa?: string | undefined;
+    defaultPrice?: number;
+    priceLevelList?: IPriceLevel[] | undefined;
+    specialPayment?: boolean;
+    specialPaymentExtendDeadline?: boolean;
+    maxSpecialPayment?: number;
+    minSpecialPayment?: number;
+    promocjaGrupaId?: number;
+    discountAllowed?: boolean;
+    canExtendPaymentDeadline?: boolean;
+    discountMax?: number;
+    token?: string | undefined;
+    expirationDate?: Date;
 }

@@ -1,0 +1,39 @@
+div.search-dropdown {
+    border: 1px solid #333;
+
+}
+
+.popup-search {
+    background-color: #ffffff;
+    padding: 1rem; /* Increased padding */
+    border-radius: 1rem; /* More rounded corners */
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); /* Stronger shadow */
+    max-width: 90%;
+    //width: 400px; /* Fixed width for the popup */
+    //text-align: center;
+    position: absolute; /* Needed for positioning the close button */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for transform */
+    visibility: hidden; /* Hidden by default */
+    z-index: 1001; /* Ensure it's on top of most content */;
+}
+
+.popup-search.show  {
+    visibility: visible; /* Make visible when 'show' class is added */
+    opacity: 1; /* Fade in */
+}
+
+.search-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-list a {
+    text-decoration: none;
+    color: #2a27ff;
+}
+
+.search-list li {
+    text-wrap-mode: nowrap;
+    overflow: hidden;
+}

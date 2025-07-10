@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Progress.BusinessLogic;
 using Progress.Infrastructure.Database.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Progress.Api
 {
@@ -33,6 +36,26 @@ namespace Progress.Api
 			builder.Services.AddScoped<ProductManager>();
 			builder.Services.AddScoped<PromoManager>();
 			builder.Services.AddScoped<CustomerManager>();
+			builder.Services.AddScoped<AuthManager>();
+      builder.Services.AddScoped<Domain.Interfaces.IUserRepository, UserRepository>();
+      
+			builder.Services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(options =>
+			{
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
+					ValidIssuer = builder.Configuration["Jwt:Issuer"],
+					ValidAudience = builder.Configuration["Jwt:Audience"],
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+				};
+			});
 
 			var app = builder.Build();
 
@@ -45,6 +68,7 @@ namespace Progress.Api
 
 			app.UseCors("AllowAllPolicy");
 
+			app.UseAuthentication();
 			//app.UseHttpsRedirection();
 
 			app.UseAuthorization();

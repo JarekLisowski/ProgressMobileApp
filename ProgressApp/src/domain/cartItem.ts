@@ -7,8 +7,9 @@ export class CartItem {
     quantity: number = 0;
     promoSetId: number = 0;
     promoItemId: number = 0;
+    imageUrl: string = "";
 }
 
-export class CartItemEdit extends CartItem {
+export class CartItemWithId extends CartItem {
     id: number = 0;
 }

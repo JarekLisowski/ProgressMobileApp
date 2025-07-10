@@ -1,4 +1,4 @@
-import { CartItem, CartItemEdit } from "./cartItem";
+import { CartItem, CartItemWithId } from "./cartItem";
 import { IPrice, IPromoItem, IPromoItemProduct, IPromoSet, Price } from "./generated/apimodel";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -34,7 +34,7 @@ export class PromoItemEdit implements IPromoItem {
     discountSetId?: number;
     products?: IPromoItemProduct[] | undefined;
     promoSet?: IPromoSet;
-    cartItems: CartItemEdit[] = [];
+    cartItems: CartItemWithId[] = [];
 
     isReady(): boolean {
         var count = 0;
@@ -77,6 +77,7 @@ export class PromoItemEdit implements IPromoItem {
                 quantity: x.quantity,
                 promoSetId: newPromoSetId ?? x.promoSetId,
                 promoItemId: x.promoItemId,
+                imageUrl: x.imageUrl
             };
             return cartItem;
         });

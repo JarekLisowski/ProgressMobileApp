@@ -6,15 +6,19 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { CategoriesComponent } from './categories/categories.component';
 import { SpecialOffersComponent } from './special-offers/special-offers.component';
 import { SpecialOfferEditComponent } from './special-offer-edit/special-offer-edit.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-    { path: 'category/:name', component: CategoryComponent },
-    { path: 'product/:name', component: ProductDetailsComponent },
-    { path: 'cart', component: CartComponent },
-    { path: 'promo', component: SpecialOfferComponent },
-    { path: 'promos', component: SpecialOffersComponent },
-    { path: 'promoEdit/:editId', component: SpecialOfferEditComponent },
-    { path: 'promoCreate/:id', component: SpecialOfferEditComponent },
-    { path: 'categories', component: CategoriesComponent }
-    { path: 'login', component: LoginComponent }
+    { path: 'category/:name', component: CategoryComponent, canActivate: [AuthGuard] },
+    { path: 'product/:name', component: ProductDetailsComponent, canActivate: [AuthGuard] },
+    { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
+    { path: 'promo', component: SpecialOfferComponent, canActivate: [AuthGuard] },
+    { path: 'promos', component: SpecialOffersComponent, canActivate: [AuthGuard] },
+    { path: 'promoEdit/:editId', component: SpecialOfferEditComponent, canActivate: [AuthGuard] },
+    { path: 'promoCreate/:id', component: SpecialOfferEditComponent, canActivate: [AuthGuard] },
+    { path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard] },
+    { path: 'login', component: LoginComponent },
+    { path: '', redirectTo: '/categories', pathMatch: 'full' },
+    { path: '**', redirectTo: '/categories' }
 ];

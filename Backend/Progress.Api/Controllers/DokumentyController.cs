@@ -1,13 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Progress.Api.Controllers
 {
+	[Authorize]
 	[Route("api/document")]
 	[ApiController]
-	public class DokumentyController : ControllerBase
-	{
-		[HttpGet("invoice/{id}")]
+	public class DokumentyController : ApiControllerBase
+  {
+    IMapper _mapper;
+
+    public DokumentyController(IMapper autoMapper, IServiceProvider serviceProvider)
+  : base(serviceProvider)
+    {
+      _mapper = autoMapper;
+    }
+
+    [HttpGet("invoice/{id}")]
 		public string GetInvoice(long id)
 		{
 			return "OK";

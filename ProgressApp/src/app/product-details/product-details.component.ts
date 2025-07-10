@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ApiService } from '../../services/api.service';
 import { Product } from '../../domain/generated/apimodel';
-import { CartService } from '../../services/cart-service';
+import { CartService } from '../../services/cart.service';
 import { AddedToCartModalComponent } from "../added-to-cart-modal/added-to-cart-modal.component";
 
 @Component({
@@ -39,6 +39,10 @@ export class ProductDetailsComponent implements OnInit {
     return this._productId;
   }
 
+  constructor(private apiService: ApiService){
+
+  }
+
   ngOnInit(): void {
     this.route.params.subscribe(
       x => {
@@ -56,7 +60,7 @@ export class ProductDetailsComponent implements OnInit {
           this.slides = [];
           var n = this.product.imagesCount ?? 1;
           for (let i = 0; i < n; i++)
-            this.slides.push({img: 'http://localhost:5085/api/product/image/'+ this.product.id +'?number='+i})
+            this.slides.push({img: this.apiService.makeUrlImage(this.product.id!, i+i)})
           console.log('loaded: ' + this.product.name);
           console.log(this.slides);
         }

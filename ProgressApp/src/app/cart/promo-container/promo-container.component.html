@@ -3,6 +3,7 @@
         <div class="promo-header-title">
             Zestaw promocyjny: {{cartPromoItem?.name}}
             <a class="ms-2" [routerLink]="['/promoEdit', cartPromoItem?.id]">Edytuj</a>
+            <a class="ms-2" (click)="deletePromo(cartPromoItem?.id)">Usuń</a>
         </div>
     </div>
     <div class="promo-items">

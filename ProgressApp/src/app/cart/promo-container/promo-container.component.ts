@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CartItem } from '../../../domain/cartItem';
-import { CartService } from '../../../services/cart-service';
+import { CartItem, CartItemWithId } from '../../../domain/cartItem';
+import { CartService } from '../../../services/cart.service';
 import { ApiService } from '../../../services/api.service';
 import { CartPromoItem, CartPromoItemWithId } from '../../../domain/cartPromoItem';
 import { CartItemComponent } from "../cart-item/cart-item.component";
@@ -15,8 +15,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './promo-container.component.scss'
 })
 export class PromoContainerComponent implements OnInit {
-  
-  cartItems: CartItem[] = [];
+
+  cartItems: CartItemWithId[] = [];
 
   @Input() set promoItem(cartPromoItem: CartPromoItemWithId) {
     this.cartPromoItem = cartPromoItem;
@@ -27,14 +27,22 @@ export class PromoContainerComponent implements OnInit {
   }
 
   cartPromoItem: CartPromoItemWithId | undefined;
-  
+
 
   constructor(private cartService: CartService, private apiService: ApiService) {
 
   }
 
+  deletePromo(promoSetId: number | undefined) {
+    if (promoSetId)
+      this.cartService.removePromoSetFromCart(promoSetId).subscribe(x => {
+        console.log('Promo set removed from cart:', x);
+      });
+  }
+
+
   ngOnInit(): void {
-    
+
   }
 
 

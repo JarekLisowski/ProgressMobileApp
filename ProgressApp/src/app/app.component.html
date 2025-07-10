@@ -1,17 +1,18 @@
       <app-header></app-header>
-      <app-navbar></app-navbar>
-      <app-bottom-bar></app-bottom-bar>
-            <main>
-         <!-- <app-products></app-products> -->
-            <div class="container">
-                  <app-sidebar></app-sidebar>
-                  <router-outlet />
-            </div>
-      </main>
+<app-navbar></app-navbar>
+<app-bottom-bar></app-bottom-bar>
+<main>
+  <!-- <app-products></app-products> -->
+  <div class="container">
+    <a *ngIf="currentUser" (click)="logout()" class="btn btn-danger">Logout</a>
+    <app-sidebar></app-sidebar>
+    <router-outlet />
+  </div>
+</main>
 
-      <!-- Modal -->
+<!-- Modal -->
 
-      <!-- <app-modal-test1></app-modal-test1> -->
+<!-- <app-modal-test1></app-modal-test1> -->
 
 
 

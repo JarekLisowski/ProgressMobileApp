@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { CartService } from '../../services/cart-service';
+import { CartService } from '../../services/cart.service';
 import { NgFor, NgIf } from '@angular/common';
 import { PromoItemEdit, SpecialOfferEdit } from '../../domain/specialOfferEdit';
 import { SpecialOfferEditItemComponent } from "./special-offer-edit-item/special-offer-edit-item.component";
-import { CartItemEdit } from '../../domain/cartItem';
+import { CartItemWithId } from '../../domain/cartItem';
 
 @Component({
   selector: 'app-special-offer-edit',
@@ -97,7 +97,7 @@ export class SpecialOfferEditComponent implements OnInit {
               initPromoSet.promoItemsEdit.forEach(promoItem => {
                 cartItems.forEach(cartItem => {
                   if (promoItem.id == cartItem.promoItemId) {
-                    var cartItemEdit: CartItemEdit = {
+                    var cartItemEdit: CartItemWithId = {
                       id: 0,
                       productId: cartItem.productId,
                       name: cartItem.name,
@@ -106,7 +106,8 @@ export class SpecialOfferEditComponent implements OnInit {
                       priceGross: cartItem.priceGross,
                       quantity: cartItem.quantity,
                       promoSetId: cartItem.promoSetId,
-                      promoItemId: cartItem.promoItemId
+                      promoItemId: cartItem.promoItemId,
+                      imageUrl: cartItem.imageUrl
                     };
                     promoItem.cartItems.push(cartItemEdit);
                   }

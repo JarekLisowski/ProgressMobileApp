@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
-import { CartItem } from '../../../domain/cartItem';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CartItem, CartItemWithId } from '../../../domain/cartItem';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ApiService } from '../../../services/api.service';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'cart-item',
@@ -13,7 +15,22 @@ import { RouterModule } from '@angular/router';
 })
 export class CartItemComponent {
 
-  @Input() cartItem: CartItem | undefined;
+  _cartItem: CartItemWithId | undefined;
+
+  constructor(private apiService: ApiService, private cartService: CartService) {
+  }
+
+  @Output() itemRemoved = new EventEmitter<number>();
+
+
+  @Input() set cartItem(item: CartItemWithId) {
+    this._cartItem = item;
+    this._cartItem.imageUrl = this.apiService.makeUrlImage(this._cartItem.productId, 0);
+  }
+
+  get cartItem(): CartItemWithId | undefined {
+    return this._cartItem;
+  }
 
   @Input() readonly: boolean = false;
 
@@ -28,14 +45,26 @@ export class CartItemComponent {
   }
 
   public amountIncrement() {
-    console.log('incrementing: ' + this.quantity);
-    this.quantity += 1;
+    this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity + 1).subscribe(x => {
+      this.quantity = x.quantity;
+    });
   }
 
   public amountDecrement() {
     if (this.quantity > 1) {
-      this.quantity -= 1;
+      this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity - 1).subscribe(x => {
+        this.quantity = x.quantity;
+      });
     }
-  } 
+  }
+
+  deleteCartItem(id: number | undefined) {
+    if (id)
+      this.cartService.removeItemFromCart(id).subscribe(x => {
+        console.log('Cart item removed:', x);
+        this.itemRemoved.emit(id);
+      })
+  }
+
 
 }

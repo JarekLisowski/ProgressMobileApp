@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
 import { RESTClientService } from "./RESTClient.service";
 import { Observable } from "rxjs";
-import { CustomerListResponse, IProductListRequest, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse } from "../domain/generated/apimodel";
+import { CustomerListResponse, IProductListRequest, LoginResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse, SearchResponse } from "../domain/generated/apimodel";
 
 @Injectable({
     providedIn: 'root'
   })
   
   export class ApiService {
+    
     constructor(private apiSerivce: RESTClientService) {
     }
     
@@ -51,6 +52,25 @@ import { CustomerListResponse, IProductListRequest, Product, ProductCategoryInfo
 
     getCustomerList(pattern: string): Observable<CustomerListResponse>{
       return this.apiSerivce.get<CustomerListResponse>(`api/customer/search/${pattern}`);
+    }
+
+    makeUrlImage(productId: number, number: number) {
+      if (number == undefined) {
+        number = 0;
+      } 
+      return `${this.baseUrl()}api/product/image/${productId}?number=${number}`;
+    }
+
+    login(username: string, password: string): Observable<LoginResponse> {
+      var request = {
+        username: username,
+        password: password
+      };
+      return this.apiSerivce.post<LoginResponse>('api/auth/login', request);
+    }
+
+    search(searchText: string): Observable<SearchResponse>  {
+      return this.apiSerivce.get<SearchResponse>(`api/product/search?searchtext=${searchText}`);    
     }
 
 }

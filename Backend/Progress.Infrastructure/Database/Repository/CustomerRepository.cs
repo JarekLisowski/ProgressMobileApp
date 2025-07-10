@@ -17,8 +17,8 @@ namespace Progress.Infrastructure.Database.Repository
       if (cechaId != null)
       {
         var query = from kh in DbContext.IfVwKontrahents
-                    join cecha in DbContext.SlCechaKhs on kh.KhId equals cecha.CkhId
-                    where (cecha.CkhId == cechaId) && (pattern == "" || kh.AdrNazwaPelna!.Contains(pattern) || kh.AdrNip!.StartsWith(pattern))
+                    join cecha in DbContext.KhCechaKhs on kh.KhId equals cecha.CkIdKhnt
+                    where (cecha.CkIdCecha == cechaId) && (pattern == "" || kh.AdrNazwaPelna!.Contains(pattern) || kh.AdrNip!.StartsWith(pattern))
                     select kh;
         if (limit != null)
           query = query.OrderBy(it => it.AdrNazwa).Take(limit.Value);

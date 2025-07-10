@@ -16,6 +16,8 @@ namespace Progress.Domain.Api
 
 			CreateMap<Model.Addres, Addres>();
 			CreateMap<Model.Customer, Customer>();
+
+			CreateMap<Model.User, User>();
 		}
 	}
 }

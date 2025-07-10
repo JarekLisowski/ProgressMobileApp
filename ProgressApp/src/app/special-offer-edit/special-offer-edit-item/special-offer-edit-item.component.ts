@@ -60,7 +60,8 @@ export class SpecialOfferEditItemComponent implements AfterViewInit {
         promoItemId: this.promoItemEdit.id ?? 0,
         priceNet: x.price?.priceNet ?? 0,
         priceGross: x.price?.priceGross ?? 0,
-        promoSetId: 0
+        promoSetId: 0,
+        imageUrl: ""
       };
     });
     this.calculateTotalQuantity();

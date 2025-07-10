@@ -15,7 +15,7 @@
 
 <div class="tab-content" id="myTabContent">
 
-  <div class="tab-pane fade " id="products-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+  <div class="tab-pane fade show active" id="products-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
     <ul class="cart-list">
       <div *ngFor="let item of cartPromoItems; let i = index">
         <promo-cart-container [promoItem]="item">
@@ -47,7 +47,7 @@
     </ul>
   </div>
 
-  <div class="tab-pane fade show active" id="sell-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="0">
+  <div class="tab-pane fade " id="sell-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="0">
     <div>
       <h6>Dokument</h6>
       <select class="form-select" aria-label="Default select example">

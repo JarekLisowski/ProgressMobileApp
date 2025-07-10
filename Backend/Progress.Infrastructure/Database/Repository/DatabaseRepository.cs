@@ -102,11 +102,16 @@ namespace Progress.Infrastructure.Database.Repository
 			return ToModel(entity);
 		}
 
-		public IEnumerable<T_MODEL> SelectWhere(Expression<Func<T_ENTITY, bool>> expression)
+		public IEnumerable<T_MODEL> SelectWhere(Expression<Func<T_ENTITY, bool>> expression, bool lateConvert = false)
 		{
-			return EntitySet.Where(expression)
+			if (!lateConvert)
+				return EntitySet.Where(expression)
 					.ProjectTo<T_MODEL>(AutomapperConfiguration).ToArray();
-		}
+
+			var db = EntitySet.Where(expression).ToArray();
+			var res = Mapper.Map<T_MODEL[]>(db);
+			return res;
+    }
 
 		//public void AddOrUpdate(T_MODEL model)
 		//{

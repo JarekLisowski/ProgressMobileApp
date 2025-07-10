@@ -1,25 +1,24 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Progress.Database;
+using Progress.Domain.Interfaces;
 using Progress.Domain.Model;
 
 namespace Progress.Infrastructure.Database.Repository
 {
-  public class UserRepository : DatabaseRepository<Domain.Model.User, IfxApiUzytkownik>
+  public class UserRepository : DatabaseRepository<User, IfxApiUzytkownik>, IUserRepository
   {
     public UserRepository(
       NavireoDbContext dbContext,
-      IConfigurationProvider automapperConfiguration,
-      string keyName,
-      Func<IfxApiUzytkownik, int> entityKey, Func<Domain.Model.User, int> modelKey)
+      IConfigurationProvider automapperConfiguration)
       : base(dbContext, automapperConfiguration, nameof(IfxApiUzytkownik.UzId), x => x.UzId, x => x.Id)
     {
     }
 
     public User? GetUser(int userId)
     {
-      var items = from apiUzytkownik in DbContext.IfxApiUzytkowniks
-                  join pd in DbContext.PdUzytkowniks on apiUzytkownik.UzId equals pd.UzId
+      var items = from apiUzytkownik in DbContext.IfxApiUzytkowniks.AsNoTracking().Include(it => it.IfxApiUzytkownikPoziomyCenowes)
+                  join pd in DbContext.PdUzytkowniks.AsNoTracking() on apiUzytkownik.UzId equals pd.UzId
                   where pd.UzId == userId
                   select new { apiUzytkownik, pd };
 
@@ -58,22 +57,40 @@ namespace Progress.Infrastructure.Database.Repository
           if (!string.IsNullOrEmpty(parametr.TwpNazwaCeny10)) prices.Add(new Price { Id = 10, Name = parametr.TwpNazwaCeny10, Curency = parametr.TwpWalutaCeny10 });
         }
 
-        var cecha = DbContext.SlCechaKhs.FirstOrDefault(x => x.CkhId == apiUzytkownik.CechaId);
+        var cecha = DbContext.SlCechaKhs.AsNoTracking().FirstOrDefault(x => x.CkhId == apiUzytkownik.CechaId);
         user.CechaId = cecha?.CkhId ?? 0;
         user.CechaNazwa = cecha?.CkhNazwa ?? "Wszyscy kontrahenci";
         user.PriceLevelList = (from ifx in apiUzytkownik.IfxApiUzytkownikPoziomyCenowes
                                join pr in prices on ifx.CenaId equals pr.Id
                                select new PriceLevel { Id = ifx.CenaId, Name = pr.Name, Primary = ifx.Primary }).ToList();
+        user.DefaultPrice = user.PriceLevelList.FirstOrDefault(it => it.Primary)?.Id ?? 1;
         user.PromocjaGrupaId = apiUzytkownik.PromocjaGrupaId.GetValueOrDefault();
         user.CanExtendPaymentDeadline = apiUzytkownik.PlatnosciOdroczoneWydluzenieTerminu;
         user.SpecialPayment = apiUzytkownik.PlatnosciOdroczone;
         user.MaxSpecialPayment = apiUzytkownik.MaxPlatnoscOdroczona.GetValueOrDefault();
         user.MinSpecialPayment = apiUzytkownik.MaxPlatnoscOdroczona.GetValueOrDefault();
         user.DiscountAllowed = apiUzytkownik.Rabat.GetValueOrDefault() > 0;
-        user.DIscountMax = apiUzytkownik.Rabat ?? 0;
+        user.DiscountMax = apiUzytkownik.Rabat ?? 0;
         return user;
       }
       return null;
     }
+
+    public User? GetByUsername(string username)
+    {
+      var dbUser = DbContext.PdUzytkowniks.AsNoTracking().FirstOrDefault(u => (u.UzNazwisko + " " + u.UzImie) == username);
+      if (dbUser == null)
+        return null;
+
+      var user = GetUser(dbUser.UzId);
+      if (user != null)
+      {
+        user.Password = dbUser.UzHaslo;
+        return user;
+      }
+
+      return null;
+    }
+
   }
 }

@@ -1,0 +1,30 @@
+using Progress.Database;
+using Progress.Domain.Interfaces;
+using Progress.Domain.Model;
+
+namespace Progress.Infrastructure.Database.Repository
+{
+    public class UserRepository : IUserRepository
+    {
+        private readonly NavireoDbContext _context;
+
+        public UserRepository(NavireoDbContext context)
+        {
+            _context = context;
+        }
+
+        public User? GetByUsername(string username)
+        {
+            var dbUser = _context.PdUzytkowniks.FirstOrDefault(u => u.UzLogin == username);
+            if (dbUser == null)
+                return null;
+
+            return new User
+            {
+                Id = dbUser.UzId,
+                Login = dbUser.UzLogin,
+                Password = dbUser.UzHaslo // In a real application, you should hash and salt passwords
+            };
+        }
+    }
+}
