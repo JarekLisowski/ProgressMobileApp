@@ -1,7 +1,7 @@
 <ul class="list-group">
     <li class="list-group-item">
         <h6>Kontrahent</h6>
-        {{transaction?.customer?.adrName}}<br />
+        <strong>{{transaction?.customer?.adrName}}</strong><br />
         {{transaction?.customer?.adrNip}}<br />
         {{transaction?.customer?.adrStreet}} {{transaction?.customer?.adrStreetNo}}
         {{transaction?.customer?.adrNumber}}<br />
@@ -9,17 +9,35 @@
     </li>
     <li class="list-group-item">
         <h6>Do zapłaty</h6>
-        {{cartTotalGross}} PLN
+        <strong>{{transaction?.totalGross}} PLN </strong><br>
+        {{transaction?.totalNet}} PLN netto
     </li>
     <li class="list-group-item">
         <h6>Płatność</h6>
-        Gotówka: {{transaction?.cashAmount}} PLN<br />
-        {{secondPaymentMethodName}} {{transaction?.secondMethodAmount}} PLN
+        Gotówka: <strong>{{transaction?.cashAmount}}</strong> PLN<br />
+        <div *ngIf="secondPaymentMethod">
+            <strong>{{secondPaymentMethod.name}}: {{transaction?.secondMethodAmount}}</strong> PLN
+            <span *ngIf="secondPaymentMethod.deferred">
+                , <strong>{{transaction?.paymentDueDays}}</strong> dni
+            </span>
+        </div>
     </li>
     <li class="list-group-item">
         <h6>Dostawa</h6>
-        {{deliveryMethodName}} {{transaction?.packagesNumber}}
-        Ilość paczek: {{transaction?.packagesNumber}}
+        <div *ngIf="deliveryMethod">
+            <div>
+                <strong>{{deliveryMethod.name}}</strong>
+            </div>
+            <div>
+                Opłata za dostawę: <strong>{{transaction?.deliveryGross}}</strong> PLN
+            </div>
+            <div>
+                Ilość paczek: {{transaction?.packagesNumber}}
+            </div>
+        </div>
+        <div *ngIf="!deliveryMethod">
+            Bez dostawy
+        </div>
     </li>
 </ul>
 <div class="save">

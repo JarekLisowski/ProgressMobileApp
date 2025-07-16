@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CartService } from '../../../services/cart.service';
 import { ApiService } from '../../../services/api.service';
-import { DeliveryMethod } from '../../../domain/generated/apimodel';
-import { NgFor } from '@angular/common';
+import { DeliveryMethod, PaymentMethod } from '../../../domain/generated/apimodel';
+import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'cart-options',
   standalone: true,
-  imports: [NgFor, FormsModule],
+  imports: [NgFor, NgIf, FormsModule],
   templateUrl: './cart-options.component.html',
   styleUrl: './cart-options.component.scss'
 })
@@ -25,6 +25,29 @@ export class CartOptionsComponent implements OnInit {
   private _packages: number = 0;
   private _comment: string = "";
 
+  selectedDeliveryMethod: DeliveryMethod | undefined;
+  selectedPaymentMethod: PaymentMethod | undefined;
+  _paymentDueDays: number = 14;
+
+  get paymentDueDays(): number {
+    return this._paymentDueDays;
+  }
+
+  set paymentDueDays(value: number) {
+    if (value > 14)
+      value = 14;
+    else if (value < 1)
+      value = 1;
+    if (!this.initializing) {
+      this.cartService.setPaymentDueDays(value).subscribe(trans => {
+        this._paymentDueDays = trans.paymentDueDays;
+      })
+    } 
+    else if (this.initializing) {
+      this._paymentDueDays = value;
+    }
+  }
+
   set selectedDocument(value: string) {
     this.cartService.setDocument(value).subscribe(x => {
       this._selectedDocument = x.document;
@@ -37,9 +60,20 @@ export class CartOptionsComponent implements OnInit {
 
   set selectedPayment(value: string) {
     var nValue = Number(value);
-    this.cartService.setPayment(nValue).subscribe(x => {
-      this._selectedPayment = x.secondPaymentMethod;
-    });
+    var paymentMethod = this.paymentMethods.find(x => x.id == nValue);
+    if (!this.initializing && this._selectedPayment != nValue) {
+      this.cartService.setPayment(nValue).subscribe(x => {
+        this._selectedPayment = x.secondPaymentMethod;
+        this.selectedPaymentMethod = paymentMethod;
+        this.secondPaymentAmount = x.secondMethodAmount;
+        this.cashAmount = x.cashAmount;
+      });
+    }
+    else if (this.initializing) {
+      this._selectedPayment = nValue;
+      this.selectedPaymentMethod = paymentMethod;
+    }
+    console.log("selectedPayment: " + value)
   }
 
   get selectedPayment(): string {
@@ -47,8 +81,9 @@ export class CartOptionsComponent implements OnInit {
   }
 
   set secondPaymentAmount(value: number) {
-    this.cartService.setPaymentValues(this.cashAmount, value).subscribe(x => {
+    this.cartService.setPaymentValues(undefined, value).subscribe(x => {
       this._secondPaymentAmount = x.secondMethodAmount;
+      this._cashAmount = x.cashAmount;
     });
   }
 
@@ -57,10 +92,22 @@ export class CartOptionsComponent implements OnInit {
   }
 
   set selectedDelivery(value: string) {
+    console.log("selectedDelivery: " + value);
     var nValue = Number(value);
-    this.cartService.setDelivery(nValue).subscribe(x => {
-      this._selectedDelivery = x.deliveryMethod;
-    });
+    var deliveryMethod = this.deliveryMethods.find(x => x.id == nValue);
+    if (!this.initializing && deliveryMethod?.id != this._selectedDelivery) {
+      console.log("selectedDelivery in transaction: " + value);
+      this.cartService.setDelivery(deliveryMethod?.id ?? nValue, deliveryMethod?.twId, deliveryMethod?.priceGross, deliveryMethod?.priceNet).subscribe(trans => {
+        this._selectedDelivery = nValue;
+        this.selectedDeliveryMethod = deliveryMethod;
+        this.secondPaymentAmount = trans.secondMethodAmount;
+        this.cashAmount = trans.cashAmount;        
+      });
+    }
+    if (this.initializing) {
+      this._selectedDelivery = nValue;
+      this.selectedDeliveryMethod = deliveryMethod;
+    }
   }
 
   get selectedDelivery(): string {
@@ -80,6 +127,7 @@ export class CartOptionsComponent implements OnInit {
   set cashAmount(value: number) {
     this.cartService.setPaymentValues(value, this.secondPaymentAmount).subscribe(x => {
       this._cashAmount = x.cashAmount;
+      this._secondPaymentAmount = x.secondMethodAmount;
     });
   }
 
@@ -98,31 +146,36 @@ export class CartOptionsComponent implements OnInit {
   }
 
 
-  paymentMethods: DeliveryMethod[] = [];
+  paymentMethods: PaymentMethod[] = [];
 
   deliveryMethods: DeliveryMethod[] = [];
+
+  private initializing: boolean = true;
 
 
   ngOnInit(): void {
     this.apiService.getPaymentMethods().subscribe(x => {
       if (!x.isError && x?.data != null)
         this.paymentMethods = x.data
+
+      this.apiService.getDeliveryMethods().subscribe(x => {
+        if (!x.isError && x?.data != null)
+          this.deliveryMethods = x.data
+
+        this.cartService.getCurrentTransaction().subscribe(trans => {
+          this.selectedDocument = trans.document;
+          this.selectedPayment = trans.secondPaymentMethod?.toString() ?? "";
+          this.secondPaymentAmount = trans.secondMethodAmount;
+          this.cashAmount = trans.cashAmount;
+          this.selectedDelivery = trans.deliveryMethod?.toString() ?? "";
+          this.comment = trans.comment;
+          this.packages = trans.packagesNumber;
+          this.paymentDueDays = trans.paymentDueDays;
+        });
+        this.initializing = false;
+      });
     });
 
-    this.apiService.getDeliveryMethods().subscribe(x => {
-      if (!x.isError && x?.data != null)
-        this.deliveryMethods = x.data
-    });
-
-    this.cartService.getCurrentTransaction().subscribe(x => {
-      this.selectedDocument = x.document;
-      this.selectedPayment = x.secondPaymentMethod?.toString() ?? "";
-      this.secondPaymentAmount = x.secondMethodAmount;
-      this.cashAmount = x.cashAmount;
-      this.selectedDelivery = x.deliveryMethod?.toString() ?? "";
-      this.comment = x.comment;
-      this.packages = x.packagesNumber;
-    });
   }
 
 

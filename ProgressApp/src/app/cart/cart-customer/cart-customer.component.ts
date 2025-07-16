@@ -22,8 +22,8 @@ export class CartCustomerComponent implements OnInit {
 
   loadCustomer() {
     this.cartService.getCurrentTransaction().subscribe(transaction => {
-      console.log('Transaction:');
-      console.log(transaction);
+      //console.log('Transaction:');
+      //console.log(transaction);
       this.customer = transaction.customer;
     });
   }
@@ -31,8 +31,8 @@ export class CartCustomerComponent implements OnInit {
   customerSelected($event: Customer) {
     this.customer = $event;
     this.cartService.getCurrentTransaction().subscribe(transaction => {
-      console.log('Transaction:');
-      console.log(transaction);
+      //console.log('Transaction:');
+      //console.log(transaction);
       transaction.customer = this.customer;
       this.cartService.updateTransaction(transaction).subscribe(x => {
         console.log('Transaction updated:', x);

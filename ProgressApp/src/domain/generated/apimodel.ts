@@ -335,6 +335,8 @@ export class DeliveryMethod implements IDeliveryMethod {
     twId?: number;
     active?: boolean;
     name?: string | undefined;
+    priceNet?: number;
+    priceGross?: number;
 
     constructor(data?: IDeliveryMethod) {
         if (data) {
@@ -351,6 +353,8 @@ export class DeliveryMethod implements IDeliveryMethod {
             this.twId = _data["twId"];
             this.active = _data["active"];
             this.name = _data["name"];
+            this.priceNet = _data["priceNet"];
+            this.priceGross = _data["priceGross"];
         }
     }
 
@@ -367,6 +371,8 @@ export class DeliveryMethod implements IDeliveryMethod {
         data["twId"] = this.twId;
         data["active"] = this.active;
         data["name"] = this.name;
+        data["priceNet"] = this.priceNet;
+        data["priceGross"] = this.priceGross;
         return data;
     }
 }
@@ -376,6 +382,8 @@ export interface IDeliveryMethod {
     twId?: number;
     active?: boolean;
     name?: string | undefined;
+    priceNet?: number;
+    priceGross?: number;
 }
 
 export class DeliveryMethodsResponse implements IDeliveryMethodsResponse {
@@ -456,12 +464,14 @@ export class Document implements IDocument {
     items?: DocumentItem[] | undefined;
     cashPayment?: number;
     secondPaymentAmount?: number;
+    paymentDueDays?: number;
     secondPaymentMethod?: number | undefined;
     deliveryMethod?: number | undefined;
     packagesNumber?: number | undefined;
     comment?: string | undefined;
     userId?: number | undefined;
     userName?: string | undefined;
+    issueDate?: Date;
 
     constructor(data?: IDocument) {
         if (data) {
@@ -491,12 +501,14 @@ export class Document implements IDocument {
             }
             this.cashPayment = _data["cashPayment"];
             this.secondPaymentAmount = _data["secondPaymentAmount"];
+            this.paymentDueDays = _data["paymentDueDays"];
             this.secondPaymentMethod = _data["secondPaymentMethod"];
             this.deliveryMethod = _data["deliveryMethod"];
             this.packagesNumber = _data["packagesNumber"];
             this.comment = _data["comment"];
             this.userId = _data["userId"];
             this.userName = _data["userName"];
+            this.issueDate = _data["issueDate"] ? new Date(_data["issueDate"].toString()) : <any>undefined;
         }
     }
 
@@ -519,12 +531,14 @@ export class Document implements IDocument {
         }
         data["cashPayment"] = this.cashPayment;
         data["secondPaymentAmount"] = this.secondPaymentAmount;
+        data["paymentDueDays"] = this.paymentDueDays;
         data["secondPaymentMethod"] = this.secondPaymentMethod;
         data["deliveryMethod"] = this.deliveryMethod;
         data["packagesNumber"] = this.packagesNumber;
         data["comment"] = this.comment;
         data["userId"] = this.userId;
         data["userName"] = this.userName;
+        data["issueDate"] = this.issueDate ? this.issueDate.toISOString() : <any>undefined;
         return data;
     }
 }
@@ -536,12 +550,14 @@ export interface IDocument {
     items?: IDocumentItem[] | undefined;
     cashPayment?: number;
     secondPaymentAmount?: number;
+    paymentDueDays?: number;
     secondPaymentMethod?: number | undefined;
     deliveryMethod?: number | undefined;
     packagesNumber?: number | undefined;
     comment?: string | undefined;
     userId?: number | undefined;
     userName?: string | undefined;
+    issueDate?: Date;
 }
 
 export class DocumentItem implements IDocumentItem {

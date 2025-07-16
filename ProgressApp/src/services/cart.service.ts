@@ -13,6 +13,8 @@ import { Transaction } from "../domain/transaction";
 export class CartService {
 
     private readonly storeTransaction = 'transaction';
+    private currentTransaction: Transaction | undefined;
+
 
     constructor(private dbService: NgxIndexedDBService) { }
 
@@ -40,14 +42,19 @@ export class CartService {
                         promoItemId: 0,
                         imageUrl: ""
                     };
-                    return this.dbService.add('cart', cartItem);
+                    return this.dbService.add('cart', cartItem).pipe(
+                        tap(x => {
+                            console.log("Add item to cart: " + x.name + " " + x.quantity);
+                            this.calculateTotalTransactionValuesImmediatelly();
+                        })
+                    );
                 }
-            })
+            }),
         );
         return res;
     }
 
-    addItemsToCart(cartItems: CartItem[]): Observable<number[]> {
+    private addItemsToCart(cartItems: CartItem[]): Observable<number[]> {
         return this.dbService.bulkAdd<CartItem>('cart', cartItems);
     }
 
@@ -55,8 +62,16 @@ export class CartService {
     updateCartItemQuntity(id: number, quantity: number): Observable<CartItem> {
         return this.dbService.getByID<CartItem>('cart', id).pipe(
             switchMap(item => {
-                item.quantity = quantity;
-                return this.dbService.update('cart', item);
+                if (item.quantity != quantity) {
+                    item.quantity = quantity;
+                    return this.dbService.update('cart', item);
+                } else {
+                    return new Observable<CartItem>();
+                }
+            }),
+            tap(x => {
+                console.log("updateCartItemQuntity: " + x.name + " " + x.quantity);
+                this.calculateTotalTransactionValuesImmediatelly();
             })
         );
     }
@@ -69,13 +84,20 @@ export class CartService {
         return this.dbService.getAllByIndex('cart', 'promoSetId', promoSetId);
     }
 
-
     removeItemFromCart(id: number): Observable<any> {
-        return this.dbService.delete('cart', id);
+        return this.dbService.delete('cart', id).pipe(
+            tap(x => {
+                this.calculateTotalTransactionValuesImmediatelly();
+            })
+        );
     }
 
     clearCart(): Observable<any> {
-        return this.dbService.clear('cart');
+        return this.dbService.clear('cart').pipe(
+            tap(x => {
+                this.calculateTotalTransactionValuesImmediatelly();
+            })
+        );;
     }
 
     addPromoSetToCart(promoSet: SpecialOfferEdit): Observable<any> {
@@ -124,12 +146,19 @@ export class CartService {
     }
 
     getCurrentTransaction(): Observable<Transaction> {
-        return this.getFirstOrCreateTransaction();
+        if (this.currentTransaction != undefined)
+            return of(this.currentTransaction);
+
+        return this.getFirstOrCreateTransaction().pipe(
+            tap(x => {
+                this.currentTransaction = x;
+            })
+        );
     }
 
     private getFirstOrCreateTransaction(): Observable<Transaction> {
         // First, try to get all transactions to check if the store is empty.
-        return from(this.dbService.getAll<Transaction>(this.storeTransaction)).pipe(
+        return this.dbService.getAll<Transaction>(this.storeTransaction).pipe(
             switchMap((transactions: Transaction[]) => {
                 if (transactions && transactions.length > 0) {
                     // If transactions exist, return the first one.
@@ -143,23 +172,26 @@ export class CartService {
                     // The 'add' method returns the key of the newly added object.
                     // We then retrieve the full object using the key (or assume the input object is sufficient).
                     //console.log('Transaction store is empty. Adding a new transaction:', newTransaction);
-                    return from(this.dbService.add<Transaction>(this.storeTransaction, newTransaction));
-                    //   .pipe(
-                    //     map(t => { 
-                    //       return t;
-                    //     })
-                    //   );
+                    return this.dbService.add<Transaction>(this.storeTransaction, newTransaction);
                 }
             })
         );
     }
 
     updateTransaction(transaction: Transaction): Observable<Transaction> {
-        return this.dbService.update('transaction', transaction);
+        return this.dbService.update('transaction', transaction).pipe(
+            tap(x => {
+                this.currentTransaction = x;
+            })
+        );
     }
 
     clearTransaction(transaction: Transaction): Observable<void> {
-        return this.dbService.clear('transaction');
+        return this.dbService.clear('transaction').pipe(
+            tap(x => {
+                this.currentTransaction = undefined;
+            })
+        );
     }
 
     setCustomer(customer: Customer): Observable<Transaction> {
@@ -184,25 +216,54 @@ export class CartService {
         return this.getCurrentTransaction().pipe(
             switchMap(tran => {
                 tran.secondPaymentMethod = value;
+                if (value == 0) {
+                    tran.secondMethodAmount = 0;
+                    tran.cashAmount = tran.totalGross;
+                } else {
+                    tran.cashAmount = 0;
+                    tran.secondMethodAmount = tran.totalGross;
+                }
                 return this.updateTransaction(tran);
             })
         );
     }
 
-    setDelivery(value: number) {
+    setDelivery(id: number, serviceId: number | undefined, priceGross: number | undefined, priceNet: number | undefined) {
         return this.getCurrentTransaction().pipe(
             switchMap(tran => {
-                tran.deliveryMethod = value;
+                tran.deliveryMethod = id;
+                tran.deliveryServiceId = serviceId;
+                tran.deliveryNet = priceNet ?? 0;
+                tran.deliveryGross = priceGross ?? 0;
+                return this.updateTransaction(tran).pipe(
+                    switchMap(x => {
+                        return this.calculateTotalTransactionValues();
+                    })
+                );
+            })
+        )
+    }
+
+    setPaymentValues(cash: number | undefined, other: number | undefined): Observable<Transaction> {
+        return this.getCurrentTransaction().pipe(
+            switchMap(tran => {
+                if (cash != undefined) {
+                    tran.cashAmount = cash;
+                    tran.secondMethodAmount = tran.totalGross - cash;
+                }
+                else if (other != undefined) {
+                    tran.cashAmount = tran.totalGross - other;
+                    tran.secondMethodAmount = other;
+                }
                 return this.updateTransaction(tran);
             })
         )
     }
 
-    setPaymentValues(cash: number, other: number) {
+    setPaymentDueDays(days: number) {
         return this.getCurrentTransaction().pipe(
             switchMap(tran => {
-                tran.cashAmount = cash;
-                tran.secondMethodAmount = other;
+                tran.paymentDueDays = days;
                 return this.updateTransaction(tran);
             })
         )
@@ -226,4 +287,43 @@ export class CartService {
         );
     }
 
+    calculateTotalTransactionValues(): Observable<Transaction> {
+        console.log("calculateTotalTransactionValues");
+        var obs = this.getCartItems().pipe(
+            switchMap(items => {
+                var totalNet = 0;
+                var totalGross = 0;
+                items.forEach(item => {
+                    totalNet += item.priceNet * item.quantity;
+                    totalGross += item.priceGross * item.quantity;
+                });
+                console.log("Total: " + totalNet + " " + totalGross);
+                return this.getCurrentTransaction().pipe(
+                    switchMap(tran => {
+                        tran.itemsNet = totalNet;
+                        tran.itemsGross = totalGross;
+                        tran.totalNet = totalNet + tran.deliveryNet;
+                        tran.totalGross = totalGross + tran.deliveryGross;
+                        if (tran.totalGross != tran.cashAmount + tran.secondMethodAmount) {
+                            if (tran.secondMethodAmount > 0) {
+                                tran.secondMethodAmount = tran.totalGross - tran.cashAmount;
+                            }
+                            else {
+                                tran.cashAmount = tran.totalGross;
+                            }
+                                
+                        }
+                        return this.updateTransaction(tran);
+                    })
+                );
+            })
+        )
+        return obs;
+    }
+
+    private calculateTotalTransactionValuesImmediatelly() {
+        this.calculateTotalTransactionValues().subscribe(x => {
+            console.log("Total calculated:", x.totalGross);
+        });
+    }
 }

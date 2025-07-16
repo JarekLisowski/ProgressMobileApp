@@ -1271,6 +1271,14 @@
           "name": {
             "type": "string",
             "nullable": true
+          },
+          "priceNet": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceGross": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -1339,6 +1347,10 @@
             "type": "number",
             "format": "double"
           },
+          "paymentDueDays": {
+            "type": "integer",
+            "format": "int32"
+          },
           "secondPaymentMethod": {
             "type": "integer",
             "format": "int32",
@@ -1366,6 +1378,10 @@
           "userName": {
             "type": "string",
             "nullable": true
+          },
+          "issueDate": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

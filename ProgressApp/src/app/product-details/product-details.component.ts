@@ -81,9 +81,9 @@ export class ProductDetailsComponent implements OnInit {
   // }
 
   quantityChanged(quantity: number) {
-    this.cartService.updateCartItemQuntity(this.product?.id!, quantity).subscribe(x => {
-      this.quantity = x.quantity;
-    });
+    if (this.quantity >= 0) {
+       this.quantity = quantity;
+    }
   }
 
   public addToCart() {

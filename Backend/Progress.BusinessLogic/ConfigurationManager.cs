@@ -1,6 +1,8 @@
-﻿using Progress.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Progress.Database;
 using Progress.Domain.Model;
 using Progress.Infrastructure.Database.Repository;
+using System.Security.Cryptography;
 
 namespace Progress.BusinessLogic
 {
@@ -8,23 +10,38 @@ namespace Progress.BusinessLogic
   {
     private IDatabaseRepository<PaymentMethod, IfxApiFormaPlatnosci> _paymentMethodRepository;
     private IDatabaseRepository<DeliveryMethod, IfxApiSposobDostawy> _deliveryMethodRepository;
-
+    private NavireoDbContext _dbContext;
     public ConfigurationManager(
       IDatabaseRepository<PaymentMethod, IfxApiFormaPlatnosci> paymentMethodRepository,
-      IDatabaseRepository<DeliveryMethod, IfxApiSposobDostawy> deliveryMethodRepository)
+      IDatabaseRepository<DeliveryMethod, IfxApiSposobDostawy> deliveryMethodRepository,
+      NavireoDbContext dbContext
+      )
     {
+      _dbContext = dbContext;
       _deliveryMethodRepository = deliveryMethodRepository;
       _paymentMethodRepository = paymentMethodRepository;
     }
 
     public IEnumerable<PaymentMethod> GetPaymentMethods()
-    {
+    {      
       return _paymentMethodRepository.SelectWhere(it => it.Aktywna).OrderBy(it => it.Name).ToArray();
     }
 
     public IEnumerable<DeliveryMethod> GetDeliveryMethods()
     {
-      return _deliveryMethodRepository.SelectWhere(it => true).OrderBy(it => it.Name).ToArray();
+      var data = from delivery in _dbContext.IfxApiSposobDostawies.AsNoTracking()
+                 join towar in _dbContext.TwTowars.AsNoTracking() on delivery.TwId equals towar.TwId
+                 join cena in _dbContext.TwCenas.AsNoTracking() on towar.TwId equals cena.TcIdTowar
+                 select new DeliveryMethod
+                 {
+                   Id = delivery.Id,
+                   Name = delivery.Nazwa,
+                   TwId = delivery.TwId,
+                   PriceGross = cena.TcCenaBrutto1 ?? 0,
+                   PriceNet = cena.TcCenaNetto1 ?? 0,
+                 };
+
+      return data.ToArray();
     }
 
   }

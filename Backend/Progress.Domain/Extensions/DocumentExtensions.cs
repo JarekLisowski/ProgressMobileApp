@@ -17,6 +17,7 @@ namespace Progress.Domain.Extensions
 
       var navDocument = new CommerceDocumentBase
       {
+        IssueDate = DateTime.Today,
         DocumentType = documentType,
         BuyerAddress = new Location
         {
@@ -29,10 +30,11 @@ namespace Progress.Domain.Extensions
           Id = document.SecondPaymentMethod ?? 0
         },
         PaymentPaidGross = document.SecondPaymentAmount,
+        PaymentDeadline = document.IssueDate.AddDays(document.paymentDueDays),
         DocumentItems = document.Items.Select(it => new Navireo.DocumentItem
         {
           Product = new Navireo.Product
-          { 
+          {
             Id = it.ProductId,
           },
           Amount = it.Quantity,
@@ -48,6 +50,7 @@ namespace Progress.Domain.Extensions
         Delivery = new DeliveryType
         {
           Id = document.DeliveryMethod ?? 0,
+          IsNew = true
         },
         UserId = document.UserId ?? 0
       };
