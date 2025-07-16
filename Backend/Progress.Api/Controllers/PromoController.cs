@@ -58,7 +58,7 @@ namespace Progress.Api.Controllers
       };
     }
 
-
+    [AllowAnonymous]
     [HttpGet("image/{promoId}")]
     public ActionResult GetProductImage(int promoId)
     {

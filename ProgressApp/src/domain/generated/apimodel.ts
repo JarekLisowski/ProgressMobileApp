@@ -330,6 +330,280 @@ export interface ICustomerResponse {
     data?: ICustomer;
 }
 
+export class DeliveryMethod implements IDeliveryMethod {
+    id?: number;
+    twId?: number;
+    active?: boolean;
+    name?: string | undefined;
+
+    constructor(data?: IDeliveryMethod) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.twId = _data["twId"];
+            this.active = _data["active"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): DeliveryMethod {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeliveryMethod();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["twId"] = this.twId;
+        data["active"] = this.active;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IDeliveryMethod {
+    id?: number;
+    twId?: number;
+    active?: boolean;
+    name?: string | undefined;
+}
+
+export class DeliveryMethodsResponse implements IDeliveryMethodsResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: DeliveryMethod[] | undefined;
+
+    constructor(data?: IDeliveryMethodsResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.data) {
+                this.data = [];
+                for (let i = 0; i < data.data.length; i++) {
+                    let item = data.data[i];
+                    this.data[i] = item && !(<any>item).toJSON ? new DeliveryMethod(item) : <DeliveryMethod>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(DeliveryMethod.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DeliveryMethodsResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeliveryMethodsResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IDeliveryMethodsResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: IDeliveryMethod[] | undefined;
+}
+
+export class Document implements IDocument {
+    id?: number | undefined;
+    customerId?: number;
+    documentType?: string | undefined;
+    items?: DocumentItem[] | undefined;
+    cashPayment?: number;
+    secondPaymentAmount?: number;
+    secondPaymentMethod?: number | undefined;
+    deliveryMethod?: number | undefined;
+    packagesNumber?: number | undefined;
+    comment?: string | undefined;
+    userId?: number | undefined;
+    userName?: string | undefined;
+
+    constructor(data?: IDocument) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.items) {
+                this.items = [];
+                for (let i = 0; i < data.items.length; i++) {
+                    let item = data.items[i];
+                    this.items[i] = item && !(<any>item).toJSON ? new DocumentItem(item) : <DocumentItem>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.customerId = _data["customerId"];
+            this.documentType = _data["documentType"];
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(DocumentItem.fromJS(item));
+            }
+            this.cashPayment = _data["cashPayment"];
+            this.secondPaymentAmount = _data["secondPaymentAmount"];
+            this.secondPaymentMethod = _data["secondPaymentMethod"];
+            this.deliveryMethod = _data["deliveryMethod"];
+            this.packagesNumber = _data["packagesNumber"];
+            this.comment = _data["comment"];
+            this.userId = _data["userId"];
+            this.userName = _data["userName"];
+        }
+    }
+
+    static fromJS(data: any): Document {
+        data = typeof data === 'object' ? data : {};
+        let result = new Document();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["customerId"] = this.customerId;
+        data["documentType"] = this.documentType;
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["cashPayment"] = this.cashPayment;
+        data["secondPaymentAmount"] = this.secondPaymentAmount;
+        data["secondPaymentMethod"] = this.secondPaymentMethod;
+        data["deliveryMethod"] = this.deliveryMethod;
+        data["packagesNumber"] = this.packagesNumber;
+        data["comment"] = this.comment;
+        data["userId"] = this.userId;
+        data["userName"] = this.userName;
+        return data;
+    }
+}
+
+export interface IDocument {
+    id?: number | undefined;
+    customerId?: number;
+    documentType?: string | undefined;
+    items?: IDocumentItem[] | undefined;
+    cashPayment?: number;
+    secondPaymentAmount?: number;
+    secondPaymentMethod?: number | undefined;
+    deliveryMethod?: number | undefined;
+    packagesNumber?: number | undefined;
+    comment?: string | undefined;
+    userId?: number | undefined;
+    userName?: string | undefined;
+}
+
+export class DocumentItem implements IDocumentItem {
+    productId?: number;
+    quantity?: number;
+    priceNet?: number;
+    priceGross?: number;
+    taxRate?: number;
+    promoSetId?: number | undefined;
+    readonly discountRate?: number;
+
+    constructor(data?: IDocumentItem) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.quantity = _data["quantity"];
+            this.priceNet = _data["priceNet"];
+            this.priceGross = _data["priceGross"];
+            this.taxRate = _data["taxRate"];
+            this.promoSetId = _data["promoSetId"];
+            (<any>this).discountRate = _data["discountRate"];
+        }
+    }
+
+    static fromJS(data: any): DocumentItem {
+        data = typeof data === 'object' ? data : {};
+        let result = new DocumentItem();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
+        data["quantity"] = this.quantity;
+        data["priceNet"] = this.priceNet;
+        data["priceGross"] = this.priceGross;
+        data["taxRate"] = this.taxRate;
+        data["promoSetId"] = this.promoSetId;
+        data["discountRate"] = this.discountRate;
+        return data;
+    }
+}
+
+export interface IDocumentItem {
+    productId?: number;
+    quantity?: number;
+    priceNet?: number;
+    priceGross?: number;
+    taxRate?: number;
+    promoSetId?: number | undefined;
+    discountRate?: number;
+}
+
 export class Login implements ILogin {
     token?: string | undefined;
     expirationDate?: Date;
@@ -470,6 +744,125 @@ export interface ILoginResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: ILogin;
+}
+
+export class PaymentMethod implements IPaymentMethod {
+    id?: number;
+    fpId?: number;
+    name?: string | undefined;
+    deferred?: boolean;
+
+    constructor(data?: IPaymentMethod) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.fpId = _data["fpId"];
+            this.name = _data["name"];
+            this.deferred = _data["deferred"];
+        }
+    }
+
+    static fromJS(data: any): PaymentMethod {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaymentMethod();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["fpId"] = this.fpId;
+        data["name"] = this.name;
+        data["deferred"] = this.deferred;
+        return data;
+    }
+}
+
+export interface IPaymentMethod {
+    id?: number;
+    fpId?: number;
+    name?: string | undefined;
+    deferred?: boolean;
+}
+
+export class PaymentMethodsResponse implements IPaymentMethodsResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: PaymentMethod[] | undefined;
+
+    constructor(data?: IPaymentMethodsResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.data) {
+                this.data = [];
+                for (let i = 0; i < data.data.length; i++) {
+                    let item = data.data[i];
+                    this.data[i] = item && !(<any>item).toJSON ? new PaymentMethod(item) : <PaymentMethod>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(PaymentMethod.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): PaymentMethodsResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaymentMethodsResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IPaymentMethodsResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: IPaymentMethod[] | undefined;
 }
 
 export class Price implements IPrice {
@@ -1562,6 +1955,62 @@ export class SearchResponse implements ISearchResponse {
 export interface ISearchResponse {
     productCategories?: IProductCategory[] | undefined;
     products?: IProduct[] | undefined;
+}
+
+export class StringApiResult implements IStringApiResult {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: string | undefined;
+
+    constructor(data?: IStringApiResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.data = _data["data"];
+        }
+    }
+
+    static fromJS(data: any): StringApiResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new StringApiResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["data"] = this.data;
+        return data;
+    }
+}
+
+export interface IStringApiResult {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: string | undefined;
 }
 
 export class User implements IUser {

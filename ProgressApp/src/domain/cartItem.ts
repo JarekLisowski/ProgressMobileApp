@@ -4,6 +4,7 @@ export class CartItem {
     code?: string = "";
     priceNet: number = 0;
     priceGross: number = 0; 
+    taxRate: number = 23;
     quantity: number = 0;
     promoSetId: number = 0;
     promoItemId: number = 0;

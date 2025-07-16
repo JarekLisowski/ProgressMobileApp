@@ -15,17 +15,20 @@ import { SpecialOfferListComponent } from "../special-offer-list/special-offer-l
 export class SpecialOffersComponent implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
-  private readonly api = inject(ApiService);
+  private readonly apiService = inject(ApiService);
   
   promoList: IPromoSet[] = [];
 
   ngOnInit(): void {
-    this.api.getPromoList().subscribe(
+    this.apiService.getPromoList().subscribe(
       x => {
         console.log(x);
         if (x.isError == false && x.data != null)
         {
           this.promoList = x.data;
+          this.promoList.forEach(x => {
+            x.imgUrl = this.apiService.makeUrlPromoImage(x.id);
+          });
         }
       });
   }

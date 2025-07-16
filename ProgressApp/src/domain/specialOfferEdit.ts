@@ -74,6 +74,7 @@ export class PromoItemEdit implements IPromoItem {
                 code: x.code,
                 priceNet: x.priceNet,
                 priceGross: x.priceGross,
+                taxRate: x.taxRate,
                 quantity: x.quantity,
                 promoSetId: newPromoSetId ?? x.promoSetId,
                 promoItemId: x.promoItemId,

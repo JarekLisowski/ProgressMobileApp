@@ -7,15 +7,8 @@
             <div>
                 {{data.name}}
             <div class="d-flex">
-                <div>
-                    Stan: {{data.stock}}
-                </div>               
                 <div class="ms-auto">
-                    <div class="input-group input-spinner">
-                        <input type="button" value="-" class="button-minus btn btn-sm" data-field="quantity" (click)="amountDecrement()" />
-                        <input type="number" step="1" [(ngModel)]="quantity" name="quantity" class="quantity-field form-control-sm form-input" (change)="amountDecrement()" />
-                        <input type="button" value="+" class="button-plus btn btn-sm" data-field="quantity" (click)="amountIncrement()"/>
-                    </div>
+                    <quantity [minQuantity]="0" [quantity]="quantity"  (quntityChanged)="quantityChanged($event)"></quantity>
                 </div>
              </div>
           </div>

@@ -1,0 +1,14 @@
+<ul class="list-unstyled">
+  <li>
+    <customer-select (customerSelectedEvent)="customerSelected($event)" [customer]="customer"></customer-select>
+  </li>
+  <li>
+    {{customer?.adrNip}}
+  </li>
+  <li>
+    {{customer?.adrStreet}} {{customer?.adrStreetNo}} {{customer?.adrNumber}}
+  </li>
+  <li>
+    {{customer?.adrCity}} {{customer?.adrZipCode}}
+  </li>
+</ul>

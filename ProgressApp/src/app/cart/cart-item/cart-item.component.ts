@@ -5,11 +5,12 @@ import { NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { CartService } from '../../../services/cart.service';
+import { QuantityComponent } from "../../quantity/quantity.component";
 
 @Component({
   selector: 'cart-item',
   standalone: true,
-  imports: [FormsModule, NgIf, RouterModule],
+  imports: [FormsModule, NgIf, RouterModule, QuantityComponent],
   templateUrl: './cart-item.component.html',
   styleUrl: './cart-item.component.scss'
 })
@@ -44,15 +45,23 @@ export class CartItemComponent {
     }
   }
 
-  public amountIncrement() {
+  amountIncrement() {
     this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity + 1).subscribe(x => {
       this.quantity = x.quantity;
     });
   }
 
-  public amountDecrement() {
+  amountDecrement() {
     if (this.quantity > 1) {
       this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity - 1).subscribe(x => {
+        this.quantity = x.quantity;
+      });
+    }
+  }
+
+  quantityChanged(quantity: number) {
+    if (quantity > 1 && this.cartItem?.id != null) {
+      this.cartService.updateCartItemQuntity(this.cartItem.id, quantity).subscribe(x => {
         this.quantity = x.quantity;
       });
     }

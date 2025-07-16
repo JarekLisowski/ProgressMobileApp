@@ -12,6 +12,15 @@
 	public class ApiResult<T_PAYLOAD> : ApiResult
 			where T_PAYLOAD : class
 	{
-		public T_PAYLOAD? Data { get; set; }
+    public ApiResult()
+    {
+    }
+
+    public ApiResult(T_PAYLOAD data)
+    {
+      Data = data;
+    }
+
+    public T_PAYLOAD? Data { get; set; }
 	}
 }

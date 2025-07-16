@@ -22,6 +22,17 @@ export class UserService {
                 }
                 return false;
             })
+        );        
+    }
+
+    getUser(): Observable<User | null> {
+        return this.dbService.getAll<User>('user').pipe(
+            map(x => {
+                if (x.length > 0) {
+                    return x[0];
+                }
+                return null;
+            })
         );
         
     }

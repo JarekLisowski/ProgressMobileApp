@@ -24,11 +24,11 @@ namespace Progress.Infrastructure.Database.Repository
       return productList;
     }
 
-    public Product? GetProduct(int id, int priceLevel = 1)
+    public Product? GetProduct(int id, int priceLevel = 1, int? stockId = null)
     {
       var productDb = DbContext.TwTowars.AsNoTracking()
         .Include(it => it.TwCena)
-        .Include(it => it.TwStans)
+        .Include(it => it.TwStans.Where(it2 => stockId == null || stockId == it2.StMagId))
         .Include(it => it.TwCechaTws).ThenInclude(it => it.ChtIdCechaNavigation)
         .FirstOrDefault(it => it.TwId == id);
       if (productDb != null)
@@ -40,6 +40,7 @@ namespace Progress.Infrastructure.Database.Repository
           product.Price = product.Prices[priceLevel];
           product.CategoryName = productDb.TwCechaTws.FirstOrDefault()?.ChtIdCechaNavigation.CtwNazwa ?? "";
           product.CategoryId = productDb.TwCechaTws.FirstOrDefault()?.ChtIdCechaNavigation.CtwId ?? 0;
+          product.Stock = productDb.TwStans.FirstOrDefault()?.StStan ?? 0;
         }
         return product;
       }

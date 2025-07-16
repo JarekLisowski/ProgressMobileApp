@@ -1,7 +1,7 @@
 <div #searchGroup class="input-group">
-    <input class="form-control" type="search" placeholder="Search for products" aria-label="Recipient's username"
+    <input class="form-control" type="search" placeholder="Szukaj produkt lub kategorię" aria-label="Recipient's username"
         aria-describedby="button-addon2" [(ngModel)]="searchText" />
-    <button class="btn btn-primary" type="button" id="button-addon2">Search</button>
+    <button class="btn btn-primary" type="button" id="button-addon2">Szukaj</button>
 </div>
 <div [class]="dropdownVisible ? 'show' : ''" class="popup-search" [style.width.px]="dropDownWidth">
     <ul class="search-list">

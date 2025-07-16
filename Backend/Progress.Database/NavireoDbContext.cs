@@ -31,7 +31,13 @@ public partial class NavireoDbContext : DbContext
 
     public virtual DbSet<IfVwKontrahent> IfVwKontrahents { get; set; }
 
+    public virtual DbSet<IfxApiDokPozycjaPromocja> IfxApiDokPozycjaPromocjas { get; set; }
+
+    public virtual DbSet<IfxApiDokumentyZapisane> IfxApiDokumentyZapisanes { get; set; }
+
     public virtual DbSet<IfxApiFormaPlatnosci> IfxApiFormaPlatnoscis { get; set; }
+
+    public virtual DbSet<IfxApiLog> IfxApiLogs { get; set; }
 
     public virtual DbSet<IfxApiPromocjaGrupa> IfxApiPromocjaGrupas { get; set; }
 
@@ -51,6 +57,8 @@ public partial class NavireoDbContext : DbContext
 
     public virtual DbSet<IfxApiUzytkownikPoziomyCenowe> IfxApiUzytkownikPoziomyCenowes { get; set; }
 
+    public virtual DbSet<IfxParameter> IfxParameters { get; set; }
+
     public virtual DbSet<KhAdresyDostawy> KhAdresyDostawies { get; set; }
 
     public virtual DbSet<KhCechaKh> KhCechaKhs { get; set; }
@@ -63,6 +71,8 @@ public partial class NavireoDbContext : DbContext
 
     public virtual DbSet<PdPodmiot> PdPodmiots { get; set; }
 
+    public virtual DbSet<PdUzytkUpraw> PdUzytkUpraws { get; set; }
+
     public virtual DbSet<PdUzytkownik> PdUzytkowniks { get; set; }
 
     public virtual DbSet<SlBank> SlBanks { get; set; }
@@ -71,6 +81,8 @@ public partial class NavireoDbContext : DbContext
 
     public virtual DbSet<SlCechaTw> SlCechaTws { get; set; }
 
+    public virtual DbSet<SlFormaPlatnosci> SlFormaPlatnoscis { get; set; }
+
     public virtual DbSet<SlGrupaKh> SlGrupaKhs { get; set; }
 
     public virtual DbSet<SlGrupaTw> SlGrupaTws { get; set; }
@@ -78,6 +90,8 @@ public partial class NavireoDbContext : DbContext
     public virtual DbSet<SlKategorium> SlKategoria { get; set; }
 
     public virtual DbSet<SlMagazyn> SlMagazyns { get; set; }
+
+    public virtual DbSet<SlPanstwo> SlPanstwos { get; set; }
 
     public virtual DbSet<SlStawkaVat> SlStawkaVats { get; set; }
 
@@ -266,6 +280,10 @@ public partial class NavireoDbContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValue("")
                 .HasColumnName("adr_Ulica");
+
+            entity.HasOne(d => d.AdrIdPanstwoNavigation).WithMany(p => p.AdrEwids)
+                .HasForeignKey(d => d.AdrIdPanstwo)
+                .HasConstraintName("FK_adr__Ewid_sl_Panstwo");
         });
 
         modelBuilder.Entity<AdrHistorium>(entity =>
@@ -878,6 +896,14 @@ public partial class NavireoDbContext : DbContext
             entity.Property(e => e.DokZlecenieId).HasColumnName("dok_ZlecenieId");
             entity.Property(e => e.DokZnacznikiGtunaPozycji).HasColumnName("dok_ZnacznikiGTUNaPozycji");
 
+            entity.HasOne(d => d.DokIdPanstwaKonsumentaNavigation).WithMany(p => p.DokDokumentDokIdPanstwaKonsumentaNavigations)
+                .HasForeignKey(d => d.DokIdPanstwaKonsumenta)
+                .HasConstraintName("FK_dok__Dokument_sl_Panstwo1");
+
+            entity.HasOne(d => d.DokIdPanstwaRozpoczeciaWysylkiNavigation).WithMany(p => p.DokDokumentDokIdPanstwaRozpoczeciaWysylkiNavigations)
+                .HasForeignKey(d => d.DokIdPanstwaRozpoczeciaWysylki)
+                .HasConstraintName("FK_dok__Dokument_sl_Panstwo");
+
             entity.HasOne(d => d.DokKat).WithMany(p => p.DokDokuments)
                 .HasForeignKey(d => d.DokKatId)
                 .HasConstraintName("FK_dok__Dokument_sl_Kategoria");
@@ -1244,6 +1270,26 @@ public partial class NavireoDbContext : DbContext
                 .HasColumnName("zm_Data");
         });
 
+        modelBuilder.Entity<IfxApiDokPozycjaPromocja>(entity =>
+        {
+            entity.HasKey(e => new { e.ObId, e.PromocjaPozycjaId, e.PozycjaUrzadzenieId });
+
+            entity.ToTable("IFx_ApiDokPozycjaPromocja");
+
+            entity.Property(e => e.ObId).HasColumnName("ob_Id");
+        });
+
+        modelBuilder.Entity<IfxApiDokumentyZapisane>(entity =>
+        {
+            entity.ToTable("IFx_ApiDokumentyZapisane");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Data).HasColumnType("datetime");
+            entity.Property(e => e.Numer)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<IfxApiFormaPlatnosci>(entity =>
         {
             entity.ToTable("IFx_ApiFormaPlatnosci");
@@ -1253,6 +1299,21 @@ public partial class NavireoDbContext : DbContext
             entity.Property(e => e.Nazwa)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<IfxApiLog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_IFx_ApiExceptions2");
+
+            entity.ToTable("IFx_ApiLog");
+
+            entity.Property(e => e.Date).HasColumnType("datetime");
+            entity.Property(e => e.InnerException).IsUnicode(false);
+            entity.Property(e => e.Message).IsUnicode(false);
+            entity.Property(e => e.StackTrace).IsUnicode(false);
+            entity.Property(e => e.UzId).HasColumnName("uz_Id");
+            entity.Property(e => e.XmlRequest).IsUnicode(false);
+            entity.Property(e => e.XmlResponse).IsUnicode(false);
         });
 
         modelBuilder.Entity<IfxApiPromocjaGrupa>(entity =>
@@ -1411,6 +1472,26 @@ public partial class NavireoDbContext : DbContext
                 .HasForeignKey(d => d.UzId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_IFx_ApiUzytkownik_PoziomyCenowe_IFx_ApiUzytkownik");
+        });
+
+        modelBuilder.Entity<IfxParameter>(entity =>
+        {
+            entity.HasKey(e => e.ParName);
+
+            entity.ToTable("IFx_Parameter");
+
+            entity.Property(e => e.ParName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("par_Name");
+            entity.Property(e => e.ParValueDecimal)
+                .HasColumnType("decimal(18, 4)")
+                .HasColumnName("par_ValueDecimal");
+            entity.Property(e => e.ParValueInt).HasColumnName("par_ValueInt");
+            entity.Property(e => e.ParValueString)
+                .HasMaxLength(1000)
+                .IsUnicode(false)
+                .HasColumnName("par_ValueString");
         });
 
         modelBuilder.Entity<KhAdresyDostawy>(entity =>
@@ -1811,6 +1892,10 @@ public partial class NavireoDbContext : DbContext
             entity.HasOne(d => d.KhIdEwVatzakKategNavigation).WithMany(p => p.KhKontrahentKhIdEwVatzakKategNavigations)
                 .HasForeignKey(d => d.KhIdEwVatzakKateg)
                 .HasConstraintName("FK_kh__Kontrahent_sl_Kategoria2");
+
+            entity.HasOne(d => d.KhIdFormaPNavigation).WithMany(p => p.KhKontrahents)
+                .HasForeignKey(d => d.KhIdFormaP)
+                .HasConstraintName("FK_kh__Kontrahent_sl_FormaPlatnosci");
 
             entity.HasOne(d => d.KhIdGrupaNavigation).WithMany(p => p.KhKontrahents)
                 .HasForeignKey(d => d.KhIdGrupa)
@@ -2515,6 +2600,19 @@ public partial class NavireoDbContext : DbContext
                 .HasColumnName("pd_WWW");
         });
 
+        modelBuilder.Entity<PdUzytkUpraw>(entity =>
+        {
+            entity.HasKey(e => e.UzupId);
+
+            entity.ToTable("pd_UzytkUpraw");
+
+            entity.Property(e => e.UzupId)
+                .ValueGeneratedNever()
+                .HasColumnName("uzup_Id");
+            entity.Property(e => e.UzupUprawId).HasColumnName("uzup_UprawId");
+            entity.Property(e => e.UzupUzytkId).HasColumnName("uzup_UzytkId");
+        });
+
         modelBuilder.Entity<PdUzytkownik>(entity =>
         {
             entity.HasKey(e => e.UzId);
@@ -2681,6 +2779,37 @@ public partial class NavireoDbContext : DbContext
                 .HasColumnName("rowguid");
         });
 
+        modelBuilder.Entity<SlFormaPlatnosci>(entity =>
+        {
+            entity.HasKey(e => e.FpId);
+
+            entity.ToTable("sl_FormaPlatnosci", tb => tb.HasTrigger("tr_FormaPlatInsMod"));
+
+            entity.Property(e => e.FpId)
+                .ValueGeneratedNever()
+                .HasColumnName("fp_Id");
+            entity.Property(e => e.FpAktywna)
+                .HasDefaultValue(true)
+                .HasColumnName("fp_Aktywna");
+            entity.Property(e => e.FpCentId).HasColumnName("fp_CentId");
+            entity.Property(e => e.FpFormaPlatnosciWysylajJako).HasColumnName("fp_FormaPlatnosciWysylajJako");
+            entity.Property(e => e.FpGlowna).HasColumnName("fp_Glowna");
+            entity.Property(e => e.FpInstKredytId).HasColumnName("fp_InstKredytId");
+            entity.Property(e => e.FpNazwa)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("fp_Nazwa");
+            entity.Property(e => e.FpOpisPlatnosciInna)
+                .HasMaxLength(256)
+                .IsUnicode(false)
+                .HasColumnName("fp_OpisPlatnosciInna");
+            entity.Property(e => e.FpRachBankId).HasColumnName("fp_RachBankId");
+            entity.Property(e => e.FpTermin).HasColumnName("fp_Termin");
+            entity.Property(e => e.FpTerminalPlatniczy).HasColumnName("fp_TerminalPlatniczy");
+            entity.Property(e => e.FpTyp).HasColumnName("fp_Typ");
+        });
+
         modelBuilder.Entity<SlGrupaKh>(entity =>
         {
             entity.HasKey(e => e.GrkId);
@@ -2793,6 +2922,32 @@ public partial class NavireoDbContext : DbContext
                 .HasColumnName("mag_Symbol");
         });
 
+        modelBuilder.Entity<SlPanstwo>(entity =>
+        {
+            entity.HasKey(e => e.PaId);
+
+            entity.ToTable("sl_Panstwo");
+
+            entity.Property(e => e.PaId)
+                .ValueGeneratedNever()
+                .HasColumnName("pa_Id");
+            entity.Property(e => e.PaCzlonekUe).HasColumnName("pa_CzlonekUE");
+            entity.Property(e => e.PaKodPanstwaIso)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("pa_KodPanstwaISO");
+            entity.Property(e => e.PaKodPanstwaUe)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("pa_KodPanstwaUE");
+            entity.Property(e => e.PaNazwa)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("pa_Nazwa");
+        });
+
         modelBuilder.Entity<SlStawkaVat>(entity =>
         {
             entity.HasKey(e => e.VatId);
@@ -2833,6 +2988,10 @@ public partial class NavireoDbContext : DbContext
                 .HasDefaultValue("")
                 .HasColumnName("vat_Symbol");
             entity.Property(e => e.VatUePanstwo).HasColumnName("vat_UePanstwo");
+
+            entity.HasOne(d => d.VatIdPanstwoNavigation).WithMany(p => p.SlStawkaVats)
+                .HasForeignKey(d => d.VatIdPanstwo)
+                .HasConstraintName("FK_sl_StawkaVAT_sl_Panstwo");
         });
 
         modelBuilder.Entity<SlWlasny>(entity =>

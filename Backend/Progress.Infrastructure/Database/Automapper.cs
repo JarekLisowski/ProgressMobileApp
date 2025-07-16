@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Progress.Database;
 using Progress.Domain.Model;
-using Progress.Domain.Navireo;
-using System;
 
 namespace Progress.Infrastructure.Database
 {
@@ -98,6 +96,14 @@ namespace Progress.Infrastructure.Database
         .ForMember(dst => dst.SpecialPayment, opt => opt.MapFrom((kontrahent, dst) => (kontrahent.KhPlatOdroczone != null && kontrahent.KhPlatOdroczone == true) && (((kontrahent.KhMaxDokKred ?? 0) > (kontrahent.IloscDokNierozliczonych ?? 0)) || kontrahent.KhMaxDokKred == null || kontrahent.KhMaxDokKred == 0) ? true : false))
         .ForMember(dst => dst.PaymentDeadline, opt => opt.MapFrom((kontrahent, dst) =>  kontrahent.KhPlatOdroczone != null && kontrahent.KhPlatOdroczone == true ? (kontrahent.FpTermin != null ? (int)kontrahent.FpTermin : -1) : 0))
 				;
+
+			CreateMap<IfxApiFormaPlatnosci, PaymentMethod>()
+				.ForMember(dst => dst.Deferred, opt => opt.MapFrom(src => src.PlatnoscOdroczona))
+				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Nazwa));
+
+			CreateMap<IfxApiSposobDostawy, DeliveryMethod>()
+				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Nazwa))
+				.ForMember(dst => dst.Active, opt => opt.MapFrom(src => src.Aktywny));
 		}
 
 		private decimal GetStan(TwTowar towar)

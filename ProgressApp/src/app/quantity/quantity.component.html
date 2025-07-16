@@ -1,0 +1,9 @@
+<div class="input-group btn-group quantity-group">
+    <span class="input-group-text btn-quantity">
+        <a href="#" (click)="quantityDecrement(); false">-</a>
+    </span>
+    <input type="number" step="1" max="10" [(ngModel)]="quantity" name="quantity" class="form-control quantity" />
+    <span class="input-group-text btn-quantity">
+        <a href="#" (click)="quantityIncrement(); false">+</a>
+    </span>
+</div>

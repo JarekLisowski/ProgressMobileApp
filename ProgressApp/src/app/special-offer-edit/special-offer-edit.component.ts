@@ -59,6 +59,7 @@ export class SpecialOfferEditComponent implements OnInit {
             newPromoItem.products = promoItem.products;
             return newPromoItem;
           });
+          this.promoSet = initPromoSet;
         }
       });
     }
@@ -104,6 +105,7 @@ export class SpecialOfferEditComponent implements OnInit {
                       code: cartItem.code,
                       priceNet: cartItem.priceNet,
                       priceGross: cartItem.priceGross,
+                      taxRate: cartItem.taxRate,
                       quantity: cartItem.quantity,
                       promoSetId: cartItem.promoSetId,
                       promoItemId: cartItem.promoItemId,

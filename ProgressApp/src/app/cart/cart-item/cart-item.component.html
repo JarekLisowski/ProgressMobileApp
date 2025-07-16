@@ -15,16 +15,8 @@
                 <!-- input -->
 
                 <div *ngIf="readonly == false" class="d-flex pt-2">
-                    <div class="">
-                        <div class="input-group input-spinner">
-                            <input type="button" value="-" class="button-minus  btn  btn-sm " data-field="quantity"
-                                (click)="amountDecrement()">
-                            <input type="number" step="1" [(ngModel)]="quantity" name="quantity"
-                                class="quantity-field form-control-sm form-input">
-                            <input type="button" value="+" class="button-plus btn btn-sm " data-field="quantity"
-                                (click)="amountIncrement()">
-                        </div>
-                    </div>
+                    <quantity [minQuantity]="1" [quantity]="quantity" (quntityChanged)="quantityChanged($event)">
+                    </quantity>
                     <div class="ms-auto">
                         <span class="fw-bold fs-4">{{cartItem?.priceGross}}</span>
                     </div>
@@ -41,8 +33,7 @@
     <div class="d-none d-lg-block">
         <div class="row align-items-center ">
             <div class="col-3 col-md-2">
-                <!-- img --> <img src="{{cartItem?.imageUrl}}" alt="Ecommerce"
-                    class="img-fluid">
+                <!-- img --> <img src="{{cartItem?.imageUrl}}" alt="Ecommerce" class="img-fluid">
             </div>
             <div class="col-4 col-md-5">
                 <!-- title -->
@@ -70,18 +61,15 @@
             </div>
             <!-- input group -->
             <div *ngIf="!readonly" class="col-3 col-md-3 col-lg-2">
-                <!-- input -->
-                <div class="input-group input-spinner  ">
-                    <input type="button" value="-" class="button-minus  btn  btn-sm " data-field="quantity" (click)="amountDecrement()">
-                    <input type="number" step="1"  [(ngModel)]="quantity" name="quantity"
-                        class="quantity-field form-control-sm form-input   ">
-                    <input type="button" value="+" class="button-plus btn btn-sm " data-field="quantity" (click)="amountIncrement()">
-                </div>
+                <quantity [minQuantity]="1" [quantity]="quantity" (quntityChanged)="quantityChanged($event)"></quantity>
             </div>
             <!-- price -->
             <div class="col-2 text-lg-end text-start text-md-end col-md-2">
-                <span class="fw-bold">$5.00</span>
+                <span class="fw-bold">{{cartItem?.priceGross}}</span>
             </div>
+        </div>
+        <div class="text-end">
+            <span class="text-muted">{{cartItem?.code}}</span>
         </div>
     </div>
 

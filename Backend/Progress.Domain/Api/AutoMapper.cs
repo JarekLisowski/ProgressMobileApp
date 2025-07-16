@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Progress.Domain.Model;
 
 namespace Progress.Domain.Api
 {
@@ -18,6 +19,10 @@ namespace Progress.Domain.Api
 			CreateMap<Model.Customer, Customer>();
 
 			CreateMap<Model.User, User>();
+
+			CreateMap<Model.PaymentMethod, PaymentMethod>();
+
+			CreateMap<Model.DeliveryMethod, DeliveryMethod>();
 		}
 	}
 }

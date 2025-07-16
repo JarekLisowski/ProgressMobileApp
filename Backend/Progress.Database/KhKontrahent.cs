@@ -331,6 +331,8 @@ public partial class KhKontrahent
 
     public virtual SlKategorium? KhIdEwVatzakKategNavigation { get; set; }
 
+    public virtual SlFormaPlatnosci? KhIdFormaPNavigation { get; set; }
+
     public virtual SlGrupaKh? KhIdGrupaNavigation { get; set; }
 
     public virtual SlKategorium? KhIdKategoriaKhNavigation { get; set; }

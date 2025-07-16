@@ -1,80 +1,78 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { CartItemsComponent } from "./cart-items/cart-items.component";
+import { CartCustomerComponent } from "./cart-customer/cart-customer.component";
+import { CartOptionsComponent } from "./cart-options/cart-options.component";
+import { CartFinalizeComponent } from "./cart-finalize/cart-finalize.component";
+import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
-import { CartItem, CartItemWithId } from '../../domain/cartItem';
-import { CartItemComponent } from "./cart-item/cart-item.component";
-import { NgFor, NgIf } from '@angular/common';
-import { PromoContainerComponent } from "./promo-container/promo-container.component";
-import { CartPromoItem, CartPromoItemWithId } from '../../domain/cartPromoItem';
-import { CustomerListComponent } from "../customer-list/customer-list.component";
-import { CustomerSelectComponent } from "../customer-select/customer-select.component";
-import { Customer } from '../../domain/generated/apimodel';
+import { WithID } from 'ngx-indexed-db';
+import { CartItem } from '../../domain/cartItem';
+import { Transaction } from '../../domain/transaction';
+import { Document, IDocument, User } from '../../domain/generated/apimodel';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CartItemComponent, NgFor, NgIf, PromoContainerComponent, CustomerListComponent, CustomerSelectComponent],
+  imports: [CartItemsComponent, CartCustomerComponent, CartOptionsComponent, CartFinalizeComponent],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
 
-export class CartComponent implements OnInit {
+export class CartComponent {
 
+  cartService = inject(CartService);
+  apiService = inject(ApiService);
+  userService = inject(UserService);
 
-  private readonly cartService = inject(CartService);
-
-  _cartItems: CartItemWithId[] = [];
-
-  customer: Customer | undefined;
-
-  set cartItems(cartItems: CartItemWithId[]) {
-    this._cartItems = cartItems;
-    this.cartItemsPromos = cartItems.filter(item => item.promoItemId !== 0).sort((a, b) => a.promoItemId - b.promoItemId);
-    this.cartItemsNoPromos = cartItems.filter(item => item.promoItemId === 0);
-  }
-
-  cartPromoItems: CartPromoItemWithId[] = [];
-
-  cartItemsPromos: CartItemWithId[] = [];
-
-  cartItemsNoPromos: CartItemWithId[] = [];
-
-  currentPromoId: number = 0;
-
-  ngOnInit(): void {
-    this.loadCart();
-  }
-
-  loadCart() {
+  sendDocument() {
     this.cartService.getCartItems().subscribe(items => {
-      console.log('Cart items:', items);
-      this.cartItems = items;
-    });
-    this.cartService.getPromoItems().subscribe(items => {
-      console.log('Promo items:', items);
-      this.cartPromoItems = items;
-    });
-    this.cartService.getCurrentTransaction().subscribe(transaction => {
-      console.log('Transaction:');
-      console.log(transaction);
-      this.customer = transaction.customer;
+      this.cartService.getCurrentTransaction().subscribe(transaction => {
+        this.userService.getUser().subscribe(user => {
+          if (user != null)
+            this.sendDocument2(items, transaction, user);
+        })
+      })
     });
   }
 
-  customerSelected($event: Customer) {
-    this.customer = $event;
-    this.cartService.getCurrentTransaction().subscribe(transaction => {
-      console.log('Transaction:');
-      console.log(transaction);
-      transaction.customer = this.customer;
-      this.cartService.updateTransaction(transaction).subscribe(x => {
-        console.log('Transaction updated:', x);
-      });
+  private sendDocument2(items: (CartItem & WithID)[], transaction: Transaction, user: User) {
+    var document: IDocument = {
+      id: undefined,
+      documentType: transaction.document,
+      cashPayment: transaction.cashAmount,
+      secondPaymentMethod: transaction.secondPaymentMethod,
+      secondPaymentAmount: transaction.secondMethodAmount,
+      customerId: transaction.customer?.id,
+      deliveryMethod: transaction.deliveryMethod,
+      comment: transaction.comment,
+      packagesNumber: transaction.packagesNumber,
+      userId: user.id,
+      items: items.map(item => {
+        return {
+          productId: item.productId,
+          quantity: item.quantity,
+          priceNet: item.priceNet,
+          priceGross: item.priceGross,
+          discountRate: 0,
+          discountAmount: 0,
+          taxRate: item.taxRate,
+          taxAmount: 0
+        }})
+    };
+    this.apiService.sendDocument(document).subscribe(x => {
+      console.log(x);
+      // this.cartService.clearTransaction(transaction).subscribe(x => {
+      //   this.cartService.clearCart().subscribe(x=> {
 
+      //   })
+      // });
     });
+
   }
 
-  removeItem($event: number) {
-    this.loadCart();
+  saveTransaction() {
+    this.sendDocument();
   }
 
 }

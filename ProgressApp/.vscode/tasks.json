@@ -40,7 +40,7 @@
     },
     {
       "label": "download swagger",
-      "command": "curl -o swagger.json https://localhost:7228/swagger/v1/swagger.json",
+      "command": "curl -o swagger.json http://localhost:5085/swagger/v1/swagger.json",
       "type": "shell"
     },
     {

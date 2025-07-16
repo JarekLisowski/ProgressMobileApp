@@ -32,6 +32,7 @@ dotnet ef dbcontext scaffold "Server=localhost;Trusted_Connection=True;Database=
 --table sl_Magazyn		  ^
 --table sl_StawkaVAT	  ^
 --table sl_Wlasny		  ^
+--table sl_FormaPlatnosci ^
 --table nz__Finanse		  ^
 --table IFx_ApiFormaPlatnosci			^
 --table IFx_ApiPromocjaGrupa			^
@@ -43,4 +44,11 @@ dotnet ef dbcontext scaffold "Server=localhost;Trusted_Connection=True;Database=
 --table IFx_ApiUzytkownik				^
 --table IFx_ApiUzytkownik_PoziomyCenowe	^
 --table IFx_ApiUstawienia				^
---table IF_vwKontrahent
+--table IF_vwKontrahent					^
+--table pd_UzytkUpraw					^
+--table sl_Panstwo						^
+--table IFx_ApiLog						^
+--table IFx_ApiDokPozycjaPromocja		^
+--table IFx_Parameter					^
+--table IFx_ApiDokumentyZapisane
+

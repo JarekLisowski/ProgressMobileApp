@@ -65,5 +65,7 @@ public partial class AdrEwid
 
     public virtual ICollection<AdrHistorium> AdrHistoria { get; set; } = new List<AdrHistorium>();
 
+    public virtual SlPanstwo? AdrIdPanstwoNavigation { get; set; }
+
     public virtual ICollection<NzFinanse> NzFinanses { get; set; } = new List<NzFinanse>();
 }

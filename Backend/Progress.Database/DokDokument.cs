@@ -337,6 +337,10 @@ public partial class DokDokument
 
     public int? DokVatMetodaLiczenia { get; set; }
 
+    public virtual SlPanstwo? DokIdPanstwaKonsumentaNavigation { get; set; }
+
+    public virtual SlPanstwo? DokIdPanstwaRozpoczeciaWysylkiNavigation { get; set; }
+
     public virtual SlKategorium? DokKat { get; set; }
 
     public virtual ICollection<DokPozycja> DokPozycjaObDokHans { get; set; } = new List<DokPozycja>();

@@ -12,7 +12,7 @@ import { Customer } from '../../domain/generated/apimodel';
 })
 export class CustomerSelectComponent implements AfterViewInit {
   
-  @ViewChild('selectProductModal') myModalRef!: ElementRef;
+  @ViewChild('selectProductModal') modalRef!: ElementRef;
 
   @Output() customerSelectedEvent = new EventEmitter<Customer>();
   
@@ -21,8 +21,8 @@ export class CustomerSelectComponent implements AfterViewInit {
   modal!: Modal;
   
   ngAfterViewInit(): void {
-    this.modal = new Modal(this.myModalRef.nativeElement);
-    this.myModalRef.nativeElement.addEventListener("hidden.bs.modal", () => {
+    this.modal = new Modal(this.modalRef.nativeElement);
+    this.modalRef.nativeElement.addEventListener("hidden.bs.modal", () => {
       
     });
   }

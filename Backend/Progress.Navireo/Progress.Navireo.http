@@ -1,6 +1,0 @@
-@Progress.Navireo_HostAddress = http://localhost:5270
-
-GET {{Progress.Navireo_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

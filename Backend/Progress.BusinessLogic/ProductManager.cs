@@ -55,9 +55,9 @@ namespace Progress.BusinessLogic
       return category;
     }
 
-    public Product? GetProduct(int id)
+    public Product? GetProduct(int id, int priceLevel = 1, int? stockId = null)
     {
-      return dbProductRepository.GetProduct(id);
+      return dbProductRepository.GetProduct(id, priceLevel, stockId);
     }
 
     public ProductImage? GetProductImage(int productId, int number = 0)

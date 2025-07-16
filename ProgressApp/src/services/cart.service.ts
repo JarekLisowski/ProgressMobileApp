@@ -11,7 +11,8 @@ import { Transaction } from "../domain/transaction";
     providedIn: 'root'
 })
 export class CartService {
-    
+
+    private readonly storeTransaction = 'transaction';
 
     constructor(private dbService: NgxIndexedDBService) { }
 
@@ -33,6 +34,7 @@ export class CartService {
                         code: product.code ?? "",
                         priceNet: product.price?.priceNet ?? 0,
                         priceGross: product.price?.priceGross ?? 0,
+                        taxRate: product.price?.taxPercent ?? 23,
                         quantity: quantity,
                         promoSetId: 0,
                         promoItemId: 0,
@@ -76,8 +78,6 @@ export class CartService {
         return this.dbService.clear('cart');
     }
 
-
-
     addPromoSetToCart(promoSet: SpecialOfferEdit): Observable<any> {
         if (promoSet.id != undefined && promoSet.id > 0) {
             this.dbService.delete('promoSet', promoSet.id).subscribe(x => {
@@ -107,12 +107,12 @@ export class CartService {
         return new Observable<any>();
     }
 
-    removePromoSetFromCart(promoSetId: number) {
-      return this.dbService.deleteAllByIndex('cart', 'promoSetId', IDBKeyRange.only(promoSetId)).pipe(
-        switchMap(x => {
-          return this.dbService.delete('promoSet', promoSetId);
-        })
-      )
+    removePromoSetFromCart(promoSetId: number): Observable<any> {
+        return this.dbService.deleteAllByIndex('cart', 'promoSetId', IDBKeyRange.only(promoSetId)).pipe(
+            switchMap(x => {
+                return this.dbService.delete('promoSet', promoSetId);
+            })
+        )
     }
 
     getPromoItems(): Observable<CartPromoItemWithId[]> {
@@ -123,38 +123,17 @@ export class CartService {
         return this.dbService.getByID<CartPromoItem>('promoSet', id);
     }
 
-    // getTransaction() : Observable<Transaction & WithID> {
-    //     var obs = this.dbService.getAll<Transaction & WithID>('transaction').pipe(
-    //         tap(x => {
-    //             return 1;
-    //         }),
-    //         map(x => {
-    //             if (x.length == 0) {
-    //                 var res2 = this.dbService.add('transaction', new Transaction());
-    //                 return res2;
-    //             }
-    //             //else {
-    //                 var res: Transaction & WithID = x[0];
-    //               //  return res;
-    //             //}
-    //         })
-    //     );
-    //     return obs;
-    // }
-
-    storeName = 'transaction';
-
     getCurrentTransaction(): Observable<Transaction> {
         return this.getFirstOrCreateTransaction();
     }
 
     private getFirstOrCreateTransaction(): Observable<Transaction> {
         // First, try to get all transactions to check if the store is empty.
-        return from(this.dbService.getAll<Transaction>(this.storeName)).pipe(
+        return from(this.dbService.getAll<Transaction>(this.storeTransaction)).pipe(
             switchMap((transactions: Transaction[]) => {
                 if (transactions && transactions.length > 0) {
                     // If transactions exist, return the first one.
-                    console.log('Transaction store is not empty. Returning first transaction:', transactions[0]);
+                    //console.log('Transaction store is not empty. Returning first transaction:', transactions[0]);
                     return of(transactions[0]);
                 } else {
                     // If the store is empty, create a new default transaction.
@@ -163,8 +142,8 @@ export class CartService {
                     // Add the new transaction to the database.
                     // The 'add' method returns the key of the newly added object.
                     // We then retrieve the full object using the key (or assume the input object is sufficient).
-                    console.log('Transaction store is empty. Adding a new transaction:', newTransaction);
-                    return from(this.dbService.add<Transaction>(this.storeName, newTransaction));
+                    //console.log('Transaction store is empty. Adding a new transaction:', newTransaction);
+                    return from(this.dbService.add<Transaction>(this.storeTransaction, newTransaction));
                     //   .pipe(
                     //     map(t => { 
                     //       return t;
@@ -175,20 +154,76 @@ export class CartService {
         );
     }
 
-    updateTransaction(transaction: Transaction) {
+    updateTransaction(transaction: Transaction): Observable<Transaction> {
         return this.dbService.update('transaction', transaction);
     }
 
-    clearTransaction(transaction: Transaction) {
-        this.dbService.clear('transaction');
+    clearTransaction(transaction: Transaction): Observable<void> {
+        return this.dbService.clear('transaction');
     }
 
+    setCustomer(customer: Customer): Observable<Transaction> {
+        return this.getCurrentTransaction().pipe(
+            switchMap(tran => {
+                tran.customer = customer;
+                return this.updateTransaction(tran);
+            })
+        );
+    }
 
+    setDocument(value: string) {
+        return this.getCurrentTransaction().pipe(
+            switchMap(tran => {
+                tran.document = value;
+                return this.updateTransaction(tran);
+            })
+        );
+    }
 
-    setCustomer(customer: Customer) {
-        this.dbService.getAll('transaction').subscribe(x => {
+    setPayment(value: number) {
+        return this.getCurrentTransaction().pipe(
+            switchMap(tran => {
+                tran.secondPaymentMethod = value;
+                return this.updateTransaction(tran);
+            })
+        );
+    }
 
-        });
+    setDelivery(value: number) {
+        return this.getCurrentTransaction().pipe(
+            switchMap(tran => {
+                tran.deliveryMethod = value;
+                return this.updateTransaction(tran);
+            })
+        )
+    }
+
+    setPaymentValues(cash: number, other: number) {
+        return this.getCurrentTransaction().pipe(
+            switchMap(tran => {
+                tran.cashAmount = cash;
+                tran.secondMethodAmount = other;
+                return this.updateTransaction(tran);
+            })
+        )
+    }
+
+    setComment(comment: string) {
+        return this.getCurrentTransaction().pipe(
+            switchMap(tran => {
+                tran.comment = comment;
+                return this.updateTransaction(tran);
+            })
+        );
+    }
+
+    setPackages(amount: number) {
+        return this.getCurrentTransaction().pipe(
+            switchMap(tran => {
+                tran.packagesNumber = amount;
+                return this.updateTransaction(tran);
+            })
+        );
     }
 
 }

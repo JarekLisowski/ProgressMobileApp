@@ -1,0 +1,13 @@
+﻿namespace Progress.Domain.Api
+{
+  public class DocumentItem
+  {
+    public int ProductId { get; set; }
+    public decimal Quantity { get; set; }
+    public decimal PriceNet { get; set; }
+    public decimal PriceGross { get; set; }
+    public decimal TaxRate { get; set; }
+    public int? PromoSetId { get; set; }
+    public decimal DiscountRate { get; internal set; }
+  }
+}

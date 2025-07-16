@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Progress.Domain.Api.Response;
 
 namespace Progress.Api.Controllers
 {
@@ -10,11 +11,13 @@ namespace Progress.Api.Controllers
 	public class DokumentyController : ApiControllerBase
   {
     IMapper _mapper;
+		NavireoConnector _navireoConnector;
 
-    public DokumentyController(IMapper autoMapper, IServiceProvider serviceProvider)
+    public DokumentyController(IMapper autoMapper, IServiceProvider serviceProvider, NavireoConnector navireoConnector)
   : base(serviceProvider)
     {
       _mapper = autoMapper;
+			_navireoConnector = navireoConnector;
     }
 
     [HttpGet("invoice/{id}")]
@@ -30,9 +33,11 @@ namespace Progress.Api.Controllers
 		}
 
 		[HttpPost("invoice")]
-		public string PostInvoice(long id) 
+		public async Task<ApiResult<string>> PostInvoice(Domain.Api.Document document) 
 		{
-			return "OK";
+			document.UserId = GetUserId();
+			var result = await _navireoConnector.UpdateDocument(document);
+			return new ApiResult<string>(result);
 		}
 
 		[HttpGet("order/{id}")]

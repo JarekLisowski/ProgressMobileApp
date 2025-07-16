@@ -1,10 +1,13 @@
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Progress.Navireo
 {
 	public class Program
 	{
 		public static void Main(string[] args)
 		{
+			Console.Title = "Navireo server";
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
@@ -13,6 +16,11 @@ namespace Progress.Navireo
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen();
+      builder.Services.AddDbContext<Database.NavireoDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Navireo")));
+      builder.Services.AddTransient<Managers.DocumentManager>();
+			builder.Services.AddTransient<Helpers.Logger>();
+			builder.Services.AddSingleton<Navireo.NavireoApplication>();
+			builder.Services.AddHostedService<Navireo.NavireoService>();
 
 			var app = builder.Build();
 
@@ -23,7 +31,7 @@ namespace Progress.Navireo
 				app.UseSwaggerUI();
 			}
 
-			app.UseHttpsRedirection();
+			//app.UseHttpsRedirection();
 
 			app.UseAuthorization();
 

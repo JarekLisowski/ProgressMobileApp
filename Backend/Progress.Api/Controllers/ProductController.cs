@@ -60,7 +60,10 @@ namespace Progress.Api.Controllers
     [HttpPost("details")]
     public ProductResponse? Get(ProductRequest request)
     {
-      var product = _productManager.GetProduct(request.ProductId);
+      var priceLevel = GetUser().DefaultPrice;
+      var stockId = 1;
+
+      var product = _productManager.GetProduct(request.ProductId, priceLevel, stockId);
       if (product != null)
         return new ProductResponse
         {

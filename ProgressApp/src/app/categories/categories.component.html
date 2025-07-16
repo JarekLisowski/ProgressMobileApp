@@ -1,10 +1,15 @@
-<div class="container">    
-    <div *ngFor="let groupKey of categoriesGroupedKeys" >
-        <div class="category-key mt-4 mb-2">{{groupKey}}</div>
-        <div class="row g-4 row-cols-lg-5 row-cols-1 row-cols-md-3">
+<div class="container">
+    <div *ngFor="let groupKey of categoriesGroupedKeys">
+        <div class="row">
+            <div class="col category-key mt-4 mb-1">
+                <h4>
+                    {{groupKey}}
+                </h4>
+            </div>
+        </div>
+        <div class="row row-cols-lg-5 row-cols-1 row-cols-md-3">
 
-            <!-- col -->
-            <div *ngFor="let item of categoriesGrouped[groupKey]" class="col mt-2">
+            <div *ngFor="let item of categoriesGrouped[groupKey]" class="col mt-1">
                 <a href="/category/{{item.id}}">
                     <div class="border rounded p-2 border-primary">
                         {{item.name}}

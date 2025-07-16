@@ -42,4 +42,6 @@ public partial class SlStawkaVat
     public virtual ICollection<TwTowar> TwTowarTwIdVatSpNavigations { get; set; } = new List<TwTowar>();
 
     public virtual ICollection<TwTowar> TwTowarTwIdVatZakNavigations { get; set; } = new List<TwTowar>();
+
+    public virtual SlPanstwo? VatIdPanstwoNavigation { get; set; }
 }

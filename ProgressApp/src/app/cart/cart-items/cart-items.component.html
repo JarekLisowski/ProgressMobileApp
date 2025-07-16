@@ -1,0 +1,11 @@
+<ul class="cart-list">
+      <div *ngFor="let item of cartPromoItems; let i = index">
+        <promo-cart-container [promoItem]="item">
+        </promo-cart-container>
+      </div>
+    </ul>
+    <ul class="cart-list">
+      <div *ngFor="let item of cartItemsNoPromos">
+        <cart-item [cartItem]="item" (itemRemoved)="removeItem($event)"></cart-item>
+      </div>
+    </ul>

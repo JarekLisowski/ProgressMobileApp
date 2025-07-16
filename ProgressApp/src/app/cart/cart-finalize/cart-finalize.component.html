@@ -1,0 +1,31 @@
+<ul class="list-group">
+    <li class="list-group-item">
+        <h6>Kontrahent</h6>
+        {{transaction?.customer?.adrName}}<br />
+        {{transaction?.customer?.adrNip}}<br />
+        {{transaction?.customer?.adrStreet}} {{transaction?.customer?.adrStreetNo}}
+        {{transaction?.customer?.adrNumber}}<br />
+        {{transaction?.customer?.adrCity}} {{transaction?.customer?.adrZipCode}}<br />
+    </li>
+    <li class="list-group-item">
+        <h6>Do zapłaty</h6>
+        {{cartTotalGross}} PLN
+    </li>
+    <li class="list-group-item">
+        <h6>Płatność</h6>
+        Gotówka: {{transaction?.cashAmount}} PLN<br />
+        {{secondPaymentMethodName}} {{transaction?.secondMethodAmount}} PLN
+    </li>
+    <li class="list-group-item">
+        <h6>Dostawa</h6>
+        {{deliveryMethodName}} {{transaction?.packagesNumber}}
+        Ilość paczek: {{transaction?.packagesNumber}}
+    </li>
+</ul>
+<div class="save">
+    <div class="position-relative mt-5">
+        <div class="position-absolute start-50 translate-middle">
+            <button class=" btn btn-primary" (click)="saveTransaction()">Zapisz</button>
+        </div>
+    </div>
+</div>

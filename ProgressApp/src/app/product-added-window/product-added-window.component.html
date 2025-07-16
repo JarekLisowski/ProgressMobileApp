@@ -1,0 +1,22 @@
+<div class="modal fade" #productAddedModal id="productAddedModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-truncate" id="exampleModalScrollableTitle">Produkt został dodany do koszyka</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-header">
+                
+            </div>
+            <div class="modal-body">
+                <a [routerLink]="['/cart']" data-bs-dismiss="modal">Zobacz koszyk</a>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>
+            </div>
+        </div>
+    </div>
+</div>
