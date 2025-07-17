@@ -28,7 +28,7 @@
 </div>
 
 <div *ngFor="let promoItem of promoSet.promoItemsEdit" class="row mb-3">
-    <app-special-offer-edit-item [promoItemEdit]="promoItem" (cartChangedEvent)="cartChangedEvent()"></app-special-offer-edit-item>
+    <app-special-offer-edit-item [promoItemEdit]="promoItem" [promoSetId]="promoSet.id" (cartChangedEvent)="cartChangedEvent()"></app-special-offer-edit-item>
 </div>
 
 

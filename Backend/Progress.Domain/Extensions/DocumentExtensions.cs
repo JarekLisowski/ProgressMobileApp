@@ -45,7 +45,9 @@ namespace Progress.Domain.Extensions
           {
             Rate = it.TaxRate,
           },
-          IsNew = true
+          IsNew = true,
+          DiscountFamilyId = it.PromoSetId ?? 0,
+          DiscountItemId = it.PromoItemId ?? 0
         }).ToList(),
         Delivery = new DeliveryType
         {

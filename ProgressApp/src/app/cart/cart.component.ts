@@ -6,10 +6,11 @@ import { CartFinalizeComponent } from "./cart-finalize/cart-finalize.component";
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
 import { WithID } from 'ngx-indexed-db';
-import { CartItem } from '../../domain/cartItem';
+import { CartItem, CartItemWithId } from '../../domain/cartItem';
 import { Transaction } from '../../domain/transaction';
 import { Document, IDocument, User } from '../../domain/generated/apimodel';
 import { UserService } from '../../services/user.service';
+import { CartPromoItemWithId } from '../../domain/cartPromoItem';
 
 @Component({
   selector: 'app-cart',
@@ -27,16 +28,18 @@ export class CartComponent {
 
   sendDocument() {
     this.cartService.getCartItems().subscribe(items => {
-      this.cartService.getCurrentTransaction().subscribe(transaction => {
-        this.userService.getUser().subscribe(user => {
-          if (user != null)
-            this.sendDocument2(items, transaction, user);
+      this.cartService.getPromoItems().subscribe(promoItems => {
+        this.cartService.getCurrentTransaction().subscribe(transaction => {
+          this.userService.getUser().subscribe(user => {
+            if (user != null)
+              this.sendDocument2(items, promoItems, transaction, user);
+          })
         })
       })
     });
   }
 
-  private sendDocument2(items: (CartItem & WithID)[], transaction: Transaction, user: User) {
+  private sendDocument2(items: (CartItemWithId)[], promoItems: CartPromoItemWithId[], transaction: Transaction, user: User) {
     var document: IDocument = {
       id: undefined,
       documentType: transaction.document,
@@ -58,7 +61,9 @@ export class CartComponent {
           discountRate: 0,
           discountAmount: 0,
           taxRate: item.taxRate,
-          taxAmount: 0
+          taxAmount: 0,
+          promoSetId: item.promoSetId != null ? (promoItems.find(x => x.id == item.promoSetId)?.promoSetId) : undefined,
+          promoItemId: item.promoItemId,
         }})
     };
     this.apiService.sendDocument(document).subscribe(x => {

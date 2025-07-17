@@ -9,6 +9,8 @@ export class CartItem {
     promoSetId: number = 0;
     promoItemId: number = 0;
     imageUrl: string = "";
+    sumNetto: number = 0;
+    sumGross: number = 0;
 }
 
 export class CartItemWithId extends CartItem {

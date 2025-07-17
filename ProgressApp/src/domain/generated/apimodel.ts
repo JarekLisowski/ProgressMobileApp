@@ -566,8 +566,9 @@ export class DocumentItem implements IDocumentItem {
     priceNet?: number;
     priceGross?: number;
     taxRate?: number;
+    discountRate?: number;
     promoSetId?: number | undefined;
-    readonly discountRate?: number;
+    promoItemId?: number | undefined;
 
     constructor(data?: IDocumentItem) {
         if (data) {
@@ -585,8 +586,9 @@ export class DocumentItem implements IDocumentItem {
             this.priceNet = _data["priceNet"];
             this.priceGross = _data["priceGross"];
             this.taxRate = _data["taxRate"];
+            this.discountRate = _data["discountRate"];
             this.promoSetId = _data["promoSetId"];
-            (<any>this).discountRate = _data["discountRate"];
+            this.promoItemId = _data["promoItemId"];
         }
     }
 
@@ -604,8 +606,9 @@ export class DocumentItem implements IDocumentItem {
         data["priceNet"] = this.priceNet;
         data["priceGross"] = this.priceGross;
         data["taxRate"] = this.taxRate;
-        data["promoSetId"] = this.promoSetId;
         data["discountRate"] = this.discountRate;
+        data["promoSetId"] = this.promoSetId;
+        data["promoItemId"] = this.promoItemId;
         return data;
     }
 }
@@ -616,8 +619,9 @@ export interface IDocumentItem {
     priceNet?: number;
     priceGross?: number;
     taxRate?: number;
-    promoSetId?: number | undefined;
     discountRate?: number;
+    promoSetId?: number | undefined;
+    promoItemId?: number | undefined;
 }
 
 export class Login implements ILogin {

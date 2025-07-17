@@ -78,7 +78,9 @@ export class PromoItemEdit implements IPromoItem {
                 quantity: x.quantity,
                 promoSetId: newPromoSetId ?? x.promoSetId,
                 promoItemId: x.promoItemId,
-                imageUrl: x.imageUrl
+                imageUrl: x.imageUrl,
+                sumNetto: x.sumNetto,
+                sumGross: x.sumGross
             };
             return cartItem;
         });

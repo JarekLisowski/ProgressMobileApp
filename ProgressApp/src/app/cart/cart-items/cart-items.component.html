@@ -1,11 +1,13 @@
-<ul class="cart-list">
-      <div *ngFor="let item of cartPromoItems; let i = index">
-        <promo-cart-container [promoItem]="item">
-        </promo-cart-container>
-      </div>
-    </ul>
-    <ul class="cart-list">
-      <div *ngFor="let item of cartItemsNoPromos">
-        <cart-item [cartItem]="item" (itemRemoved)="removeItem($event)"></cart-item>
-      </div>
-    </ul>
+<ul class="cart-list ps-0">
+  <div *ngFor="let item of cartPromoItems; let i = index">
+    <promo-cart-container [promoItem]="item" (itemRemove)="removePromoItem($event)">
+    </promo-cart-container>
+  </div>
+</ul>
+<ul class="cart-list ps-0">
+  <div *ngFor="let item of cartItemsNoPromos">
+    <cart-item [cartItem]="item" (itemRemove)="removeItem($event)"></cart-item>
+  </div>
+</ul>
+
+<confirm-modal-window #productRemoveWindow></confirm-modal-window>

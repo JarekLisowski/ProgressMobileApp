@@ -19,7 +19,6 @@ export class RESTClientService {
 
     get<T>(apiAddress : string) : Observable<T> {
         var url = this.baseUrl() + apiAddress;
-        console.log("GET: " + url);
         return this.httpClient.get<T>(url);
     }
 
@@ -30,7 +29,6 @@ export class RESTClientService {
 
     post<T>(apiAddress : string, data: any) : Observable<T> {
         var url = this.baseUrl() + apiAddress;
-        console.log("POST: " + url);
         return this.httpClient.post<T>(url, data);
     }
 

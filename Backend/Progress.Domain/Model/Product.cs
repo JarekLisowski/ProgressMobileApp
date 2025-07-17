@@ -10,7 +10,7 @@ public class Product
   public Price Price { get; set; } = new();
   public Dictionary<int, Price> Prices { get; set; } = new Dictionary<int, Price>();
   public decimal TaxRate { get; set; }
-  public decimal TaxName { get; set; }
+  public string TaxName { get; set; } = string.Empty;
   public string CategoryName { get; set; } = string.Empty;
   public int CategoryId { get; set; }
   public string BarCode { get; set; } = string.Empty;

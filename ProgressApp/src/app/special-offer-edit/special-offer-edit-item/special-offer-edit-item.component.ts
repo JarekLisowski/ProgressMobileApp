@@ -17,6 +17,8 @@ import { PromoItemEdit } from '../../../domain/specialOfferEdit';
 export class SpecialOfferEditItemComponent implements AfterViewInit {
 
   @Input() promoItemEdit!: PromoItemEdit;
+  @Input() promoSetId!: number | undefined;
+
 
   @ViewChild('selectProductModal') myModalRef!: ElementRef;
 
@@ -39,13 +41,13 @@ export class SpecialOfferEditItemComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.promoItemEdit);
     this.modal = new Modal(this.myModalRef.nativeElement);
     this.myModalRef.nativeElement.addEventListener("hidden.bs.modal", () => {
       if (this.isModified)
         this.addSelectdItemsToPromoCart();
     });
     this.loadPromoItems();
+
   }
 
   addSelectdItemsToPromoCart() {
@@ -62,7 +64,9 @@ export class SpecialOfferEditItemComponent implements AfterViewInit {
         priceGross: x.price?.priceGross ?? 0,
         taxRate: x.price?.taxPercent ?? 23,
         promoSetId: 0,
-        imageUrl: ""
+        imageUrl: "",
+        sumGross: (x.price?.priceGross ?? 0) * x.quantity,
+        sumNetto: (x.price?.priceNet ?? 0) * x.quantity
       };
     });
     this.calculateTotalQuantity();
@@ -93,8 +97,18 @@ export class SpecialOfferEditItemComponent implements AfterViewInit {
         this.maxQuantity = this.promoItemEdit?.quantity ?? 1;
         this.updateQuantity();
         this.isModified = false;
+        if (this.promoSetId == undefined || this.promoSetId == 0) {
+          this.setSingleItems();
+        }
       }
     });
+  }
+
+  setSingleItems() {
+    if (this.promoProduct.length == 1) {
+      this.promoProduct[0].quantity = this.maxQuantity;
+      this.addSelectdItemsToPromoCart();
+    }
   }
 
   showProductSelectionForPromoItem() {
@@ -117,7 +131,6 @@ export class SpecialOfferEditItemComponent implements AfterViewInit {
   }
 
   quantityChanged() {
-    console.log("Quantity changed");
     this.isModified = true;
     this.calculateTotalQuantity();
   }

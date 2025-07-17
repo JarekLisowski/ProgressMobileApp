@@ -1409,15 +1409,19 @@
             "type": "number",
             "format": "double"
           },
+          "discountRate": {
+            "type": "number",
+            "format": "double"
+          },
           "promoSetId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "discountRate": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
+          "promoItemId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false

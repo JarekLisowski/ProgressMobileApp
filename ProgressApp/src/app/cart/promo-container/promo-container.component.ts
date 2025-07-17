@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CartItem, CartItemWithId } from '../../../domain/cartItem';
 import { CartService } from '../../../services/cart.service';
 import { ApiService } from '../../../services/api.service';
@@ -21,10 +21,11 @@ export class PromoContainerComponent implements OnInit {
   @Input() set promoItem(cartPromoItem: CartPromoItemWithId) {
     this.cartPromoItem = cartPromoItem;
     this.cartService.getCartItemsForPromoSet(cartPromoItem.id).subscribe(items => {
-      console.log('Cart promo items:', items);
       this.cartItems = items;
     });
   }
+
+  @Output() itemRemove = new EventEmitter<CartPromoItemWithId>();
 
   cartPromoItem: CartPromoItemWithId | undefined;
 
@@ -33,13 +34,10 @@ export class PromoContainerComponent implements OnInit {
 
   }
 
-  deletePromo(promoSetId: number | undefined) {
-    if (promoSetId)
-      this.cartService.removePromoSetFromCart(promoSetId).subscribe(x => {
-        console.log('Promo set removed from cart:', x);
-      });
+  deletePromo(item: CartPromoItemWithId | undefined) {
+    if (item != undefined)
+      this.itemRemove.emit(item )
   }
-
 
   ngOnInit(): void {
 

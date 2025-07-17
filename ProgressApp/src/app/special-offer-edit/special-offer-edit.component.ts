@@ -33,6 +33,7 @@ export class SpecialOfferEditComponent implements OnInit {
   isNew: boolean = true;
 
   isModified: boolean = false;
+ 
 
   ngOnInit(): void {
     var initPromoSet = new SpecialOfferEdit();
@@ -109,14 +110,13 @@ export class SpecialOfferEditComponent implements OnInit {
                       quantity: cartItem.quantity,
                       promoSetId: cartItem.promoSetId,
                       promoItemId: cartItem.promoItemId,
-                      imageUrl: cartItem.imageUrl
+                      imageUrl: cartItem.imageUrl,
+                      sumNetto: cartItem.sumNetto,
+                      sumGross: cartItem.sumGross
                     };
                     promoItem.cartItems.push(cartItemEdit);
                   }
                 });
-                console.log("Promoset edit:");
-                console.dir(this.promoSet);
-                console.log("Is ready: " + promoItem.isReady());
               });
               this.promoSet = initPromoSet;
               this.checkPromosetsCompleteness();
@@ -135,14 +135,13 @@ export class SpecialOfferEditComponent implements OnInit {
   checkPromosetsCompleteness() {
     this._isReady = true;
     this.promoSet.promoItemsEdit.forEach(promoItem => {
-      console.log(promoItem.isReady());
       this._isReady = this._isReady && promoItem.isReady();
     });
   }
 
   addPromoSetToCart() {
     this.cartService.addPromoSetToCart(this.promoSet).subscribe(x => {
-      console.log('promo added, key: ', x);
+      //console.log('promo added, key: ', x);
     });
   }
 

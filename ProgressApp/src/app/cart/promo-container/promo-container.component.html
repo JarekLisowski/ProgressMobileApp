@@ -1,12 +1,18 @@
-<div class="promo-group">
-    <div class="promo-header">
-        <div class="promo-header-title">
-            Zestaw promocyjny: {{cartPromoItem?.name}}
-            <a class="ms-2" [routerLink]="['/promoEdit', cartPromoItem?.id]">Edytuj</a>
-            <a class="ms-2" (click)="deletePromo(cartPromoItem?.id)">Usuń</a>
+<div class="promo-group border border-primary rounded mb-3">
+    <div class="promo-header p-2">
+        <h6>
+            {{cartPromoItem?.name}}
+        </h6>
+        <div class="d-flex flex-row-reverse">
+            <a class="ms-4" [routerLink]="['/promoEdit', cartPromoItem?.id]">
+                <i class="bi bi-pencil-square"></i>
+            </a>
+            <a class="ms-2" (click)="deletePromo(cartPromoItem)">
+                <i class="bi bi-x-square"></i>
+            </a>
         </div>
     </div>
-    <div class="promo-items">
+    <div class="promo-items ">
         <cart-item *ngFor="let item of cartItems" [cartItem]="item" [readonly]="true"></cart-item>
-    </div>        
+    </div>
 </div>

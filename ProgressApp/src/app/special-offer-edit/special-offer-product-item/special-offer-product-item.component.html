@@ -1,17 +1,18 @@
-<div class="card">
+<div class="card mb-2">
     <div class="card-body">
-        <div class="row">
-            <div class="col-2">
-                <img/>
-            </div>
+        <h6>{{data.name}}</h6>
+        <div class="d-flex">
             <div>
-                {{data.name}}
-            <div class="d-flex">
-                <div class="ms-auto">
-                    <quantity [minQuantity]="0" [quantity]="quantity"  (quntityChanged)="quantityChanged($event)"></quantity>
-                </div>
-             </div>
-          </div>
-         
+                <span class="fw-medium">
+                    netto: {{data.price?.priceNet | number : '1.2-2'}} PLN
+                </span><br/>
+                <span class="">
+                    brutto: {{data.price?.priceGross | number : '1.2-2'}} PLN
+                </span>
+            </div>
+            <div class="ms-auto">
+                <quantity [minQuantity]="0" [quantity]="quantity" (quntityChanged)="quantityChanged($event)">
+                </quantity>
+            </div>
+        </div>
     </div>
-  </div>

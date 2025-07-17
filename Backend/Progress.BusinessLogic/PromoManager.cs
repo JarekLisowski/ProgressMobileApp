@@ -14,9 +14,11 @@ namespace Progress.BusinessLogic
     IDatabaseRepository<PromoItem, IfxApiPromocjaPozycja> _promoItemRepository;
     IDatabaseRepository<Product, TwTowar> _dbProduct;
     string _imagesBaseFolder = "";
+    NavireoDbContext _dbContext;
 
     public PromoManager(
       IMapper autoMapper, 
+      NavireoDbContext dbContext,
       PromoRepository promoRepository,
       IDatabaseRepository<PromoItem, IfxApiPromocjaPozycja> promoItemRepository,
       IDatabaseRepository<Product, TwTowar> dbProduct,
@@ -28,6 +30,7 @@ namespace Progress.BusinessLogic
       _promoItemRepository = promoItemRepository;
       _dbProduct = dbProduct;
       _imagesBaseFolder = configurationProvider.GetValue<string>("PromoImagesBaseDir") ?? "";
+      _dbContext = dbContext;
     }
 
     public IEnumerable<PromoSet> GetPromoSetList()
@@ -60,22 +63,22 @@ namespace Progress.BusinessLogic
       return null;
     }
 
-    public IEnumerable<Product> GetPromoItemProducts(int id)
-    {
-      var data = _promoItemRepository.EntitySet
-        .AsNoTracking()
-        .Include(it => it.IfxApiPromocjaPozycjaTowars)
-        .FirstOrDefault(it => it.Id == id);
+    //public IEnumerable<Product> GetPromoItemProducts(int id)
+    //{
+    //  var data = _promoItemRepository.EntitySet
+    //    .AsNoTracking()
+    //    .Include(it => it.IfxApiPromocjaPozycjaTowars)
+    //    .FirstOrDefault(it => it.Id == id);
 
-      if (data != null)
-      {
-        var codes = data.IfxApiPromocjaPozycjaTowars.Select(it => it.TwSymbol).ToList();
-        var qProducts = _dbProduct.SelectWhere(it => codes.Any(itCode => itCode == it.TwSymbol));
-        var products = qProducts.ToList();
-        return products;
-      }
-      return Array.Empty<Product>();
-    }
+    //  if (data != null)
+    //  {
+    //    var codes = data.IfxApiPromocjaPozycjaTowars.Select(it => it.TwSymbol).ToList();
+    //    var qProducts = _dbProduct.SelectWhere(it => codes.Any(itCode => itCode == it.TwSymbol));
+    //    var products = qProducts.ToList();
+    //    return products;
+    //  }
+    //  return Array.Empty<Product>();
+    //}
 
     public byte[]? GetPromoImage(int promoId)
     {
@@ -96,15 +99,7 @@ namespace Progress.BusinessLogic
 
     public Product[] GetProductsForPromoItem(int id)
     {
-      var sql = @"
-select * from tw__Towar tw
-inner join IFx_ApiPromocjaPozycjaTowar promtw on tw.tw_Symbol = promtw.TwSymbol
-inner join tw_Cena tc on tc.tc_IdTowar = tw.tw_Id
-where promtw.PozycjaId={0}";
-      var data = _promoRepository.DbContext.Database.SqlQueryRaw<Database.TwTowarShort>(sql, id).ToArray();
-      var data2 = _autoMapper.Map<TwTowar[]>(data);
-      var products = _autoMapper.Map<Product[]>(data2);
-      return products;
+      return _promoRepository.GetProductsForPromoItem(id);
     }
   }
 }

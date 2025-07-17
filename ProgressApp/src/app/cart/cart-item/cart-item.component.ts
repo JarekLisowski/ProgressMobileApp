@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartItem, CartItemWithId } from '../../../domain/cartItem';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { CartService } from '../../../services/cart.service';
@@ -10,7 +10,7 @@ import { QuantityComponent } from "../../quantity/quantity.component";
 @Component({
   selector: 'cart-item',
   standalone: true,
-  imports: [FormsModule, NgIf, RouterModule, QuantityComponent],
+  imports: [FormsModule, NgIf, RouterModule, QuantityComponent, CommonModule ],
   templateUrl: './cart-item.component.html',
   styleUrl: './cart-item.component.scss'
 })
@@ -21,7 +21,7 @@ export class CartItemComponent {
   constructor(private apiService: ApiService, private cartService: CartService) {
   }
 
-  @Output() itemRemoved = new EventEmitter<number>();
+  @Output() itemRemove = new EventEmitter<CartItemWithId>();
 
 
   @Input() set cartItem(item: CartItemWithId) {
@@ -45,34 +45,34 @@ export class CartItemComponent {
     }
   }
 
-  amountIncrement() {
-    this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity + 1).subscribe(x => {
-      this.quantity = x.quantity;
-    });
-  }
+  // amountIncrement() {
+  //   this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity + 1).subscribe(x => {
+  //     this.quantity = x.quantity;
+  //   });
+  // }
 
-  amountDecrement() {
-    if (this.quantity > 1) {
-      this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity - 1).subscribe(x => {
-        this.quantity = x.quantity;
-      });
-    }
-  }
+  // amountDecrement() {
+  //   if (this.quantity > 1) {
+  //     this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity - 1).subscribe(x => {
+  //       this.quantity = x.quantity;
+  //     });
+  //   }
+  // }
 
   quantityChanged(quantity: number) {
     if (quantity > 1 && this.cartItem?.id != null) {
       this.cartService.updateCartItemQuntity(this.cartItem.id, quantity).subscribe(x => {
+        var cartItem = x;
+        x.imageUrl = this._cartItem!.imageUrl;
+        this._cartItem = x;
         this.quantity = x.quantity;
       });
     }
   }
 
-  deleteCartItem(id: number | undefined) {
-    if (id)
-      this.cartService.removeItemFromCart(id).subscribe(x => {
-        console.log('Cart item removed:', x);
-        this.itemRemoved.emit(id);
-      })
+  deleteCartItem(item: CartItemWithId | undefined) {
+    if (item != undefined)
+      this.itemRemove.emit(item)
   }
 
 

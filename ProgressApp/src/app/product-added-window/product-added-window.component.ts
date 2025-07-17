@@ -10,9 +10,9 @@ import { Modal } from 'bootstrap';
   styleUrl: './product-added-window.component.scss'
 })
 export class ProductAddedWindowComponent {
-  
+
   @ViewChild('productAddedModal') modalRef!: ElementRef;
-  
+
   modal: Modal | undefined;
 
   show(info: string | undefined) {
@@ -21,9 +21,9 @@ export class ProductAddedWindowComponent {
     this.modal!.show();
     console.log('showing');
   }
-  
+
   hide() {
     this.modal?.hide();
   }
-    
+
 }

@@ -3,11 +3,12 @@ import { Product } from '../../../domain/generated/apimodel';
 import { FormsModule } from '@angular/forms';
 import { ProductPromoItem } from '../../../domain/ProductPromoItem';
 import { QuantityComponent } from "../../quantity/quantity.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-special-offer-product-item',
   standalone: true,
-  imports: [FormsModule, QuantityComponent],
+  imports: [FormsModule, QuantityComponent, CommonModule],
   templateUrl: './special-offer-product-item.component.html',
   styleUrl: './special-offer-product-item.component.scss'
 })
@@ -23,20 +24,6 @@ export class SpecialOfferProductItemComponent {
   set quantity(value: number) {
     this.data.quantity = value;
   }
-
-  // public amountIncrement() {
-  //   this.data.quantity += 1;
-  //   this.quantityChangedEvent.emit(); 
-  //   console.log("Quantity changed: " + this.data.quantity);
-  // }
-
-  // public amountDecrement() {
-  //   if (this.data.quantity >= 1) {
-  //     this.data.quantity -= 1;
-  //     this.quantityChangedEvent.emit(); 
-  //     console.log("Quantity changed: " + this.data.quantity);
-  //   }
-  // } 
 
   quantityChanged(quantity: number) {
     this.quantity = quantity;

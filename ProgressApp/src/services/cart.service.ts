@@ -40,7 +40,9 @@ export class CartService {
                         quantity: quantity,
                         promoSetId: 0,
                         promoItemId: 0,
-                        imageUrl: ""
+                        imageUrl: "",
+                        sumNetto: (product.price?.priceNet ?? 0) * quantity,
+                        sumGross: ((product.price?.priceNet ?? 0) * quantity) * (1 + (product.price?.taxPercent ?? 23) / 100),
                     };
                     return this.dbService.add('cart', cartItem).pipe(
                         tap(x => {
@@ -59,14 +61,16 @@ export class CartService {
     }
 
 
-    updateCartItemQuntity(id: number, quantity: number): Observable<CartItem> {
-        return this.dbService.getByID<CartItem>('cart', id).pipe(
+    updateCartItemQuntity(id: number, quantity: number): Observable<CartItemWithId> {
+        return this.dbService.getByID<CartItemWithId>('cart', id).pipe(
             switchMap(item => {
                 if (item.quantity != quantity) {
                     item.quantity = quantity;
+                    item.sumNetto = item.priceNet * item.quantity;
+                    item.sumGross = item.sumNetto * (1 + item.taxRate / 100);
                     return this.dbService.update('cart', item);
                 } else {
-                    return new Observable<CartItem>();
+                    return new Observable<CartItemWithId>();
                 }
             }),
             tap(x => {

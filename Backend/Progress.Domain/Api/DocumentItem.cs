@@ -7,7 +7,8 @@
     public decimal PriceNet { get; set; }
     public decimal PriceGross { get; set; }
     public decimal TaxRate { get; set; }
+    public decimal DiscountRate { get; set; }
     public int? PromoSetId { get; set; }
-    public decimal DiscountRate { get; internal set; }
+    public int? PromoItemId { get; set; }
   }
 }
