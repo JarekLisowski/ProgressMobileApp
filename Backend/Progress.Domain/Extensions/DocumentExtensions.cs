@@ -25,12 +25,12 @@ namespace Progress.Domain.Extensions
         },
         Comment = document.Comment,
         PaidCashGross = document.CashPayment,
-        Payment = new PaymentType
+        Payment = ((document.SecondPaymentMethod ?? 0) != 0) ? new PaymentType
         {
           Id = document.SecondPaymentMethod ?? 0
-        },
+        } : null,
         PaymentPaidGross = document.SecondPaymentAmount,
-        PaymentDeadline = document.IssueDate.AddDays(document.paymentDueDays),
+        PaymentDeadline = document.IssueDate.AddDays(document.PaymentDueDays),
         DocumentItems = document.Items.Select(it => new Navireo.DocumentItem
         {
           Product = new Navireo.Product

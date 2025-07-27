@@ -16,5 +16,7 @@ export class Transaction {
     deliveryNet: number = 0;
     deliveryGross: number = 0;
     paymentDueDays: number = 14;
-    deliveryServiceId: number | undefined;;
+    deliveryServiceId: number | undefined;
+    deliveryTaxRate: number = 23;
+;
 }

@@ -70,7 +70,7 @@
         /// <summary>
         /// Sposób płatności
         /// </summary>
-        public PaymentType Payment { get; set; }
+        public PaymentType? Payment { get; set; }
 
         /// <summary>
         /// Rodzaj dostawy

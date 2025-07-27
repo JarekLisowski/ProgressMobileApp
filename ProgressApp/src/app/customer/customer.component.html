@@ -1,0 +1,10 @@
+<div *ngIf="customer">
+  <h2>name: {{ customer.adrName }}</h2>
+  <p>Address: {{ customer.adrStreet }}</p>
+  <p>City: {{ customer.adrCity }}</p>
+  <p>Zip: {{ customer.adrZipCode }}</p>
+  <p>NIP: {{ customer.adrNip }}</p>
+</div>
+<div>
+  <invoices [customerId]="customerId" ></invoices>
+</div>

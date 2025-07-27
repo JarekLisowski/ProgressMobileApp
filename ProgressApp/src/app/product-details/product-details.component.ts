@@ -7,11 +7,12 @@ import { Product } from '../../domain/generated/apimodel';
 import { CartService } from '../../services/cart.service';
 import { ProductAddedWindowComponent } from "../product-added-window/product-added-window.component";
 import { QuantityComponent } from "../quantity/quantity.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-details',
   standalone: true,
-  imports: [SlickCarouselModule, FormsModule, ProductAddedWindowComponent, QuantityComponent],
+  imports: [SlickCarouselModule, FormsModule, ProductAddedWindowComponent, QuantityComponent, CommonModule],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss'
 })

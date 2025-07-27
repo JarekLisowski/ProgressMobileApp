@@ -1,21 +1,25 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { ProductCategory } from '../../domain/generated/apimodel';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf, FormsModule],
   templateUrl: './categories.component.html',
   styleUrl: './categories.component.scss'
 })
-export class CategoriesComponent  implements OnInit {
-  
+export class CategoriesComponent implements OnInit {
   private readonly api = inject(ApiService);
-  
+
+  @Input() showFilter: boolean = false;
+
   categoryList: ProductCategory[] = [];
   categoriesGrouped: { [key: string]: ProductCategory[] } = {};
+  filter: string = "";
+
   get categoriesGroupedKeys() {
     return Object.keys(this.categoriesGrouped);
   }
@@ -27,8 +31,8 @@ export class CategoriesComponent  implements OnInit {
       this.categoriesGrouped = this.groupByFirstLetter(this.categoryList);
     });
   }
-  
-  groupByFirstLetter(categories : ProductCategory[]) {
+
+  groupByFirstLetter(categories: ProductCategory[]) {
     const grouped: { [key: string]: ProductCategory[] } = {};
     for (const category of categories) {
       if (category.name != null && category.name.length > 0) {
@@ -42,5 +46,19 @@ export class CategoriesComponent  implements OnInit {
     }
     return grouped;
   }
-  
+
+  filterProducts($event: KeyboardEvent) {
+    if (this.filter == "") {
+      this.categoriesGrouped = this.groupByFirstLetter(this.categoryList);
+    } else {
+      var filtered = this.categoryList.filter(x => x.name?.toLowerCase().includes(this.filter.toLowerCase()) );
+      this.categoriesGrouped = this.groupByFirstLetter(filtered);
+    }
+  }
+
+  clearFilter() {
+    this.filter = "";
+  }
+
+
 }

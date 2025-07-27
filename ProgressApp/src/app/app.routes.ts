@@ -8,6 +8,10 @@ import { SpecialOffersComponent } from './special-offers/special-offers.componen
 import { SpecialOfferEditComponent } from './special-offer-edit/special-offer-edit.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
+import { CustomersComponent } from './customers/customers.component';
+import { CustomerComponent } from './customer/customer.component';
+import { InvoicesComponent } from './invoices/invoices.component';
+import { InvoiceComponent } from './invoice/invoice.component';
 
 export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent, canActivate: [AuthGuard] },
@@ -19,6 +23,10 @@ export const routes: Routes = [
     { path: 'promoCreate/:id', component: SpecialOfferEditComponent, canActivate: [AuthGuard] },
     { path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
+    { path: 'customers', component: CustomersComponent },
+    { path: 'customer/:id', component: CustomerComponent, canActivate: [AuthGuard] },
+    { path: 'invoices', component: InvoicesComponent, canActivate: [AuthGuard] },
+    { path: 'invoice/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/categories', pathMatch: 'full' },
     { path: '**', redirectTo: '/categories' }
 ];

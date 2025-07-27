@@ -1,4 +1,9 @@
 <div class="container">
+    <div *ngIf="showFilter" class="row">
+        <div class="col">
+             <input type="text" [(ngModel)]="filter" (keyup)="filterProducts($event)" class="form-control" placeholder="Filtruj"/>
+        </div>
+    </div>
     <div *ngFor="let groupKey of categoriesGroupedKeys">
         <div class="row">
             <div class="col category-key mt-4 mb-1">

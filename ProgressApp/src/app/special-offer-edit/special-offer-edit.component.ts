@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
 import { NgFor, NgIf } from '@angular/common';
@@ -19,6 +19,7 @@ export class SpecialOfferEditComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly api = inject(ApiService);
   private readonly cartService = inject(CartService);
+  private readonly router = inject(Router);
 
   promoEditId: number = 0;
   promoSetId: number = 0;
@@ -33,7 +34,7 @@ export class SpecialOfferEditComponent implements OnInit {
   isNew: boolean = true;
 
   isModified: boolean = false;
- 
+
 
   ngOnInit(): void {
     var initPromoSet = new SpecialOfferEdit();
@@ -140,8 +141,10 @@ export class SpecialOfferEditComponent implements OnInit {
   }
 
   addPromoSetToCart() {
-    this.cartService.addPromoSetToCart(this.promoSet).subscribe(x => {
-      //console.log('promo added, key: ', x);
+    this.cartService.addOrUpdatePromoSetOnCart(this.promoSet).subscribe(x => {
+      console.log('promo added:');
+      console.log(x);
+      this.router.navigate(['/cart']);
     });
   }
 

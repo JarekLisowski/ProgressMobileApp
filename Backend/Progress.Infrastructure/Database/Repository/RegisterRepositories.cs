@@ -18,6 +18,7 @@ namespace Progress.Infrastructure.Database.Repository
 			services.AddScoped<PromoRepository>();
 			services.AddScoped<CustomerRepository>();
 			services.AddScoped<UserRepository>();
+			services.AddScoped<DocumentRepository>();
 			services.AddScoped(sp => MakeRepository<Model.Product, DbModel.TwTowar>(sp, nameof(DbModel.TwTowar.TwId), x => x.TwId, x => x.Id));
 			services.AddScoped(sp => MakeRepository<Model.ProductImage, DbModel.TwZdjecieTw>(sp, nameof(DbModel.TwZdjecieTw.ZdId), x => x.ZdId, x => x.Id));
 			services.AddScoped(sp => MakeRepository<Model.ProductCategory, DbModel.SlCechaTw>(sp, nameof(DbModel.SlCechaTw.CtwId), x => x.CtwId, x => x.Id));
@@ -27,7 +28,7 @@ namespace Progress.Infrastructure.Database.Repository
 			services.AddScoped(sp => MakeRepository<Model.PaymentMethod, DbModel.IfxApiFormaPlatnosci>(sp, nameof(DbModel.IfxApiFormaPlatnosci.Id), x => x.Id, x => x.Id));
 			services.AddScoped(sp => MakeRepository<Model.DeliveryMethod, DbModel.IfxApiSposobDostawy>(sp, nameof(DbModel.IfxApiSposobDostawy.Id), x => x.Id, x => x.Id));
 			services.AddScoped(sp => MakeRepository<Model.PaymentMethod, DbModel.IfxApiFormaPlatnosci>(sp, nameof(DbModel.IfxApiFormaPlatnosci.Id), x => x.Id, x => x.Id));
-
+			services.AddScoped(sp => MakeRepository<Model.DocumentItem, DbModel.DokPozycja>(sp, nameof(DbModel.DokPozycja.ObId), x => x.ObId, x => x.Id));
     }
 
     private static IDatabaseRepository<TM, TE> MakeRepository<TM, TE>(IServiceProvider sp, string keyName, Func<TE, int> entityKey, Func<TM, int> modelKey)

@@ -32,7 +32,9 @@
                         <span class="fs-4">{{cartItem?.sumGross | number : '1.2-2'}}</span>                        
                     </div>
                 </div>
-
+                <div *ngIf="readonly == true" class="d-flex pt-2">
+                    ilość: {{cartItem?.quantity}} 
+                </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,41 @@
+<h5>{{document?.number}}</h5>
+<h6 class="mt-3">    
+    {{document?.customer?.adrName}}
+</h6>
+<div>
+    NIP: {{document?.customer?.adrNip}}
+</div>
+<div class="row border-bottom mt-2">
+  <dd class="col-3">Data:</dd>
+  <dt class="col-9">{{document?.issueDate | date:'shortDate'}}</dt>
+  <dd class="col-3">Netto:</dd>
+  <dt class="col-9">{{document?.totalNet | number : '1.2-2'}} PLN</dt>
+  <dd class="col-3">Brutto:</dd>
+  <dt class="col-9">{{document?.totalGross | number : '1.2-2'}} PLN</dt>
+  <dd class="col-3">Do zapł.:</dd>
+  <dt class="col-9">{{document?.paymentToBeSettled | number : '1.2-2'}} PLN</dt>
+</div>
+
+<div class="mt-3">
+    <div *ngFor="let item of document?.items" class="row border-bottom">
+        <div class="col-sm-12 fw-medium mb-2">
+            {{item?.product?.name}}
+        </div>
+        <div class="col-4 col-lg-2">
+            {{item?.quantity}} {{item.product?.unit}}
+        </div>
+        <div class="col-4 col-lg-2">
+            Netto: {{item?.priceNet | number : '1.2-2'}}
+        </div>
+        <div class="col-4 col-lg-2">
+            Brutto: {{item?.priceGross | number : '1.2-2'}}
+        </div>
+
+        <div class="col-6 col-lg-2">
+            Suma N.: {{item?.lineNet | number : '1.2-2'}}
+        </div>
+        <div class="col-6 col-lg-2">
+            Suma B.: {{item?.lineGross | number : '1.2-2'}}
+        </div>
+    </div>
+</div>

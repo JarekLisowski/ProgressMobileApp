@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { CartService } from '../../../services/cart.service';
 import { ApiService } from '../../../services/api.service';
 import { DeliveryMethod, PaymentMethod } from '../../../domain/generated/apimodel';
@@ -12,10 +12,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './cart-options.component.html',
   styleUrl: './cart-options.component.scss'
 })
-export class CartOptionsComponent implements OnInit {
+export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly cartService = inject(CartService);
   private readonly apiService = inject(ApiService);
+  private readonly elementRef = inject(ElementRef);
+  
+  private intersectionObserver: IntersectionObserver | undefined;
 
   private _selectedDocument: string = "";
   private _selectedPayment: number | undefined;
@@ -97,7 +100,7 @@ export class CartOptionsComponent implements OnInit {
     var deliveryMethod = this.deliveryMethods.find(x => x.id == nValue);
     if (!this.initializing && deliveryMethod?.id != this._selectedDelivery) {
       console.log("selectedDelivery in transaction: " + value);
-      this.cartService.setDelivery(deliveryMethod?.id ?? nValue, deliveryMethod?.twId, deliveryMethod?.priceGross, deliveryMethod?.priceNet).subscribe(trans => {
+      this.cartService.setDelivery(deliveryMethod?.id ?? nValue, deliveryMethod?.twId, deliveryMethod?.priceGross, deliveryMethod?.priceNet, deliveryMethod?.taxRate).subscribe(trans => {
         this._selectedDelivery = nValue;
         this.selectedDeliveryMethod = deliveryMethod;
         this.secondPaymentAmount = trans.secondMethodAmount;
@@ -154,6 +157,11 @@ export class CartOptionsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    //this.loadTransactionData();
+  }
+
+  loadTransactionData() {
+    console.log("Loading transaction data");
     this.apiService.getPaymentMethods().subscribe(x => {
       if (!x.isError && x?.data != null)
         this.paymentMethods = x.data
@@ -175,7 +183,21 @@ export class CartOptionsComponent implements OnInit {
         this.initializing = false;
       });
     });
+  }
 
+  ngAfterViewInit(): void {
+    this.intersectionObserver = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        this.loadTransactionData();
+      }
+    });
+    this.intersectionObserver.observe(this.elementRef.nativeElement);
+  }
+
+  ngOnDestroy(): void {
+    if (this.intersectionObserver) {
+      this.intersectionObserver.disconnect();
+    }
   }
 
 

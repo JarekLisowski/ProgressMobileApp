@@ -30,11 +30,11 @@
             <!-- price -->
             <div>
                <span>Netto: </span>
-               <span class="fw-bold text-dark">{{product?.price?.priceNet}} {{product?.price?.currencyName}}</span>
+               <span class="fw-bold text-dark">{{product?.price?.priceNet | number:'1.2-2'}} {{product?.price?.currencyName}}</span>
             </div>
             <div>
                <span>Brutto: </span>
-               <span class="fw-bold text-dark">{{product?.price?.priceGross}} {{product?.price?.currencyName}}</span>
+               <span class="fw-bold text-dark">{{product?.price?.priceGross | number:'1.2-2'}} {{product?.price?.currencyName}}</span>
             </div>
             <div class="mt-2 mb-2">
                kategoria: <a href="/category/{{product?.categoryId}}">{{product?.categoryName}}</a>
@@ -46,15 +46,7 @@
          <div class="mt-3 row justify-content-start g-2 align-items-center">
             <div class="col-xxl-4 col-lg-4 col-md-6 col-6 d-grid">
                <quantity (quntityChanged)="quantityChanged($event)"></quantity>
-               <!-- <div class="input-group btn-group quantity-group">
-                  <span class="input-group-text btn-quantity">
-                     <a href="#" (click)="amountDecrement(); false">-</a>
-                  </span>
-                  <input type="number" step="1" max="10" [(ngModel)]="quantity" name="quantity" class="form-control quantity" />
-                  <span class="input-group-text btn-quantity">
-                     <a href="#" (click)="amountIncrement(); false">+</a>
-                  </span>
-               </div> -->
+
             </div>
             <div class="col-xxl-4 col-lg-4 col-md-6 col-6 d-grid">
                <!-- button -->

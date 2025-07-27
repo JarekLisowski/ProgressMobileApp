@@ -104,9 +104,58 @@ namespace Progress.Infrastructure.Database
 			CreateMap<IfxApiSposobDostawy, DeliveryMethod>()
 				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Nazwa))
 				.ForMember(dst => dst.Active, opt => opt.MapFrom(src => src.Aktywny));
+
+			CreateMap<IfVwDokument, Document>()
+				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.DokId))
+				.ForMember(dst => dst.IssueDate, opt => opt.MapFrom(src => src.DokDataWyst))
+				.ForMember(dst => dst.CashPayment, opt => opt.MapFrom(src => src.DokKwGotowka))
+				.ForMember(dst => dst.Comment, opt => opt.MapFrom(src => src.DokUwagi))
+				.ForMember(dst => dst.CustomerId, opt => opt.MapFrom(src => src.DokPlatnikId))
+				.ForMember(dst => dst.DocumentType, opt => opt.MapFrom(src => src.DokTyp))
+				.ForMember(dst => dst.PaymentDueDays, opt => opt.MapFrom((src, dst) => src.DokPlatTermin != null ? (src.DokPlatTermin - src.DokDataWyst).Value.Days : 0))
+				.ForMember(dst => dst.PaymentToBeSettled, opt => opt.MapFrom(src => src.NzfWartoscDoZaplaty))
+				.ForMember(dst => dst.SecondPaymentAmount, opt => opt.MapFrom((src, dst) => (src.DokKwKarta ?? 0) > 0 ? src.DokKwKarta : src.DokKwKredyt))
+				.ForMember(dst => dst.SecondPaymentMethod, opt => opt.MapFrom(src => 0))
+				.ForMember(dst => dst.TotalGross, opt => opt.MapFrom(src => src.DokWartNetto))
+				.ForMember(dst => dst.TotalGross, opt => opt.MapFrom(src => src.DokWartBrutto))
+				.ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.DokWystawil))
+				.ForMember(dst => dst.Number, opt => opt.MapFrom(src => src.DokNrPelny))
+				.ForMember(dst => dst.Customer, opt => opt.MapFrom((src, dst) => CreateCustomer(src)));
+
+			CreateMap<DokPozycja, DocumentItem>()
+				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.ObId))
+				.ForMember(dst => dst.DiscountRate, opt => opt.MapFrom(src => src.ObRabat))
+				.ForMember(dst => dst.PriceGross, opt => opt.MapFrom(src => src.ObCenaBrutto))
+				.ForMember(dst => dst.PriceNet, opt => opt.MapFrom(src => src.ObCenaNetto))
+				.ForMember(dst => dst.ProductId, opt => opt.MapFrom(src => src.ObTowId))
+				.ForMember(dst => dst.Quantity, opt => opt.MapFrom(src => src.ObIloscMag))
+				.ForMember(dst => dst.TaxRate, opt => opt.MapFrom(src => src.ObVatProc))
+				.ForMember(dst => dst.Product, opt => opt.MapFrom(src => src.ObTow))
+				.ForMember(dst => dst.LineNet, opt => opt.MapFrom(src => src.ObWartNetto))
+				.ForMember(dst => dst.LineGross, opt => opt.MapFrom(src => src.ObWartBrutto));
 		}
 
-		private decimal GetStan(TwTowar towar)
+    private Customer CreateCustomer(IfVwDokument src)
+    {
+			var customer = new Customer
+			{
+				AdrCity = src.AdrhMiejscowosc,
+				AdrCountryId = src.AdrhIdPanstwo,
+				AdrName = src.AdrhNazwaPelna,
+				AdrNameFull = src.AdrhNazwaPelna,
+				AdrNip = src.AdrhNip,
+				AdrNumber = src.AdrhNrLokalu,
+				AdrStreet = src.AdrhUlica,
+				AdrStreetNo = src.AdrhNrDomu,
+				AdrTel = src.AdrhTelefon,
+				AdrZipCode = src.AdrhKod,
+				Code = src.AdrhSymbol,
+				Id = src.DokPlatnikId ?? 0
+			};
+			return customer;
+    }
+
+    private decimal GetStan(TwTowar towar)
 		{
 			return towar.TwStans.FirstOrDefault()?.StStan ?? 0;
 		}

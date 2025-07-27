@@ -4,12 +4,12 @@ import { CartService } from '../../../services/cart.service';
 import { Transaction } from '../../../domain/transaction';
 import { CartItem } from '../../../domain/cartItem';
 import { DeliveryMethod, PaymentMethod } from '../../../domain/generated/apimodel';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'cart-finalize',
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, CommonModule],
   templateUrl: './cart-finalize.component.html',
   styleUrl: './cart-finalize.component.scss'
 })

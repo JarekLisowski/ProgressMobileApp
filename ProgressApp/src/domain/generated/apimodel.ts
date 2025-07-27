@@ -337,6 +337,7 @@ export class DeliveryMethod implements IDeliveryMethod {
     name?: string | undefined;
     priceNet?: number;
     priceGross?: number;
+    taxRate?: number;
 
     constructor(data?: IDeliveryMethod) {
         if (data) {
@@ -355,6 +356,7 @@ export class DeliveryMethod implements IDeliveryMethod {
             this.name = _data["name"];
             this.priceNet = _data["priceNet"];
             this.priceGross = _data["priceGross"];
+            this.taxRate = _data["taxRate"];
         }
     }
 
@@ -373,6 +375,7 @@ export class DeliveryMethod implements IDeliveryMethod {
         data["name"] = this.name;
         data["priceNet"] = this.priceNet;
         data["priceGross"] = this.priceGross;
+        data["taxRate"] = this.taxRate;
         return data;
     }
 }
@@ -384,6 +387,7 @@ export interface IDeliveryMethod {
     name?: string | undefined;
     priceNet?: number;
     priceGross?: number;
+    taxRate?: number;
 }
 
 export class DeliveryMethodsResponse implements IDeliveryMethodsResponse {
@@ -460,9 +464,14 @@ export interface IDeliveryMethodsResponse {
 export class Document implements IDocument {
     id?: number | undefined;
     customerId?: number;
+    customer?: Customer;
     documentType?: string | undefined;
+    number?: string | undefined;
     items?: DocumentItem[] | undefined;
     cashPayment?: number;
+    totalNet?: number;
+    totalGross?: number;
+    paymentToBeSettled?: number;
     secondPaymentAmount?: number;
     paymentDueDays?: number;
     secondPaymentMethod?: number | undefined;
@@ -479,6 +488,7 @@ export class Document implements IDocument {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.customer = data.customer && !(<any>data.customer).toJSON ? new Customer(data.customer) : <Customer>this.customer;
             if (data.items) {
                 this.items = [];
                 for (let i = 0; i < data.items.length; i++) {
@@ -493,13 +503,18 @@ export class Document implements IDocument {
         if (_data) {
             this.id = _data["id"];
             this.customerId = _data["customerId"];
+            this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : <any>undefined;
             this.documentType = _data["documentType"];
+            this.number = _data["number"];
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
                     this.items!.push(DocumentItem.fromJS(item));
             }
             this.cashPayment = _data["cashPayment"];
+            this.totalNet = _data["totalNet"];
+            this.totalGross = _data["totalGross"];
+            this.paymentToBeSettled = _data["paymentToBeSettled"];
             this.secondPaymentAmount = _data["secondPaymentAmount"];
             this.paymentDueDays = _data["paymentDueDays"];
             this.secondPaymentMethod = _data["secondPaymentMethod"];
@@ -523,13 +538,18 @@ export class Document implements IDocument {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["customerId"] = this.customerId;
+        data["customer"] = this.customer ? this.customer.toJSON() : <any>undefined;
         data["documentType"] = this.documentType;
+        data["number"] = this.number;
         if (Array.isArray(this.items)) {
             data["items"] = [];
             for (let item of this.items)
                 data["items"].push(item.toJSON());
         }
         data["cashPayment"] = this.cashPayment;
+        data["totalNet"] = this.totalNet;
+        data["totalGross"] = this.totalGross;
+        data["paymentToBeSettled"] = this.paymentToBeSettled;
         data["secondPaymentAmount"] = this.secondPaymentAmount;
         data["paymentDueDays"] = this.paymentDueDays;
         data["secondPaymentMethod"] = this.secondPaymentMethod;
@@ -546,9 +566,14 @@ export class Document implements IDocument {
 export interface IDocument {
     id?: number | undefined;
     customerId?: number;
+    customer?: ICustomer;
     documentType?: string | undefined;
+    number?: string | undefined;
     items?: IDocumentItem[] | undefined;
     cashPayment?: number;
+    totalNet?: number;
+    totalGross?: number;
+    paymentToBeSettled?: number;
     secondPaymentAmount?: number;
     paymentDueDays?: number;
     secondPaymentMethod?: number | undefined;
@@ -565,10 +590,13 @@ export class DocumentItem implements IDocumentItem {
     quantity?: number;
     priceNet?: number;
     priceGross?: number;
+    lineNet?: number;
+    lineGross?: number;
     taxRate?: number;
     discountRate?: number;
     promoSetId?: number | undefined;
     promoItemId?: number | undefined;
+    product?: Product;
 
     constructor(data?: IDocumentItem) {
         if (data) {
@@ -576,6 +604,7 @@ export class DocumentItem implements IDocumentItem {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
+            this.product = data.product && !(<any>data.product).toJSON ? new Product(data.product) : <Product>this.product;
         }
     }
 
@@ -585,10 +614,13 @@ export class DocumentItem implements IDocumentItem {
             this.quantity = _data["quantity"];
             this.priceNet = _data["priceNet"];
             this.priceGross = _data["priceGross"];
+            this.lineNet = _data["lineNet"];
+            this.lineGross = _data["lineGross"];
             this.taxRate = _data["taxRate"];
             this.discountRate = _data["discountRate"];
             this.promoSetId = _data["promoSetId"];
             this.promoItemId = _data["promoItemId"];
+            this.product = _data["product"] ? Product.fromJS(_data["product"]) : <any>undefined;
         }
     }
 
@@ -605,10 +637,13 @@ export class DocumentItem implements IDocumentItem {
         data["quantity"] = this.quantity;
         data["priceNet"] = this.priceNet;
         data["priceGross"] = this.priceGross;
+        data["lineNet"] = this.lineNet;
+        data["lineGross"] = this.lineGross;
         data["taxRate"] = this.taxRate;
         data["discountRate"] = this.discountRate;
         data["promoSetId"] = this.promoSetId;
         data["promoItemId"] = this.promoItemId;
+        data["product"] = this.product ? this.product.toJSON() : <any>undefined;
         return data;
     }
 }
@@ -618,10 +653,84 @@ export interface IDocumentItem {
     quantity?: number;
     priceNet?: number;
     priceGross?: number;
+    lineNet?: number;
+    lineGross?: number;
     taxRate?: number;
     discountRate?: number;
     promoSetId?: number | undefined;
     promoItemId?: number | undefined;
+    product?: IProduct;
+}
+
+export class DocumentResponse implements IDocumentResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: Document[] | undefined;
+
+    constructor(data?: IDocumentResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.data) {
+                this.data = [];
+                for (let i = 0; i < data.data.length; i++) {
+                    let item = data.data[i];
+                    this.data[i] = item && !(<any>item).toJSON ? new Document(item) : <Document>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(Document.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DocumentResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new DocumentResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IDocumentResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: IDocument[] | undefined;
 }
 
 export class Login implements ILogin {

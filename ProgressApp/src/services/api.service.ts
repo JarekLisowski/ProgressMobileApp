@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RESTClientService } from "./RESTClient.service";
 import { Observable } from "rxjs";
-import { CustomerListResponse, DeliveryMethodsResponse, IDocument, IProductListRequest, LoginResponse, PaymentMethodsResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse, SearchResponse } from "../domain/generated/apimodel";
+import { Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IProductListRequest, LoginResponse, PaymentMethodsResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse, SearchResponse } from "../domain/generated/apimodel";
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +66,19 @@ export class ApiService {
 
   sendDocument(document: IDocument):Observable<any> {
     return this.apiSerivce.post('api/document/invoice', document)
+  }
+  
+  getInvoices(customerId: number):Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/invoices/${customerId}`)
+  }
+
+  getInvoice(id: number):Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/invoice/${id}`)
+  }
+
+
+  getCustomer(id: number): Observable<CustomerResponse> {
+    return this.apiSerivce.get<CustomerResponse>(`api/customer/${id}`);
   }
 
 

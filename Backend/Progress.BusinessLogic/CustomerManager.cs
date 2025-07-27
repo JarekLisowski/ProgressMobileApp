@@ -18,7 +18,7 @@ namespace Progress.BusinessLogic
 
     public Customer? Get(int id)
     {
-      var data = dbKontrahent.Select(id);
+      var data = dbKontrahent.SelectWhere(it => it.KhId == id, true).FirstOrDefault();
       return data;
     }
 

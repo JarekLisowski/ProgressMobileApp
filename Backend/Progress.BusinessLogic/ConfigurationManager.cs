@@ -32,6 +32,7 @@ namespace Progress.BusinessLogic
       var data = from delivery in _dbContext.IfxApiSposobDostawies.AsNoTracking()
                  join towar in _dbContext.TwTowars.AsNoTracking() on delivery.TwId equals towar.TwId
                  join cena in _dbContext.TwCenas.AsNoTracking() on towar.TwId equals cena.TcIdTowar
+                 join vat in _dbContext.SlStawkaVats.AsNoTracking() on towar.TwIdVatSp equals vat.VatId
                  select new DeliveryMethod
                  {
                    Id = delivery.Id,
@@ -39,6 +40,7 @@ namespace Progress.BusinessLogic
                    TwId = delivery.TwId,
                    PriceGross = cena.TcCenaBrutto1 ?? 0,
                    PriceNet = cena.TcCenaNetto1 ?? 0,
+                   TaxRate = vat.VatStawka
                  };
 
       return data.ToArray();

@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Navireo\" />
-    <Folder Include="Api\" />
   </ItemGroup>
 
   <ItemGroup>

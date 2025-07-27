@@ -823,7 +823,7 @@ namespace Progress.Navireo.Managers
               Code = dostawa.Code,
             },
             PriceNet = document.Delivery.PriceNet != 0 ? document.Delivery.PriceNet : dostawa.PriceNet,
-            PriceGross = document.Delivery.PriceGross != 0 ? document.Delivery.PriceGross : dostawa.PriceGross,
+            //PriceGross = document.Delivery.PriceGross != 0 ? document.Delivery.PriceGross : dostawa.PriceGross,
             Amount = document.Delivery.Amount
           };
           UpdateDocumentItems(new List<DocumentItem>() { documentItem }, suDokument, pozManager); //zapisujemy dostawę jako pozycję

@@ -255,6 +255,46 @@
         }
       }
     },
+    "/api/document/invoices/{customerId}": {
+      "get": {
+        "tags": [
+          "Dokumenty"
+        ],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/document/invoice/{id}": {
       "get": {
         "tags": [
@@ -267,7 +307,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "format": "int32"
             }
           }
         ],
@@ -277,88 +317,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/document/invoices": {
-      "get": {
-        "tags": [
-          "Dokumenty"
-        ],
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "dateFrom",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "dateTo",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 100
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               }
             }
@@ -1279,6 +1248,10 @@
           "priceGross": {
             "type": "number",
             "format": "double"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -1328,7 +1301,14 @@
             "type": "integer",
             "format": "int32"
           },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          },
           "documentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
             "type": "string",
             "nullable": true
           },
@@ -1340,6 +1320,18 @@
             "nullable": true
           },
           "cashPayment": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalNet": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalGross": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentToBeSettled": {
             "type": "number",
             "format": "double"
           },
@@ -1405,6 +1397,14 @@
             "type": "number",
             "format": "double"
           },
+          "lineNet": {
+            "type": "number",
+            "format": "double"
+          },
+          "lineGross": {
+            "type": "number",
+            "format": "double"
+          },
           "taxRate": {
             "type": "number",
             "format": "double"
@@ -1421,6 +1421,42 @@
           "promoItemId": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DocumentResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Document"
+            },
             "nullable": true
           }
         },

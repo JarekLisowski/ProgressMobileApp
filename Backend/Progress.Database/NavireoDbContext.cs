@@ -29,6 +29,8 @@ public partial class NavireoDbContext : DbContext
 
     public virtual DbSet<DokVat> DokVats { get; set; }
 
+    public virtual DbSet<IfVwDokument> IfVwDokuments { get; set; }
+
     public virtual DbSet<IfVwKontrahent> IfVwKontrahents { get; set; }
 
     public virtual DbSet<IfxApiDokPozycjaPromocja> IfxApiDokPozycjaPromocjas { get; set; }
@@ -1136,6 +1138,143 @@ public partial class NavireoDbContext : DbContext
                 .HasForeignKey(d => d.VtVatId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_dok_Vat_sl_StawkaVAT");
+        });
+
+        modelBuilder.Entity<IfVwDokument>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("IF_vwDokument");
+
+            entity.Property(e => e.AdrhId).HasColumnName("adrh_Id");
+            entity.Property(e => e.AdrhIdPanstwo).HasColumnName("adrh_IdPanstwo");
+            entity.Property(e => e.AdrhKod)
+                .HasMaxLength(8)
+                .IsUnicode(false)
+                .HasColumnName("adrh_Kod");
+            entity.Property(e => e.AdrhMiejscowosc)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("adrh_Miejscowosc");
+            entity.Property(e => e.AdrhNazwaPelna)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("adrh_NazwaPelna");
+            entity.Property(e => e.AdrhNip)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("adrh_NIP");
+            entity.Property(e => e.AdrhNrDomu)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("adrh_NrDomu");
+            entity.Property(e => e.AdrhNrLokalu)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("adrh_NrLokalu");
+            entity.Property(e => e.AdrhSymbol)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("adrh_Symbol");
+            entity.Property(e => e.AdrhTelefon)
+                .HasMaxLength(35)
+                .IsUnicode(false)
+                .HasColumnName("adrh_Telefon");
+            entity.Property(e => e.AdrhUlica)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("adrh_Ulica");
+            entity.Property(e => e.DataWystawienia).HasColumnType("datetime");
+            entity.Property(e => e.DokCenyPoziom).HasColumnName("dok_CenyPoziom");
+            entity.Property(e => e.DokDataOtrzym)
+                .HasColumnType("datetime")
+                .HasColumnName("dok_DataOtrzym");
+            entity.Property(e => e.DokDataWyst)
+                .HasColumnType("datetime")
+                .HasColumnName("dok_DataWyst");
+            entity.Property(e => e.DokDataZakonczenia)
+                .HasColumnType("datetime")
+                .HasColumnName("dok_DataZakonczenia");
+            entity.Property(e => e.DokDefiniowalnyId).HasColumnName("dok_DefiniowalnyId");
+            entity.Property(e => e.DokDoDokId).HasColumnName("dok_DoDokId");
+            entity.Property(e => e.DokDoDokNrPelny)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("dok_DoDokNrPelny");
+            entity.Property(e => e.DokId).HasColumnName("dok_Id");
+            entity.Property(e => e.DokJestTylkoDoOdczytu).HasColumnName("dok_JestTylkoDoOdczytu");
+            entity.Property(e => e.DokKartaId).HasColumnName("dok_KartaId");
+            entity.Property(e => e.DokKredytId).HasColumnName("dok_KredytId");
+            entity.Property(e => e.DokKwDoZaplaty)
+                .HasColumnType("money")
+                .HasColumnName("dok_KwDoZaplaty");
+            entity.Property(e => e.DokKwGotowka)
+                .HasColumnType("money")
+                .HasColumnName("dok_KwGotowka");
+            entity.Property(e => e.DokKwKarta)
+                .HasColumnType("money")
+                .HasColumnName("dok_KwKarta");
+            entity.Property(e => e.DokKwKredyt)
+                .HasColumnType("money")
+                .HasColumnName("dok_KwKredyt");
+            entity.Property(e => e.DokKwWartosc)
+                .HasColumnType("money")
+                .HasColumnName("dok_KwWartosc");
+            entity.Property(e => e.DokMagId).HasColumnName("dok_MagId");
+            entity.Property(e => e.DokNr).HasColumnName("dok_Nr");
+            entity.Property(e => e.DokNrPelny)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("dok_NrPelny");
+            entity.Property(e => e.DokOdebral)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("dok_Odebral");
+            entity.Property(e => e.DokPersonelId).HasColumnName("dok_PersonelId");
+            entity.Property(e => e.DokPlatId).HasColumnName("dok_PlatId");
+            entity.Property(e => e.DokPlatTermin)
+                .HasColumnType("datetime")
+                .HasColumnName("dok_PlatTermin");
+            entity.Property(e => e.DokPlatnikAdreshId).HasColumnName("dok_PlatnikAdreshId");
+            entity.Property(e => e.DokPlatnikId).HasColumnName("dok_PlatnikId");
+            entity.Property(e => e.DokPodtyp).HasColumnName("dok_Podtyp");
+            entity.Property(e => e.DokPowiazanyNumer)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.DokStatus).HasColumnName("dok_Status");
+            entity.Property(e => e.DokStatusFiskal).HasColumnName("dok_StatusFiskal");
+            entity.Property(e => e.DokTyp).HasColumnName("dok_Typ");
+            entity.Property(e => e.DokUwagi)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("dok_Uwagi");
+            entity.Property(e => e.DokWaluta)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("dok_Waluta");
+            entity.Property(e => e.DokWalutaKurs)
+                .HasColumnType("money")
+                .HasColumnName("dok_WalutaKurs");
+            entity.Property(e => e.DokWartBrutto)
+                .HasColumnType("money")
+                .HasColumnName("dok_WartBrutto");
+            entity.Property(e => e.DokWartNetto)
+                .HasColumnType("money")
+                .HasColumnName("dok_WartNetto");
+            entity.Property(e => e.DokWartVat)
+                .HasColumnType("money")
+                .HasColumnName("dok_WartVat");
+            entity.Property(e => e.DokWystawil)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("dok_Wystawil");
+            entity.Property(e => e.IdokDataCzasWyst)
+                .HasColumnType("datetime")
+                .HasColumnName("idok_DataCzasWyst");
+            entity.Property(e => e.NzfWartoscDoZaplaty)
+                .HasColumnType("money")
+                .HasColumnName("nzf_WartoscDoZaplaty");
         });
 
         modelBuilder.Entity<IfVwKontrahent>(entity =>

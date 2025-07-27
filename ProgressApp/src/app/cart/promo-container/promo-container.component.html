@@ -3,13 +3,19 @@
         <h6>
             {{cartPromoItem?.name}}
         </h6>
-        <div class="d-flex flex-row-reverse">
-            <a class="ms-4" [routerLink]="['/promoEdit', cartPromoItem?.id]">
-                <i class="bi bi-pencil-square"></i>
-            </a>
-            <a class="ms-2" (click)="deletePromo(cartPromoItem)">
-                <i class="bi bi-x-square"></i>
-            </a>
+        <div class="d-flex flex-row">
+            <div>
+                <span class="fw-medium">b: {{cartPromoItem?.priceGross | number : '1.2-2'}} PLN</span>
+                <span class="ms-2">n: {{cartPromoItem?.priceNet | number : '1.2-2'}} PLN</span>
+            </div>
+            <div class="me-0 ms-auto">
+                <a class="ms-2" (click)="deletePromo(cartPromoItem)">
+                    <i class="bi bi-x-square"></i>
+                </a>
+                <a class="ms-4 me-2" [routerLink]="['/promoEdit', cartPromoItem?.id]">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+            </div>
         </div>
     </div>
     <div class="promo-items ">

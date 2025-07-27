@@ -11,18 +11,15 @@ namespace Progress.Domain.Api
 			CreateMap<Model.ProductImage, ProductImage>();
 			CreateMap<Model.ProductCategory, ProductCategory>();
 			CreateMap<Model.Price, Price>();
-
 			CreateMap<Model.PromoSet, PromoSet>();
 			CreateMap<Model.PromoItem, PromoItem>();
-
 			CreateMap<Model.Addres, Addres>();
 			CreateMap<Model.Customer, Customer>();
-
 			CreateMap<Model.User, User>();
-
 			CreateMap<Model.PaymentMethod, PaymentMethod>();
-
 			CreateMap<Model.DeliveryMethod, DeliveryMethod>();
+			CreateMap<Model.Document, Document>();
+			CreateMap<Model.DocumentItem, DocumentItem>();
 		}
 	}
 }
