@@ -1,6 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Document } from '../../domain/generated/apimodel';
 import { CommonModule, NgFor } from '@angular/common';
+import { PayModalComponent } from '../pay-modal/pay-modal.component';
 
 @Component({
   selector: 'document',
@@ -10,6 +11,13 @@ import { CommonModule, NgFor } from '@angular/common';
   styleUrl: './document.component.scss'
 })
 export class DocumentComponent {
-  
+
   @Input() document: Document | undefined;
+
+  @Output() onPay: EventEmitter<any> = new EventEmitter();
+
+  pay() {
+    this.onPay.emit();
+  }
+
 }

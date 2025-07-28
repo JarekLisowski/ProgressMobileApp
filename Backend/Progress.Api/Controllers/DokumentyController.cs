@@ -73,10 +73,31 @@ namespace Progress.Api.Controllers
       return "OK";
     }
 
-    [HttpPost("payment")]
-    public string PostPayment(long id)
+    [HttpPost("pay")]
+    public async Task<ApiResult> PostPayment(Payment payment)
     {
-      return "OK";
+      var userId = GetUserId();
+      if (userId != null)
+      {
+        try
+        {
+          var result = await _navireoConnector.AddPayment(payment, userId.Value);
+          return result;
+        }
+        catch(Exception ex)
+        {
+          return new ApiResult
+          {
+            IsError = true,
+            Message = ex.Message,
+          };
+        }
+      }
+      return new ApiResult
+      {
+        IsError = true,
+        Message = "No user"
+      };
     }
 
   }

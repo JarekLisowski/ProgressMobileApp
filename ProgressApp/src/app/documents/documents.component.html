@@ -3,17 +3,19 @@
         <tr>
             <th scope="col">Numer</th>
             <th scope="col">Data</th>
-            <th scope="col">Wartość</th>
-            <th scope="col">Pozostaje do zapłaty</th>
+            <th scope="col">Wartość/<br/>Do zapłaty</th>            
             <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let item of data">
-            <th scope="row"><a href="#" (click)="selectDocument(item); false">{{item.number}}</a></th>
-            <td>{{item.issueDate}}</td>
-            <td>{{item.totalGross}}</td>
-            <td>{{item.paymentToBeSettled}}</td>            
+            <td scope="row"><a href="#" (click)="selectDocument(item); false">{{item.number}}</a></td>
+            <td>{{item.issueDate | date:'shortDate'}}</td>
+            <td class="text-end">{{item.totalGross | number:'1.2-2'}}<br/>
+                <span>
+                {{item.paymentToBeSettled| number:'1.2-2'}}
+                </span>
+            </td>
         </tr>
     </tbody>
 </table>

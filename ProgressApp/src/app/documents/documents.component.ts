@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Document } from '../../domain/generated/apimodel';
-import { NgFor } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'documents',
   standalone: true,
-  imports: [NgFor, RouterModule],
+  imports: [NgFor, RouterModule, CommonModule],
   templateUrl: './documents.component.html',
   styleUrl: './documents.component.scss'
 })

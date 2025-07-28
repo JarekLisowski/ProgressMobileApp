@@ -1,0 +1,28 @@
+<div class="modal" #modalWindow id="productRemoveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Płatność</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>Płatność za: {{document?.number}}</div>
+                <div>
+                    Pozostało do zapłaty: {{document?.paymentToBeSettled}}
+                </div>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="input-payment-other" [(ngModel)]="selectedPayment">
+                        <option selected value="0">Gotówka</option>
+                        <option *ngFor="let item of paymentMethods" value="{{item.id}}">{{item.name}}</option>
+                    </select>
+                    <input type="number" class="form-control" [(ngModel)]="payValue"  min="0" max="{{document?.paymentToBeSettled}}">
+                    <span class="input-group-text">PLN</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="clickAccept()">Zapłać</button>
+                <button type="button" class="btn btn-secondary" (click)="clickReject()">Anuluj</button>
+            </div>
+        </div>
+    </div>
+</div>

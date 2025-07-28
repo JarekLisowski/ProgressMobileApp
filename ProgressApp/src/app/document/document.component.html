@@ -1,24 +1,40 @@
 <h5>{{document?.number}}</h5>
-<h6 class="mt-3">    
+<h6 class="mt-3">
     {{document?.customer?.adrName}}
 </h6>
 <div>
-    NIP: {{document?.customer?.adrNip}}
+    {{document?.customer?.adrStreet}} {{document?.customer?.adrStreetNo}}
 </div>
-<div class="row border-bottom mt-2">
-  <dd class="col-3">Data:</dd>
-  <dt class="col-9">{{document?.issueDate | date:'shortDate'}}</dt>
-  <dd class="col-3">Netto:</dd>
-  <dt class="col-9">{{document?.totalNet | number : '1.2-2'}} PLN</dt>
-  <dd class="col-3">Brutto:</dd>
-  <dt class="col-9">{{document?.totalGross | number : '1.2-2'}} PLN</dt>
-  <dd class="col-3">Do zapł.:</dd>
-  <dt class="col-9">{{document?.paymentToBeSettled | number : '1.2-2'}} PLN</dt>
+<div>
+    {{document?.customer?.adrCity}} {{document?.customer?.adrZipCode}}
 </div>
 
-<div class="mt-3">
-    <div *ngFor="let item of document?.items" class="row border-bottom">
-        <div class="col-sm-12 fw-medium mb-2">
+<div>
+    NIP: {{document?.customer?.adrNip}}
+</div>
+<div class="row mt-2 border-top">
+    <div class="col-3">Data:</div>
+    <div class="col-4 text-end">{{document?.issueDate | date:'shortDate'}}</div>
+</div>
+<div class="row">
+    <div class="col-3">Netto:</div>
+    <div class="col-4 text-end">{{document?.totalNet | number : '1.2-2'}} PLN</div>
+</div>
+<div class="row">
+    <div class="col-3">Brutto:</div>
+    <div class="col-4 text-end">{{document?.totalGross | number : '1.2-2'}} PLN</div>
+</div>
+<div class="row">
+    <div class="col-3">Do zapł.:</div>
+    <div class="col-4 text-end">{{document?.paymentToBeSettled | number : '1.2-2'}} PLN</div>
+    <div *ngIf="(document?.paymentToBeSettled ?? 0) > 0" class="col-5">
+        <input type="button" class="btn btn-primary btn-sm" value="Zapłać" (click)="pay()">
+    </div>
+</div>
+
+<div class="mt-3 border-top">
+    <div *ngFor="let item of document?.items" class="row border-bottom pb-2">
+        <div class="col-sm-12 fw-medium">
             {{item?.product?.name}}
         </div>
         <div class="col-4 col-lg-2">
@@ -39,3 +55,4 @@
         </div>
     </div>
 </div>
+

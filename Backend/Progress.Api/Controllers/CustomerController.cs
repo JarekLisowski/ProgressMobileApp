@@ -14,12 +14,13 @@ namespace Progress.Api.Controllers
   {
     CustomerManager _customerManager;
     IMapper _mapper;
-
-    public CustomerController(CustomerManager customerManager, IMapper autoMapper, IServiceProvider serviceProvider)
+    NavireoConnector _navireoConnector;
+    public CustomerController(CustomerManager customerManager, IMapper autoMapper, IServiceProvider serviceProvider, NavireoConnector navireoConnector)
       : base(serviceProvider)
     {
       _customerManager = customerManager;
       _mapper = autoMapper;
+      _navireoConnector = navireoConnector;
     }
 
     [HttpGet("{id}")]
@@ -56,16 +57,31 @@ namespace Progress.Api.Controllers
       return new CustomerListResponse();
     }
 
-    [HttpPost]
-    public string Create()
+    [HttpPost("update")]
+    public async Task<ApiResult<string>> Update(Customer customer)
     {
-      return "Not implemented";
-    }
-
-    [HttpPut]
-    public string Update()
-    {
-      return "Not implemented";
+      try
+      {
+        var userId = GetUserId();
+        if (userId != null)
+        {
+          var resutl = await _navireoConnector.UpdateOrAddCustomer(customer, userId.Value);
+          return new ApiResult<string>("OK");
+        }
+      }
+      catch (Exception ex)
+      {
+        return new ApiResult<string>
+        {
+          IsError = true,
+          Message = ex.Message
+        };
+      }
+      return new ApiResult<string>
+      {
+        IsError = true,
+        Message = "Nieokreœlony b³¹d"
+      };
     }
 
   }

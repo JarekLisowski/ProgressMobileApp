@@ -10,6 +10,58 @@
 
 
 
+export class ApiResult implements IApiResult {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+
+    constructor(data?: IApiResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+        }
+    }
+
+    static fromJS(data: any): ApiResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        return data;
+    }
+}
+
+export interface IApiResult {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+}
+
 export class Customer implements ICustomer {
     id?: number;
     code?: string | undefined;
@@ -873,6 +925,74 @@ export interface ILoginResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: ILogin;
+}
+
+export class Payment implements IPayment {
+    relatedDocumentId?: number;
+    relatedDocumentNumber?: string | undefined;
+    issueDate?: Date;
+    value?: number;
+    title?: string | undefined;
+    payerId?: number;
+    fromPerson?: string | undefined;
+    toPerson?: string | undefined;
+    paymentType?: number;
+
+    constructor(data?: IPayment) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.relatedDocumentId = _data["relatedDocumentId"];
+            this.relatedDocumentNumber = _data["relatedDocumentNumber"];
+            this.issueDate = _data["issueDate"] ? new Date(_data["issueDate"].toString()) : <any>undefined;
+            this.value = _data["value"];
+            this.title = _data["title"];
+            this.payerId = _data["payerId"];
+            this.fromPerson = _data["fromPerson"];
+            this.toPerson = _data["toPerson"];
+            this.paymentType = _data["paymentType"];
+        }
+    }
+
+    static fromJS(data: any): Payment {
+        data = typeof data === 'object' ? data : {};
+        let result = new Payment();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["relatedDocumentId"] = this.relatedDocumentId;
+        data["relatedDocumentNumber"] = this.relatedDocumentNumber;
+        data["issueDate"] = this.issueDate ? this.issueDate.toISOString() : <any>undefined;
+        data["value"] = this.value;
+        data["title"] = this.title;
+        data["payerId"] = this.payerId;
+        data["fromPerson"] = this.fromPerson;
+        data["toPerson"] = this.toPerson;
+        data["paymentType"] = this.paymentType;
+        return data;
+    }
+}
+
+export interface IPayment {
+    relatedDocumentId?: number;
+    relatedDocumentNumber?: string | undefined;
+    issueDate?: Date;
+    value?: number;
+    title?: string | undefined;
+    payerId?: number;
+    fromPerson?: string | undefined;
+    toPerson?: string | undefined;
+    paymentType?: number;
 }
 
 export class PaymentMethod implements IPaymentMethod {

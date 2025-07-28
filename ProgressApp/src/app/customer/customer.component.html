@@ -1,10 +1,56 @@
-<div *ngIf="customer">
-  <h2>name: {{ customer.adrName }}</h2>
-  <p>Address: {{ customer.adrStreet }}</p>
-  <p>City: {{ customer.adrCity }}</p>
-  <p>Zip: {{ customer.adrZipCode }}</p>
-  <p>NIP: {{ customer.adrNip }}</p>
-</div>
 <div>
-  <invoices [customerId]="customerId" ></invoices>
+  <!-- View Mode -->
+  <div *ngIf="!editMode && customer">
+    <div class="d-flex justify-content-between mb-3s">
+      <h2>{{ customer.adrName }}</h2>
+      <div class="">
+        <button class="btn btn-primary btn-sm " (click)="edit()">
+          <i class="bi bi-pencil-square"></i>
+        </button>     
+      </div>
+    </div>
+    <div>{{ customer.adrStreet }} {{ customer.adrStreetNo }}</div>
+    <div>{{ customer.adrCity }} {{ customer.adrZipCode }}</div>
+    <div>
+      <div>
+        NIP: {{ customer.adrNip }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Mode -->
+  <div *ngIf="editMode && customerEdit">
+    <h5 *ngIf="customerId == 0">Dodawanie kontrahenta</h5>
+    <div class="mb-3 mt-3">
+      <label for="name" class="form-label">Nazwa: </label>
+      <input id="name" class="form-control" [(ngModel)]="customerEdit.adrName" />
+    </div>
+    <div class="mb-3">
+      <label for="street" class="form-label">Ulica: </label>
+      <input id="street" class="form-control" [(ngModel)]="customerEdit.adrStreet" />
+    </div>
+    <div class="mb-3">
+      <label for="streetNo" class="form-label">Numer domu: </label>
+      <input id="streetNo" class="form-control" [(ngModel)]="customerEdit.adrStreetNo" />
+    </div>
+    <div class="mb-3">
+      <label for="city" class="form-label">Miejscowość: </label>
+      <input id="city" class="form-control" [(ngModel)]="customerEdit.adrCity" />
+    </div>
+    <div class="mb-3">
+      <label for="zipCode" class="form-label">Kod pocztowy: </label>
+      <input id="zipCode" class="form-control" [(ngModel)]="customerEdit.adrZipCode" />
+    </div>
+    <div class="mb-3">
+      <label for="nip" class="form-label">NIP: </label>
+      <input id="nip" class="form-control" [(ngModel)]="customerEdit.adrNip" />
+    </div>
+    <br>
+    <input type="button" class="btn btn-primary me-3" (click)="save()" value="Zapisz" />
+    <button class="btn btn-secondary" (click)="cancel()">Anuluj</button>
+  </div>
+</div>
+
+<div *ngIf="!editMode && customerId" class="mb-3">
+  <invoices [customerId]="customerId"></invoices>
 </div>

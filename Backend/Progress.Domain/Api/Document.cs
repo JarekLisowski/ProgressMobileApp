@@ -21,4 +21,5 @@ public class Document
   public int? UserId { get; set; }
   public string UserName { get; set; } = "";
   public DateTime IssueDate { get; set; } = DateTime.Today;
+
 }

@@ -1,23 +1,25 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Document } from '../../domain/generated/apimodel';
+import { Document, IPayment } from '../../domain/generated/apimodel';
 import { ApiService } from '../../services/api.service';
 import { DocumentComponent } from "../document/document.component";
+import { PayModalComponent } from "../pay-modal/pay-modal.component";
 
 @Component({
   selector: 'invoice',
   standalone: true,
-  imports: [DocumentComponent],
+  imports: [DocumentComponent, PayModalComponent],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.scss'
 })
 export class InvoiceComponent implements OnInit {
 
+  @ViewChild('payWindow') payWindowRef!: PayModalComponent;
+  
   route = inject(ActivatedRoute);
   apiService = inject(ApiService);
 
   invoice: Document | undefined;
-
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -32,6 +34,24 @@ export class InvoiceComponent implements OnInit {
         }
       });
     }
+  }
+
+  pay() {
+    if (this.invoice) {      
+      this.payWindowRef.showObservable().subscribe(x => {
+        if (x) {
+          this.doPay(x);
+        }
+      });
+    }
+  }
+
+  doPay(payment: IPayment) {
+    this.apiService.payForInvoice(payment).subscribe(x => {
+      if (!x.isError) {
+        
+      }
+    });
   }
 
 }
