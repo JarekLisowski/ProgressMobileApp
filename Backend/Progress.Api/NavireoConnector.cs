@@ -58,7 +58,7 @@ namespace Progress.Api
         Payment = payment
       };
 
-      var result = await httpClient.PostAsJsonAsync("document/pay", request, default);
+      var result = await httpClient.PostAsJsonAsync("dokumenty/pay", request, default);
       if (result != null)
       {
         if (result.IsSuccessStatusCode)
@@ -78,7 +78,7 @@ namespace Progress.Api
         return new ApiResult
         {
           IsError = true,
-          Message = $"{result.StatusCode}: {result.ReasonPhrase}"
+          Message = $"{(int)result.StatusCode}: {result.ReasonPhrase}"
         };
       }
       return new ApiResult

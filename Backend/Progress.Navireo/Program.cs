@@ -19,6 +19,7 @@ namespace Progress.Navireo
       builder.Services.AddDbContext<Database.NavireoDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Navireo")));
       builder.Services.AddTransient<Managers.DocumentManager>();
 			builder.Services.AddTransient<Managers.CustomerManager>();
+			builder.Services.AddTransient<Managers.FinanceManager>();
 			builder.Services.AddTransient<Helpers.Logger>();
 			builder.Services.AddSingleton<Navireo.NavireoApplication>();
 			builder.Services.AddHostedService<Navireo.NavireoService>();

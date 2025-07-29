@@ -60,6 +60,8 @@
     /// </summary>
     public string ToPerson { get; set; } = "";
 
+    public int PaymentMethod { get; set; }
+
   }
 
 

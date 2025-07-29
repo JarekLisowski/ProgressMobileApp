@@ -16,7 +16,8 @@ namespace Progress.Domain.Extensions
         Buyer = new Location
         {
           Id = payment.PayerId
-        }
+        },
+        PaymentMethod = payment.PaymentType,
       };
       return result;
     }

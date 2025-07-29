@@ -48,8 +48,8 @@ export class InvoiceComponent implements OnInit {
 
   doPay(payment: IPayment) {
     this.apiService.payForInvoice(payment).subscribe(x => {
-      if (!x.isError) {
-        
+      if (!x.isError && this.invoice?.id) {
+        this.loadData(this.invoice?.id);
       }
     });
   }

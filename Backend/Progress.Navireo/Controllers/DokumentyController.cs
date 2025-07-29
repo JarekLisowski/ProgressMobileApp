@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Progress.Domain.Api;
 using Progress.Domain.Api.Request;
+using Progress.Domain.Api.Response;
 using Progress.Domain.Extensions;
 using Progress.Navireo.Managers;
 
@@ -37,22 +38,33 @@ namespace Progress.Navireo.Controllers
     }
 
     [HttpPost("pay")]
-    public object SettleDocument(PaymentRequest request)
+    public ApiResult SettleDocument(PaymentRequest request)
     {
       if (request?.Payment == null)
-        return "No data";
+        return new ApiResult
+        {
+          IsError = true,
+          Message = "Brak danych"
+        };
 
       try
       {
         var documentSettlement = request.Payment.ToNavireoDocumentSettlement();
         _financeManager.SettleDocument(request.OperatorId, documentSettlement);
+        return new ApiResult
+        {
+          Message = "Zapłacono"
+        };
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex);
-        throw;
-      }
-      return "OK";
+        return new ApiResult
+        {
+          IsError = true,
+          Message = ex.Message
+        };
+      }      
     }
   }
 }

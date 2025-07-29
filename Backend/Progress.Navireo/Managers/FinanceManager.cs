@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Progress.Database;
-using Progress.Domain.Api;
 using Progress.Domain.Navireo;
 using Progress.Navireo.Extensions;
 using Progress.Navireo.Helpers;
@@ -164,16 +163,29 @@ namespace Progress.Navireo.Managers
     /// <param name="settlement">Rozliczenie</param>
     /// <param name="przelew">Czy przelew</param>
     /// <returns></returns>
-    public List<KeyValuePair<string, int>> SettleDocument(int operatorId, DocumentSettlement settlement, bool przelew = false)
+    public bool SettleDocument(int operatorId, DocumentSettlement settlement, bool przelew = false)
     {
       if (settlement.Value == 0)
         throw new Exception("Brak podanej kwoty TotalGross dokumentu");
 
-      var result = new List<KeyValuePair<string, int>>();
+      //var result = new List<KeyValuePair<string, int>>();
       InsERT.FinDokumenty naleznosci = null;
       InsERT.FinManager finManager = null;
       try
       {
+        int? karta = null;
+        if (settlement.PaymentMethod > 0)
+        {
+          var ifxfp = dbContext.IfxApiFormaPlatnoscis.FirstOrDefault(it => it.Id == settlement.PaymentMethod);
+          if (ifxfp != null)
+          {
+            var fp = dbContext.SlFormaPlatnoscis.FirstOrDefault(it => it.FpId == ifxfp.FpId);
+            if (fp != null && fp.FpTerminalPlatniczy && fp.FpAktywna)
+            {
+              karta = fp.FpId;
+            }
+          }
+        }
         if (settlement.RelatedDocumentId > 0)
         {
           var doc = dbContext.DokDokuments.FirstOrDefault(x => x.DokId == settlement.RelatedDocumentId);
@@ -202,6 +214,10 @@ namespace Progress.Navireo.Managers
               nal = (InsERT.FinDokument)_oNal;
               if (nal.WartoscBiezaca < settlement.Value)
                 throw new Exception(string.Format("Wartość rozliczenia: {1} jest wyższa od kwoty należności: {0}", nal.WartoscBiezaca, settlement.Value));
+              int wplataId = RozliczNaleznosc(finManager, nal, settlement.Number, settlement.Value, settlement.IssueDate, (int)pd_Uzytkownik.UzIdKasy, przelew, karta);
+              SetWystawil(wplataId, pd_Uzytkownik);
+              //result.Add(new KeyValuePair<string, int>(settlement.GUID, wplataId));
+
             }
             finally
             {
@@ -209,7 +225,7 @@ namespace Progress.Navireo.Managers
               nal = null;
             }
           }
-          return result;
+          return true;
         }
         else
         {
@@ -226,12 +242,10 @@ namespace Progress.Navireo.Managers
             kp.WartoscPoczatkowaWaluta = settlement.Value;
             kp.ObiektPowiazanyWstaw(InsERT.DokFinObiektTypEnum.gtaDokFinObiektKontrahent, settlement.Buyer.Id);
             kp.Data = DateTime.Now;
-            // kp.Numer = settlement.Number;
             kp.Zapisz();
             int wplataId = kp.Identyfikator;
             SetWystawil(wplataId, pd_Uzytkownik);
-            result.Add(new KeyValuePair<string, int>(settlement.GUID, wplataId));
-            return result;
+            return true;
           }
           finally
           {
@@ -296,23 +310,38 @@ namespace Progress.Navireo.Managers
     /// Rozlicza dokument - dodaje wpłatę
     /// </summary>
     /// <returns></returns>
-    private static int RozliczNaleznosc(InsERT.FinManager finManager, InsERT.FinDokument nal, int numer, decimal kwotaSplaty, DateTime data, int kasaId, bool przelew = true)
+    private static int RozliczNaleznosc(InsERT.FinManager finManager, InsERT.FinDokument nal, int numer, decimal kwotaSplaty, DateTime data, int kasaId, bool przelew = true, int? fpKartaId = null)
     {
       InsERT.FinDokument wplata = null;
       InsERT.FinRozliczenie rozliczenie = null;
+      InsERT.FinCesja finCesja = null;
       try
       {
-        if (przelew)
-          wplata = finManager.DodajOperacjeBankowa(InsERT.DokFinTypEnum.gtaDokFinTypBP, 1);
+        if (fpKartaId != null)
+        {
+          finCesja = nal.Rozliczenia.UtworzCesje();
+          finCesja.KartaId = fpKartaId.Value;
+          finCesja.DataRozrachunku = DateTime.Today;
+          finCesja.KwotaSplaty = kwotaSplaty;
+          nal.Rozliczenia.RozliczKarta(finCesja);
+          finCesja.ZapiszCesje();
+          nal.Zapisz();
+          return 0;
+        }
         else
-          wplata = finManager.DodajDokumentKasowy(InsERT.DokFinTypEnum.gtaDokFinTypKP, kasaId);
-        wplata.ObiektPowiazanyWstaw(InsERT.DokFinObiektTypEnum.gtaDokFinObiektKontrahent, nal.ObiektPowiazanyId);
-        wplata.WartoscPoczatkowaWaluta = kwotaSplaty; // nal.WartoscBiezaca;
-        wplata.Data = data;
-        rozliczenie = wplata.Rozliczenia.Rozlicz(nal, wplata.WartoscPoczatkowaWaluta);
-        wplata.Tytulem = wplata.GenerujTytul();
-        wplata.Zapisz();
-        return wplata.Identyfikator;
+        {
+          if (przelew)
+            wplata = finManager.DodajOperacjeBankowa(InsERT.DokFinTypEnum.gtaDokFinTypBP, 1);
+          else
+            wplata = finManager.DodajDokumentKasowy(InsERT.DokFinTypEnum.gtaDokFinTypKP, kasaId);
+          wplata.ObiektPowiazanyWstaw(InsERT.DokFinObiektTypEnum.gtaDokFinObiektKontrahent, nal.ObiektPowiazanyId);
+          wplata.WartoscPoczatkowaWaluta = kwotaSplaty; 
+          wplata.Data = data;
+          rozliczenie = wplata.Rozliczenia.Rozlicz(nal, wplata.WartoscPoczatkowaWaluta);
+          wplata.Tytulem = wplata.GenerujTytul();
+          wplata.Zapisz();
+          return wplata.Identyfikator;
+        }
       }
       finally
       {
