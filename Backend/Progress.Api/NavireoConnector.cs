@@ -9,24 +9,30 @@ namespace Progress.Api
     string baseUrl = "http://localhost:5270/";
 
 
-    public async Task<string> UpdateDocument(Document document)
+    public async Task<SaveDocumentResponse> SaveDocument(Document document)
     {
       var httpClient = GetHttpClient();
-      var result = await httpClient.PostAsJsonAsync("dokumenty/updateDocument", document, default);
+      var result = await httpClient.PostAsJsonAsync("dokumenty/saveDocument", document, default);
       if (result != null)
       {
         if (result.IsSuccessStatusCode)
         {
-          return "Dokument został zapisany";
+          var navireoResult = await result.Content.ReadFromJsonAsync<SaveDocumentResponse>();
+          if (navireoResult != null)           
+            return navireoResult;
         }
         var stream = new StreamReader(result.Content.ReadAsStream());
         var data = stream.ReadToEnd();
         Console.WriteLine(data);
       }
-      return "Error";
+      return new SaveDocumentResponse
+      {
+        IsError = true,
+        Message = "Wystąpił błąd."
+      };
     }
 
-    internal async Task<string> UpdateOrAddCustomer(Customer customer, int userId)
+    internal async Task<string> SaveCustomer(Customer customer, int userId)
     {
       var httpClient = GetHttpClient();
       var request = new UpdateCustomerRequest
@@ -35,7 +41,7 @@ namespace Progress.Api
         Customer = customer
       };
       
-      var result = await httpClient.PostAsJsonAsync("customer/update", request, default);
+      var result = await httpClient.PostAsJsonAsync("customer/save", request, default);
       if (result != null)
       {
         if (result.IsSuccessStatusCode)

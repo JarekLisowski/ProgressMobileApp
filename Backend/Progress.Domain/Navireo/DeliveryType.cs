@@ -48,7 +48,7 @@
         /// <summary>
         /// VAT
         /// </summary>
-        public Tax Tax { get; set; }
+        public Tax? Tax { get; set; }
 
         /// <summary>
         /// Max waga towarów dla dostawy

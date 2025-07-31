@@ -30,4 +30,6 @@ public partial class SlKategorium
     public virtual ICollection<KhKontrahent> KhKontrahentKhIdRachKategRozchodNavigations { get; set; } = new List<KhKontrahent>();
 
     public virtual ICollection<NzFinanse> NzFinanses { get; set; } = new List<NzFinanse>();
+
+    public virtual ICollection<RbRachBankowy> RbRachBankowies { get; set; } = new List<RbRachBankowy>();
 }

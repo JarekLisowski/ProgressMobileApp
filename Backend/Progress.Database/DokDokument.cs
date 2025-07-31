@@ -343,6 +343,8 @@ public partial class DokDokument
 
     public virtual SlKategorium? DokKat { get; set; }
 
+    public virtual RbRachBankowy? DokNrRachunkuBankowegoPdmNavigation { get; set; }
+
     public virtual ICollection<DokPozycja> DokPozycjaObDokHans { get; set; } = new List<DokPozycja>();
 
     public virtual ICollection<DokPozycja> DokPozycjaObDokMags { get; set; } = new List<DokPozycja>();

@@ -211,5 +211,7 @@ public partial class NzFinanse
 
     public virtual SlKategorium? NzfIdKategoriiNavigation { get; set; }
 
+    public virtual RbRachBankowy? NzfIdRachunkuNavigation { get; set; }
+
     public virtual NzFinanse? NzfIdRozrachunkuNavigation { get; set; }
 }

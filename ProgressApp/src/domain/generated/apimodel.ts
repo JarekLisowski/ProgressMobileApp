@@ -523,6 +523,7 @@ export class Document implements IDocument {
     cashPayment?: number;
     totalNet?: number;
     totalGross?: number;
+    totalTax?: number;
     paymentToBeSettled?: number;
     secondPaymentAmount?: number;
     paymentDueDays?: number;
@@ -566,6 +567,7 @@ export class Document implements IDocument {
             this.cashPayment = _data["cashPayment"];
             this.totalNet = _data["totalNet"];
             this.totalGross = _data["totalGross"];
+            this.totalTax = _data["totalTax"];
             this.paymentToBeSettled = _data["paymentToBeSettled"];
             this.secondPaymentAmount = _data["secondPaymentAmount"];
             this.paymentDueDays = _data["paymentDueDays"];
@@ -601,6 +603,7 @@ export class Document implements IDocument {
         data["cashPayment"] = this.cashPayment;
         data["totalNet"] = this.totalNet;
         data["totalGross"] = this.totalGross;
+        data["totalTax"] = this.totalTax;
         data["paymentToBeSettled"] = this.paymentToBeSettled;
         data["secondPaymentAmount"] = this.secondPaymentAmount;
         data["paymentDueDays"] = this.paymentDueDays;
@@ -625,6 +628,7 @@ export interface IDocument {
     cashPayment?: number;
     totalNet?: number;
     totalGross?: number;
+    totalTax?: number;
     paymentToBeSettled?: number;
     secondPaymentAmount?: number;
     paymentDueDays?: number;
@@ -1224,6 +1228,110 @@ export interface IPriceLevel {
     name?: string | undefined;
     primary?: boolean;
     checked?: boolean;
+}
+
+export class PrintDocumentResponse implements IPrintDocumentResponse {
+    info?: string | undefined;
+    lines?: string[] | undefined;
+
+    constructor(data?: IPrintDocumentResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.info = _data["info"];
+            if (Array.isArray(_data["lines"])) {
+                this.lines = [] as any;
+                for (let item of _data["lines"])
+                    this.lines!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): PrintDocumentResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PrintDocumentResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["info"] = this.info;
+        if (Array.isArray(this.lines)) {
+            data["lines"] = [];
+            for (let item of this.lines)
+                data["lines"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IPrintDocumentResponse {
+    info?: string | undefined;
+    lines?: string[] | undefined;
+}
+
+export class PrintRequestResponse implements IPrintRequestResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: string | undefined;
+
+    constructor(data?: IPrintRequestResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.data = _data["data"];
+        }
+    }
+
+    static fromJS(data: any): PrintRequestResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PrintRequestResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["data"] = this.data;
+        return data;
+    }
+}
+
+export interface IPrintRequestResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: string | undefined;
 }
 
 export class Product implements IProduct {
@@ -2134,6 +2242,70 @@ export interface IPromoSetResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: IPromoSet;
+}
+
+export class SaveDocumentResponse implements ISaveDocumentResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    documentId?: number;
+    payDocumentId?: number;
+    documentNumber?: string | undefined;
+
+    constructor(data?: ISaveDocumentResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.documentId = _data["documentId"];
+            this.payDocumentId = _data["payDocumentId"];
+            this.documentNumber = _data["documentNumber"];
+        }
+    }
+
+    static fromJS(data: any): SaveDocumentResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaveDocumentResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["documentId"] = this.documentId;
+        data["payDocumentId"] = this.payDocumentId;
+        data["documentNumber"] = this.documentNumber;
+        return data;
+    }
+}
+
+export interface ISaveDocumentResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    documentId?: number;
+    payDocumentId?: number;
+    documentNumber?: string | undefined;
 }
 
 export class SearchResponse implements ISearchResponse {

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RESTClientService } from "./RESTClient.service";
 import { Observable } from "rxjs";
-import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IPayment, IProductListRequest, LoginResponse, Payment, PaymentMethodsResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse, SearchResponse, StringApiResult } from "../domain/generated/apimodel";
+import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IPayment, IProductListRequest, LoginResponse, Payment, PaymentMethodsResponse, PrintRequestResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse, SaveDocumentResponse, SearchResponse, StringApiResult } from "../domain/generated/apimodel";
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +62,7 @@ export class ApiService {
     return this.apiSerivce.get<DeliveryMethodsResponse>(`api/configuration/deliveryMethods`);
   }
 
-  sendDocument(document: IDocument):Observable<any> {
+  sendDocument(document: IDocument):Observable<SaveDocumentResponse> {
     return this.apiSerivce.post('api/document/invoice', document)
   }
   
@@ -85,6 +85,11 @@ export class ApiService {
   payForInvoice(payment: IPayment): Observable<ApiResult> {
     return this.apiSerivce.post<ApiResult>(`api/document/pay/`, payment);
   }
+
+  printInvoiceRequest(id: number): Observable<PrintRequestResponse> {
+    return this.apiSerivce.post<PrintRequestResponse>(`api/print/request/invoice/${id}`, {});
+  }
+
 
 
 

@@ -12,6 +12,7 @@ import { CustomersComponent } from './customers/customers.component';
 import { CustomerComponent } from './customer/customer.component';
 import { InvoicesComponent } from './invoices/invoices.component';
 import { InvoiceComponent } from './invoice/invoice.component';
+import { SaveDocSummaryComponent } from './save-doc-summary/save-doc-summary.component';
 
 export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent, canActivate: [AuthGuard] },
@@ -27,6 +28,7 @@ export const routes: Routes = [
     { path: 'customer/:id', component: CustomerComponent, canActivate: [AuthGuard] },
     { path: 'invoices', component: InvoicesComponent, canActivate: [AuthGuard] },
     { path: 'invoice/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
+    { path: 'saveDocumentSummary/:id?number=:docNumber&payment=:paymentId', component: SaveDocSummaryComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/categories', pathMatch: 'full' },
     { path: '**', redirectTo: '/categories' }
 ];

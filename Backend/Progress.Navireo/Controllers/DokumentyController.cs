@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Progress.Domain.Api;
 using Progress.Domain.Api.Request;
 using Progress.Domain.Api.Response;
 using Progress.Domain.Extensions;
@@ -20,21 +19,27 @@ namespace Progress.Navireo.Controllers
       _financeManager = financeManager;
     }
 
-    [HttpPost("updateDocument")]
-    public object UpdateDocument(Domain.Api.Document request)
+    [HttpPost("saveDocument")]
+    public SaveDocumentResponse SaveDocument(Domain.Api.Document request)
     {
       try
       {
         var document = request.ToNavireoDocument();
         document.IsNew = true;
-        _documentManager.UpdateDocument(document);
+        var result = _documentManager.UpdateDocument(document);
+        return new SaveDocumentResponse
+        {
+          DocumentId = result.DocumentId,
+          PayDocumentId = result.PayDocumentId,
+          DocumentNumber = result.DocumentNumber
+
+        };
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex);
         throw;
       }
-      return "OK";
     }
 
     [HttpPost("pay")]
@@ -64,7 +69,7 @@ namespace Progress.Navireo.Controllers
           IsError = true,
           Message = ex.Message
         };
-      }      
+      }
     }
   }
 }

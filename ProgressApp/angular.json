@@ -75,7 +75,8 @@
               "buildTarget": "ProgressApp:build:production"
             },
             "development": {
-              "buildTarget": "ProgressApp:build:development"
+              "buildTarget": "ProgressApp:build:development",
+              "host": "0.0.0.0"
             }
           },
           "defaultConfiguration": "development"

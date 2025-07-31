@@ -327,6 +327,8 @@ public partial class KhKontrahent
 
     public virtual ICollection<KhCechaKh> KhCechaKhs { get; set; } = new List<KhCechaKh>();
 
+    public virtual RbRachBankowy? KhDomyslnyRachBankowy { get; set; }
+
     public virtual SlKategorium? KhIdEwVatspKategNavigation { get; set; }
 
     public virtual SlKategorium? KhIdEwVatzakKategNavigation { get; set; }

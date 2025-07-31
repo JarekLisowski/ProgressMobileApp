@@ -65,7 +65,7 @@ namespace Progress.Api.Controllers
         var userId = GetUserId();
         if (userId != null)
         {
-          var resutl = await _navireoConnector.UpdateOrAddCustomer(customer, userId.Value);
+          var resutl = await _navireoConnector.SaveCustomer(customer, userId.Value);
           return new ApiResult<string>("OK");
         }
       }

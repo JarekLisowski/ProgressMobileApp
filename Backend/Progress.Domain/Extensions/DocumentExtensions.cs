@@ -1,11 +1,10 @@
-﻿using Progress.Domain.Api;
-using Progress.Domain.Navireo;
+﻿using Progress.Domain.Navireo;
 
 namespace Progress.Domain.Extensions
 {
   public static class DocumentExtensions
   {
-    public static CommerceDocumentBase ToNavireoDocument(this Document document)
+    public static CommerceDocumentBase ToNavireoDocument(this Api.Document document)
     {
       var documentType = DocumentEnum.CustomerOrder;
       switch (document.DocumentType)
@@ -58,5 +57,30 @@ namespace Progress.Domain.Extensions
       };
       return navDocument;
     }
+
+    public static VatLine[] GetVatSummary(this Model.Document document)
+    {
+      var vatGroups = document.Items.GroupBy(it => it.TaxRate);
+      var result = vatGroups.Select(it => new VatLine
+      {
+        Rate = it.Key,
+        Net = it.Sum(it => it.LineNet),
+      }).ToArray();
+      foreach (var vatGroup in result)
+      {
+        vatGroup.Net = Math.Round(vatGroup.Net, 2);
+        vatGroup.Gross = Math.Round(vatGroup.Net * (1 + vatGroup.Rate / 100), 2);
+        vatGroup.Tax = vatGroup.Gross - vatGroup.Net;
+        vatGroup.RateName = $"{vatGroup.Rate:N1}%";
+      }
+      return result;
+    }
+
+    public static void CalculateVatSummary(this Model.Document document)
+    {
+      document.VatSummary = document.GetVatSummary();
+      document.TotalTax = document.TotalGross - document.TotalNet;
+    }
+
   }
 }

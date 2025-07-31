@@ -11,6 +11,7 @@ import { Transaction } from '../../domain/transaction';
 import { Document, IDocument, User } from '../../domain/generated/apimodel';
 import { UserService } from '../../services/user.service';
 import { CartPromoItemWithId } from '../../domain/cartPromoItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -25,6 +26,7 @@ export class CartComponent {
   cartService = inject(CartService);
   apiService = inject(ApiService);
   userService = inject(UserService);
+  router = inject(Router);
 
   sendDocument() {
     this.cartService.getCartItems().subscribe(items => {
@@ -73,6 +75,7 @@ export class CartComponent {
 
       //   })
       // });
+      this.router.navigate(['/saveDocumentSummary', x.documentId], { queryParams: { number: x.documentNumber, payment: x.payDocumentId } });
     });
 
   }

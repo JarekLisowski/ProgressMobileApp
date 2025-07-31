@@ -45,7 +45,7 @@ export class UserService {
         var obs = this.dbService.getAll<User>('user').pipe(
             map(x => {
                 if (x.length == 0) {
-                    undefined;
+                    return undefined;
                 }
                 var token = x[0].token;
                 return token;;

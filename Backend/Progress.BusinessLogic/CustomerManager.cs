@@ -9,6 +9,7 @@ namespace Progress.BusinessLogic
     IDatabaseRepository<Customer, IfVwKontrahent> dbKontrahent;
     IDatabaseRepository<Addres, AdrEwid> dbAdres;
     CustomerRepository customerRepository;
+    static Customer? _ownCompany = null;
 
     public CustomerManager(IDatabaseRepository<Customer, IfVwKontrahent> repoKontrahent, CustomerRepository repoCustomer)
     {
@@ -27,5 +28,15 @@ namespace Progress.BusinessLogic
       Customer[] data = customerRepository.GetCustomers(pattern, cechaId, limit);
       return data;
     }
+
+    public Customer GetOwnCompany()
+    {
+      if (_ownCompany == null)
+      {
+        _ownCompany = customerRepository.GetOwnCompany();
+      }
+      return _ownCompany;
+    }
+
   }
 }

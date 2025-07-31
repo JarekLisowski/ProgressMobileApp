@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Progress.Database;
 using Progress.Domain.Model;
+using Progress.Domain.Navireo;
 
 namespace Progress.Infrastructure.Database.Repository
 {
@@ -35,6 +37,23 @@ namespace Progress.Infrastructure.Database.Repository
         var data = query.ToList();
         return Mapper.Map<Customer[]>(data);
       }
+    }
+
+    public Customer GetOwnCompany()
+    {
+      var adrEwid = DbContext.AdrEwids.AsNoTracking().
+                    Include(x => x.AdrIdPanstwoNavigation)
+                    .Where(x => x.AdrTypAdresu == 8)
+                    .FirstOrDefault();
+      if (adrEwid != null)
+      {
+        var rachunek = DbContext.RbRachBankowies.FirstOrDefault(it => it.RbIdObiektu == adrEwid.AdrIdObiektu && it.RbTypObiektu == 0 && it.RbPodstawowy);
+        string rachunekNumer = rachunek != null ? rachunek.RbNumer : "";
+        var result = Mapper.Map<Customer>(adrEwid);
+        result.BankAccount = rachunekNumer;
+        return result;
+      }
+      return new Customer();
     }
   }
 }

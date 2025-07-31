@@ -51,6 +51,8 @@ dotnet ef dbcontext scaffold "Server=localhost;Trusted_Connection=True;Database=
 --table IFx_ApiDokPozycjaPromocja		^
 --table IFx_Parameter					^
 --table IFx_ApiDokumentyZapisane		^
---table IF_vwDokument
+--table IF_vwDokument					^
+--table rb__RachBankowy
+
 
 

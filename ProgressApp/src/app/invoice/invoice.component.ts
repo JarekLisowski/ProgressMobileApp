@@ -54,4 +54,14 @@ export class InvoiceComponent implements OnInit {
     });
   }
 
+  print() {
+    if (this.invoice?.id) {
+      this.apiService.printInvoiceRequest(this.invoice.id).subscribe(x => {
+        if (!x.isError && x.data) {
+          window.open(`https://progress.ifox.com.pl/invoice/${x.data}`, '_blank');  
+        }
+      });
+    }
+  }
+
 }

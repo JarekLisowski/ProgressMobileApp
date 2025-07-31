@@ -11,6 +11,7 @@ public class Document
   public decimal CashPayment { get; set; } = 0;
   public decimal TotalNet { get; set; } = 0;
   public decimal TotalGross { get; set; } = 0;
+  public decimal TotalTax { get; set; }
   public decimal PaymentToBeSettled { get; set; } = 0;
   public decimal SecondPaymentAmount { get; set; } = 0;
   public int PaymentDueDays { get; set; } = 0;

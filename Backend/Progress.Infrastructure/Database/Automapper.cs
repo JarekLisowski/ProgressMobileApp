@@ -97,7 +97,23 @@ namespace Progress.Infrastructure.Database
         .ForMember(dst => dst.PaymentDeadline, opt => opt.MapFrom((kontrahent, dst) =>  kontrahent.KhPlatOdroczone != null && kontrahent.KhPlatOdroczone == true ? (kontrahent.FpTermin != null ? (int)kontrahent.FpTermin : -1) : 0))
 				;
 
-			CreateMap<IfxApiFormaPlatnosci, PaymentMethod>()
+			CreateMap<AdrEwid, Customer>()
+				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.AdrIdObiektu))
+				.ForMember(dst => dst.AdrCity, opt => opt.MapFrom(src => src.AdrMiejscowosc))
+				.ForMember(dst => dst.AdrCountry, opt => opt.MapFrom((src, dst) => src.AdrIdPanstwoNavigation?.PaNazwa ?? ""))
+				.ForMember(dst => dst.AdrCountryCode, opt => opt.MapFrom((src, dst) => src.AdrIdPanstwoNavigation?.PaKodPanstwaUe ?? ""))
+				.ForMember(dst => dst.AdrCountryId, opt => opt.MapFrom(src => src.AdrIdPanstwo))
+				.ForMember(dst => dst.AdrName, opt => opt.MapFrom(src => src.AdrNazwa))
+				.ForMember(dst => dst.AdrNameFull, opt => opt.MapFrom(src => src.AdrNazwaPelna))
+				.ForMember(dst => dst.AdrNip, opt => opt.MapFrom(src => src.AdrNip))
+				.ForMember(dst => dst.AdrNumber, opt => opt.MapFrom(src => src.AdrNrLokalu))
+				.ForMember(dst => dst.AdrStreet, opt => opt.MapFrom(src => src.AdrUlica))
+				.ForMember(dst => dst.AdrStreetNo, opt => opt.MapFrom(src => src.AdrNrDomu))
+				.ForMember(dst => dst.AdrTel, opt => opt.MapFrom(src => src.AdrTelefon))
+				.ForMember(dst => dst.AdrZipCode, opt => opt.MapFrom(src => src.AdrKod));
+
+
+      CreateMap<IfxApiFormaPlatnosci, PaymentMethod>()
 				.ForMember(dst => dst.Deferred, opt => opt.MapFrom(src => src.PlatnoscOdroczona))
 				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Nazwa));
 
@@ -116,7 +132,7 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.PaymentToBeSettled, opt => opt.MapFrom(src => src.NzfWartoscDoZaplaty))
 				.ForMember(dst => dst.SecondPaymentAmount, opt => opt.MapFrom((src, dst) => (src.DokKwKarta ?? 0) > 0 ? src.DokKwKarta : src.DokKwKredyt))
 				.ForMember(dst => dst.SecondPaymentMethod, opt => opt.MapFrom(src => 0))
-				.ForMember(dst => dst.TotalGross, opt => opt.MapFrom(src => src.DokWartNetto))
+				.ForMember(dst => dst.TotalNet, opt => opt.MapFrom(src => src.DokWartNetto))
 				.ForMember(dst => dst.TotalGross, opt => opt.MapFrom(src => src.DokWartBrutto))
 				.ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.DokWystawil))
 				.ForMember(dst => dst.Number, opt => opt.MapFrom(src => src.DokNrPelny))

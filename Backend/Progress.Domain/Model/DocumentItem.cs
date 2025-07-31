@@ -10,6 +10,7 @@
     public decimal LineNet { get; set; }
     public decimal LineGross { get; set; }
     public decimal TaxRate { get; set; }
+    public string Unit { get; set; } = "szt.";
     public decimal DiscountRate { get; set; }
     public int? PromoSetId { get; set; }
     public int? PromoItemId { get; set; }

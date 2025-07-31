@@ -1,3 +1,3 @@
-<document [document]="invoice" (onPay)="pay()"></document>
+<document [document]="invoice" (onPay)="pay()" (onPrint)="print()"></document>
 
 <pay-modal #payWindow [document]="invoice"></pay-modal>

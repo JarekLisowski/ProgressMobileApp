@@ -77,6 +77,8 @@ public partial class NavireoDbContext : DbContext
 
     public virtual DbSet<PdUzytkownik> PdUzytkowniks { get; set; }
 
+    public virtual DbSet<RbRachBankowy> RbRachBankowies { get; set; }
+
     public virtual DbSet<SlBank> SlBanks { get; set; }
 
     public virtual DbSet<SlCechaKh> SlCechaKhs { get; set; }
@@ -909,6 +911,10 @@ public partial class NavireoDbContext : DbContext
             entity.HasOne(d => d.DokKat).WithMany(p => p.DokDokuments)
                 .HasForeignKey(d => d.DokKatId)
                 .HasConstraintName("FK_dok__Dokument_sl_Kategoria");
+
+            entity.HasOne(d => d.DokNrRachunkuBankowegoPdmNavigation).WithMany(p => p.DokDokuments)
+                .HasForeignKey(d => d.DokNrRachunkuBankowegoPdm)
+                .HasConstraintName("FK_rb__RachBankowy_dok__Dokument");
         });
 
         modelBuilder.Entity<DokPozycja>(entity =>
@@ -2024,6 +2030,10 @@ public partial class NavireoDbContext : DbContext
             entity.Property(e => e.KhZgodaMark).HasColumnName("kh_ZgodaMark");
             entity.Property(e => e.KhZgodaNewsletterVendero).HasColumnName("kh_ZgodaNewsletterVendero");
 
+            entity.HasOne(d => d.KhDomyslnyRachBankowy).WithMany(p => p.KhKontrahents)
+                .HasForeignKey(d => d.KhDomyslnyRachBankowyId)
+                .HasConstraintName("FK_kh__Kontrahent_rb__RachBankowy");
+
             entity.HasOne(d => d.KhIdEwVatspKategNavigation).WithMany(p => p.KhKontrahentKhIdEwVatspKategNavigations)
                 .HasForeignKey(d => d.KhIdEwVatspKateg)
                 .HasConstraintName("FK_kh__Kontrahent_sl_Kategoria1");
@@ -2459,6 +2469,10 @@ public partial class NavireoDbContext : DbContext
                 .HasForeignKey(d => d.NzfIdKategorii)
                 .HasConstraintName("FK_nz__Finanse_sl_Kategoria");
 
+            entity.HasOne(d => d.NzfIdRachunkuNavigation).WithMany(p => p.NzFinanses)
+                .HasForeignKey(d => d.NzfIdRachunku)
+                .HasConstraintName("FK_nz__Finanse_rb__RachBankowy");
+
             entity.HasOne(d => d.NzfIdRozrachunkuNavigation).WithMany(p => p.InverseNzfIdRozrachunkuNavigation)
                 .HasForeignKey(d => d.NzfIdRozrachunku)
                 .HasConstraintName("FK_nz__Finanse_nz__Finanse");
@@ -2866,6 +2880,100 @@ public partial class NavireoDbContext : DbContext
             entity.HasOne(d => d.UzIdMagazynuNavigation).WithMany(p => p.PdUzytkowniks)
                 .HasForeignKey(d => d.UzIdMagazynu)
                 .HasConstraintName("FK_pd_Uzytkownik_sl_Magazyn");
+        });
+
+        modelBuilder.Entity<RbRachBankowy>(entity =>
+        {
+            entity.HasKey(e => e.RbId);
+
+            entity.ToTable("rb__RachBankowy", tb => tb.HasTrigger("rb__RachBankowy_InsertingUpdating"));
+
+            entity.HasIndex(e => new { e.RbTypObiektu, e.RbIdObiektu, e.RbStatus }, "IX_rb__RachBankowy");
+
+            entity.Property(e => e.RbId)
+                .ValueGeneratedNever()
+                .HasColumnName("rb_Id");
+            entity.Property(e => e.RbAnalityka)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("rb_Analityka");
+            entity.Property(e => e.RbBank)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("rb_Bank");
+            entity.Property(e => e.RbDataHist)
+                .HasColumnType("datetime")
+                .HasColumnName("rb_DataHist");
+            entity.Property(e => e.RbDataSaldo)
+                .HasColumnType("datetime")
+                .HasColumnName("rb_DataSaldo");
+            entity.Property(e => e.RbDik)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("rb_Dik");
+            entity.Property(e => e.RbEbank).HasColumnName("rb_Ebank");
+            entity.Property(e => e.RbIban).HasColumnName("rb_IBAN");
+            entity.Property(e => e.RbIdKategorii).HasColumnName("rb_IdKategorii");
+            entity.Property(e => e.RbIdObiektu).HasColumnName("rb_IdObiektu");
+            entity.Property(e => e.RbIdPowiazanyRachunekVat).HasColumnName("rb_IdPowiazanyRachunekVAT");
+            entity.Property(e => e.RbIdUslugi)
+                .HasDefaultValueSql("(NULL)")
+                .HasColumnName("rb_IdUslugi");
+            entity.Property(e => e.RbIdWaluty)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("PLN")
+                .IsFixedLength()
+                .HasColumnName("rb_IdWaluty");
+            entity.Property(e => e.RbIndywPodatkowyWspolnik).HasColumnName("rb_IndywPodatkowyWspolnik");
+            entity.Property(e => e.RbIndywWspolnik).HasColumnName("rb_IndywWspolnik");
+            entity.Property(e => e.RbIndywidualny).HasColumnName("rb_Indywidualny");
+            entity.Property(e => e.RbIndywidualnyPodatkowy).HasColumnName("rb_IndywidualnyPodatkowy");
+            entity.Property(e => e.RbLicznik).HasColumnName("rb_Licznik");
+            entity.Property(e => e.RbMnemonik)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("rb_Mnemonik");
+            entity.Property(e => e.RbNazwa)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("rb_Nazwa");
+            entity.Property(e => e.RbNumer)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("rb_Numer");
+            entity.Property(e => e.RbNumerZnormalizowany)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValue("")
+                .HasColumnName("rb_NumerZnormalizowany");
+            entity.Property(e => e.RbOpis)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("rb_Opis");
+            entity.Property(e => e.RbPodstawowy).HasColumnName("rb_Podstawowy");
+            entity.Property(e => e.RbPodstawowyWirtualny).HasColumnName("rb_PodstawowyWirtualny");
+            entity.Property(e => e.RbRachunekVat).HasColumnName("rb_RachunekVAT");
+            entity.Property(e => e.RbSaldo)
+                .HasColumnType("money")
+                .HasColumnName("rb_Saldo");
+            entity.Property(e => e.RbStatus)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasDefaultValue("N")
+                .IsFixedLength()
+                .HasColumnName("rb_Status");
+            entity.Property(e => e.RbTypIdentyfikacjiPlatnosci).HasColumnName("rb_TypIdentyfikacjiPlatnosci");
+            entity.Property(e => e.RbTypObiektu).HasColumnName("rb_TypObiektu");
+            entity.Property(e => e.RbUs).HasColumnName("rb_US");
+            entity.Property(e => e.RbWirtualny).HasColumnName("rb_Wirtualny");
+            entity.Property(e => e.RbZfss).HasColumnName("rb_ZFSS");
+
+            entity.HasOne(d => d.RbIdKategoriiNavigation).WithMany(p => p.RbRachBankowies)
+                .HasForeignKey(d => d.RbIdKategorii)
+                .HasConstraintName("FK_rb__RachBankowy_sl_Kategoria");
         });
 
         modelBuilder.Entity<SlBank>(entity =>

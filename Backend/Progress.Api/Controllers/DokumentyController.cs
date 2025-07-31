@@ -48,11 +48,11 @@ namespace Progress.Api.Controllers
     }
 
     [HttpPost("invoice")]
-    public async Task<ApiResult<string>> PostInvoice(Domain.Api.Document document)
+    public async Task<SaveDocumentResponse> PostInvoice(Domain.Api.Document document)
     {
       document.UserId = GetUserId();
-      var result = await _navireoConnector.UpdateDocument(document);
-      return new ApiResult<string>(result);
+      var result = await _navireoConnector.SaveDocument(document);
+      return result;
     }
 
     [HttpGet("order/{id}")]

@@ -78,4 +78,5 @@ public partial class Customer
   public bool DeferredPayment { get; set; }
   public bool SpecialPayment { get; set; }
   public int PaymentDeadline { get; set; }
+  public string BankAccount { get; set; } = string.Empty;
 }
