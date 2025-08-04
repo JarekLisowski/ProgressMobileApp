@@ -2,3 +2,7 @@ Backend/.vs
 obj
 bin
 ProgressApp/public/
+_assets/
+Deploy/Backend/
+Deploy/Frontend/
+Deploy/NavireoApi/

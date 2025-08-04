@@ -1,7 +1,7 @@
 ﻿                           Faktura VAT 
                     Numer: {{Number}}
 Data: {{IssueDate | format_date: "dd.MM.yyyy"}}
-----------------------------------------------------------------
+-----------------------------------------------------------------
 Sprzedawca:
   {{Seller.AdrName}}
   {{Seller.AdrStreet}} {{Seller.AdrStreetNo}}
@@ -41,3 +41,4 @@ Pozostało do zapłaty: {{SecondPaymentAmount | format_number:"N2"}},
 termin płatności: {{PaymentDueDate}}
 {% endif %}
 Wystawił: {{UserName}}
+

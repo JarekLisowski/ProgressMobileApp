@@ -1,10 +1,11 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideIndexedDb, DBConfig } from 'ngx-indexed-db';
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { AppConfigService } from '../services/app-config.service';
 
 const dbConfig: DBConfig  = {
   name: 'ProgressDb',
@@ -39,6 +40,19 @@ const dbConfig: DBConfig  = {
   ]
 };
 
+export function initializeApp(http: HttpClient, appConfig: AppConfigService ) {
+
+    return () => new Promise<any>(res => {
+        http
+          .get("/config.json")
+          .subscribe(data => {
+            console.log("Read /config.json.");
+            appConfig.config = data            
+            res('ok');
+          });
+    });
+  }
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -47,5 +61,11 @@ export const appConfig: ApplicationConfig = {
     provideIndexedDb(dbConfig),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    {
+        provide: APP_INITIALIZER,
+        useFactory: initializeApp,
+        multi: true,
+        deps: [HttpClient, AppConfigService],
+    },
   ]
 };

@@ -13,20 +13,11 @@ export class AppConfigService {
     constructor() {
         this._config = new Config();
         var url = 'http://192.168.33.2';
-        // this._currentProfile = {
-        //     backendApiUrl: 'http://localhost:5085/',
-        //     backendUrl: 'http://localhost:5085/',
-        //     name: "default"
-        // };
-
         this._currentProfile = {
             backendApiUrl: `${url}:5085/`,
             backendUrl: `${url}:4200/`,
             name: "test"
         };
-        // this._config.profiles.push({
-        // /
-        // // });
     }
 
 

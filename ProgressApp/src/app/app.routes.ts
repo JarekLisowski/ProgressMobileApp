@@ -28,7 +28,7 @@ export const routes: Routes = [
     { path: 'customer/:id', component: CustomerComponent, canActivate: [AuthGuard] },
     { path: 'invoices', component: InvoicesComponent, canActivate: [AuthGuard] },
     { path: 'invoice/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
-    { path: 'saveDocumentSummary/:id?number=:docNumber&payment=:paymentId', component: SaveDocSummaryComponent, canActivate: [AuthGuard] },
+    { path: 'saveDocumentSummary/:id', component: SaveDocSummaryComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/categories', pathMatch: 'full' },
     { path: '**', redirectTo: '/categories' }
 ];

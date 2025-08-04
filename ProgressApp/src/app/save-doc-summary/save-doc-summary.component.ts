@@ -1,10 +1,11 @@
+import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-save-doc-summary',
   standalone: true,
-  imports: [],
+  imports: [NgIf],
   templateUrl: './save-doc-summary.component.html',
   styleUrl: './save-doc-summary.component.scss'
 })

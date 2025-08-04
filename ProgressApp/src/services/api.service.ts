@@ -90,7 +90,9 @@ export class ApiService {
     return this.apiSerivce.post<PrintRequestResponse>(`api/print/request/invoice/${id}`, {});
   }
 
-
+  printCashReceiptRequest(id: number): Observable<PrintRequestResponse> {
+    return this.apiSerivce.post<PrintRequestResponse>(`api/print/request/cashReceipt/${id}`, {});
+  }
 
 
 

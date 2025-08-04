@@ -12,6 +12,7 @@ import { Document, IDocument, User } from '../../domain/generated/apimodel';
 import { UserService } from '../../services/user.service';
 import { CartPromoItemWithId } from '../../domain/cartPromoItem';
 import { Router } from '@angular/router';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-cart',
@@ -27,6 +28,9 @@ export class CartComponent {
   apiService = inject(ApiService);
   userService = inject(UserService);
   router = inject(Router);
+
+  saving: boolean = false;
+  errorMessage: string = "";
 
   sendDocument() {
     this.cartService.getCartItems().subscribe(items => {
@@ -66,21 +70,38 @@ export class CartComponent {
           taxAmount: 0,
           promoSetId: item.promoSetId != null ? (promoItems.find(x => x.id == item.promoSetId)?.promoSetId) : undefined,
           promoItemId: item.promoItemId,
-        }})
+        }
+      })
     };
-    this.apiService.sendDocument(document).subscribe(x => {
-      console.log(x);
-      // this.cartService.clearTransaction(transaction).subscribe(x => {
-      //   this.cartService.clearCart().subscribe(x=> {
 
-      //   })
-      // });
-      this.router.navigate(['/saveDocumentSummary', x.documentId], { queryParams: { number: x.documentNumber, payment: x.payDocumentId } });
+    this.apiService.sendDocument(document).subscribe({
+      next: (x) => {
+        //console.log(x);
+        if (x.isError == false) {
+          this.saving = true;
+          // this.cartService.clearTransaction(transaction).subscribe(x => {
+          //   this.cartService.clearCart().subscribe(x=> {
+
+          //   })
+          // });
+          this.router.navigate(['/saveDocumentSummary', x.documentId], { queryParams: { number: x.documentNumber, payment: x.payDocumentId } });
+        }
+        else {
+          this.saving = false;
+          this.errorMessage = x.message ?? "Wystąpił błąd podczas wysyłania dokumentu. Spróbuj ponownie później.";
+        }
+      },
+      error: (error) => {
+        this.saving = false;
+        console.log(error);
+        this.errorMessage = error;
+      }
     });
-
   }
 
   saveTransaction() {
+    this.saving = true;
+    this.errorMessage = "";
     this.sendDocument();
   }
 

@@ -26,6 +26,7 @@ namespace Progress.Navireo.Managers
       Logger = logger;
       this.navireoApplication = navireoApplication;
     }
+
     /// <summary>
     /// Pobiera podsumowanie sprzedaży dla użytkownika w podanym zakresie dat
     /// </summary>

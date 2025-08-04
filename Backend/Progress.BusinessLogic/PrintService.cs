@@ -2,9 +2,8 @@
 using Fluid.Values;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Progress.Domain.Extensions;
-using Progress.Infrastructure.Database.Repository;
 using System.Collections.Concurrent;
+using System.Globalization;
 
 namespace Progress.BusinessLogic
 {
@@ -12,7 +11,7 @@ namespace Progress.BusinessLogic
   {
     CancellationToken _stoppingToken;
     ConcurrentDictionary<Guid, Printout> printOuts = new ConcurrentDictionary<Guid, Printout>();
-    ConcurrentDictionary<string, IFluidTemplate> templates = new ConcurrentDictionary<string, IFluidTemplate>();    
+    ConcurrentDictionary<string, IFluidTemplate> templates = new ConcurrentDictionary<string, IFluidTemplate>();
     IServiceProvider _serviceProvider;
 
     public PrintService(IServiceProvider serviceProvider)
@@ -26,6 +25,14 @@ namespace Progress.BusinessLogic
       return Task.Run(MainTask);
     }
 
+    private void MainTask()
+    {
+      do
+      {
+        _stoppingToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(10));
+      } while (!_stoppingToken.IsCancellationRequested);
+    }
+
     public Printout? GetPrintout(string guid)
     {
       var g = new Guid(guid);
@@ -37,22 +44,41 @@ namespace Progress.BusinessLogic
     public Guid GenerateInvoicePrintout(int dokId)
     {
       var documentManager = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<DocumentManager>();
-      var template = GetFuidTemplate("invoice");
+      var doc = documentManager.GetDocument(dokId);
+      if (doc != null)
+      {
+        return GeneratePrintout("invoice", doc, doc.Number);
+      }
+      throw new Exception($"Brak faktury {dokId}");
+    }
+
+    public Guid GenerateCashReceiptPrintout(int nzId)
+    {
+      var financeManager = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<FinanceManager>();
+      var doc = financeManager.GetCashReceipt(nzId);
+      if (doc != null)
+      {
+        return GeneratePrintout("cashReceipt", doc, doc.Number);
+      }
+      throw new Exception($"Brak dokumentu KP. {nzId}");
+    }
+
+    private Guid GeneratePrintout(string templateName, object data, string docNumber)
+    {
+      var template = GetFuidTemplate(templateName);
       if (template != null)
       {
-        var doc = documentManager.GetDocument(dokId);
-        if (doc != null)
-        {
-          var context = new TemplateContext(doc);
-          var output = template.Render(context);
-          var guid = Guid.NewGuid();
-          printOuts[guid] = new Printout { Data = output, DocNumber = doc.Number };
-          return guid;
-        }
-        throw new Exception("Brak dokumentu");
+        var options = new TemplateOptions();
+        var context = new TemplateContext(data);
+        var output = template.Render(context);
+        var guid = Guid.NewGuid();
+        printOuts[guid] = new Printout { Data = output, DocNumber = docNumber };
+        return guid;
       }
       throw new Exception("Brak wzorca wydruku");
     }
+
+
 
     private IFluidTemplate? GetFuidTemplate(string templateName)
     {
@@ -60,14 +86,10 @@ namespace Progress.BusinessLogic
       {
         var templateFile = File.ReadAllText($"Templates\\{templateName}.txt");
         var parser = new FluidParser();
-        var options = new TemplateOptions();
+        TemplateOptions.Default.CultureInfo = new CultureInfo("pl-PL");
         TemplateOptions.Default.MemberAccessStrategy = new UnsafeMemberAccessStrategy();
         TemplateOptions.Default.Filters.AddFilter("alignRight", AlighRight);
         TemplateOptions.Default.Filters.AddFilter("alignLeft", AlighLeft);
-        //options.MemberAccessStrategy.Register<Document>();
-        //options.MemberAccessStrategy.Register<Customer>();
-        //options.MemberAccessStrategy.Register<DocumentItem>();
-        //options.MemberAccessStrategy.Register<VatLine>();
         template = parser.Parse(templateFile);
       }
       ;
@@ -96,15 +118,8 @@ namespace Progress.BusinessLogic
       return new StringValue(result);
     }
 
-    private void MainTask()
-    {
-      do
-      {
 
-        _stoppingToken.WaitHandle.WaitOne(TimeSpan.FromSeconds(10));
-      } while (!_stoppingToken.IsCancellationRequested);
-    }
 
- 
+
   }
 }

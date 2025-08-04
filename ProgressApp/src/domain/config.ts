@@ -7,7 +7,7 @@ export class Profile {
     name : string = "";
     backendUrl : string = "";
     public get backendApiUrl() { 
-        return this.backendUrl + 'api/';
+        return this.backendUrl;
     };
 
     constructor(data?: Profile) {

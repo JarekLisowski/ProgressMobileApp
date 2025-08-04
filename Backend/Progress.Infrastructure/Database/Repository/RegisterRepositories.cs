@@ -19,6 +19,7 @@ namespace Progress.Infrastructure.Database.Repository
 			services.AddScoped<CustomerRepository>();
 			services.AddScoped<UserRepository>();
 			services.AddScoped<DocumentRepository>();
+			services.AddScoped<FinanceRepository>();
 			services.AddScoped(sp => MakeRepository<Model.Product, DbModel.TwTowar>(sp, nameof(DbModel.TwTowar.TwId), x => x.TwId, x => x.Id));
 			services.AddScoped(sp => MakeRepository<Model.ProductImage, DbModel.TwZdjecieTw>(sp, nameof(DbModel.TwZdjecieTw.ZdId), x => x.ZdId, x => x.Id));
 			services.AddScoped(sp => MakeRepository<Model.ProductCategory, DbModel.SlCechaTw>(sp, nameof(DbModel.SlCechaTw.CtwId), x => x.CtwId, x => x.Id));

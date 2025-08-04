@@ -28,28 +28,38 @@ namespace Progress.Api.Controllers
     [HttpPost("login")]
     public LoginResponse Login([FromBody] LoginRequest login)
     {
-      var user = _authManager.Authenticate(login.Username, login.Password);
-
-      if (user != null)
+      try
       {
-        var expireTime = DateTime.Now.AddHours(24);
-        var token = GenerateToken(user, expireTime);
-        var apiUser = _mapper.Map<Domain.Api.User>(user);
-        apiUser.Token = token;
-        apiUser.ExpirationDate = expireTime;
+        var user = _authManager.Authenticate(login.Username, login.Password);
+
+        if (user != null)
+        {
+          var expireTime = DateTime.Now.AddHours(24);
+          var token = GenerateToken(user, expireTime);
+          var apiUser = _mapper.Map<Domain.Api.User>(user);
+          apiUser.Token = token;
+          apiUser.ExpirationDate = expireTime;
+          return new LoginResponse
+          {
+            Data = new Domain.Api.Login
+            {
+              User = apiUser
+            }
+          };
+        }
         return new LoginResponse
         {
-          Data = new Domain.Api.Login
-          {
-            User = apiUser
-          }          
+          IsError = true,
+          Message = "Nieprawidłowy użytkownik lub hasło lub użytkownik nie jest oznaczony jako mobilny"
+        };
+      } catch (Exception ex) 
+      {
+        return new LoginResponse
+        {
+          IsError = true,
+          Message = ex.Message
         };
       }
-      return new LoginResponse
-      {
-        IsError = true,
-        Message = "Nieprawidłowy użytkownik lub hasło lub użytkownik nie jest oznaczony jako mobilny"
-      };
       //return Unauthorized();
     }
 

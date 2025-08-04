@@ -10,11 +10,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-header">
-                Kontrahenci
-            </div>
             <div class="modal-body">
-                <customer-list (customerSelectedEvent)="customerSelected($event)"></customer-list>
+                <customer-list (customerSelectedEvent)="customerSelected($event)" (customerAddEvent)="customerAdd($event)"></customer-list>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>

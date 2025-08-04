@@ -29,8 +29,8 @@ namespace Progress.Api.Controllers
       _printService = printService;
     }
 
-    [HttpGet("invoice/{requestId}")]
-    public PrintDocumentResponse Invoice(string requestId)
+    [HttpGet("getPrintout/{requestId}")]
+    public PrintDocumentResponse GetPrintout(string requestId)
     {
       var printout = _printService.GetPrintout(requestId);
       return new PrintDocumentResponse
@@ -67,6 +67,61 @@ namespace Progress.Api.Controllers
       try
       {
         var guid = _printService.GenerateInvoicePrintout(dokId);
+        var printout = _printService.GetPrintout(guid.ToString());
+        return new PrintDocumentResponse
+        {
+          Info = printout.DocNumber,
+          Lines = printout.Data.Split("\r\n")
+        };
+      }
+      catch (Exception ex)
+      {
+        return new PrintDocumentResponse
+        {
+          Info = ex.Message,
+          Lines = []
+        };
+      }
+    }
+
+    //[HttpGet("cashReceipt/{requestId}")]
+    //public PrintDocumentResponse CashReceipt(string requestId)
+    //{
+    //  var printout = _printService.GetPrintout(requestId);
+    //  return new PrintDocumentResponse
+    //  {
+    //    Info = printout.DocNumber,
+    //    Lines = printout.Data.Split("\r\n")
+    //  };
+    //}
+
+    [HttpPost("request/cashReceipt/{nzId}")]
+    public PrintRequestResponse RequestCashReceipt(int nzId)
+    {
+      try
+      {
+        var guid = _printService.GenerateCashReceiptPrintout(nzId);
+        return new PrintRequestResponse
+        {
+          Data = guid.ToString()
+        };
+      }
+      catch (Exception ex)
+      {
+        return new PrintRequestResponse
+        {
+          IsError = true,
+          Message = ex.Message,
+        };
+      }
+    }
+
+    [HttpPost("test-request/cashReceipt/{nzId}")]
+    public PrintDocumentResponse TestRequestCashReceiptPrint(int nzId)
+    {
+      try
+      {
+        var guid = _printService.GenerateCashReceiptPrintout(nzId);
         var printout = _printService.GetPrintout(guid.ToString());
         return new PrintDocumentResponse
         {

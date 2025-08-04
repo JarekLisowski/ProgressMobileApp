@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output, OnDestroy, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output, OnDestroy, AfterViewInit, ElementRef, Input } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { CartService } from '../../../services/cart.service';
 import { Transaction } from '../../../domain/transaction';
@@ -28,6 +28,8 @@ export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
   secondPaymentMethod: PaymentMethod | undefined;
   private _deliveryMethods: DeliveryMethod[] = [];
   private _paymentMethods: PaymentMethod[] = [];
+  @Input() saving: boolean = false;
+  @Input() errorMessage: string = "";
 
   get cartTotalGross() {
     var sum = 0;

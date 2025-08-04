@@ -1,8 +1,11 @@
 <h5>Dokument został zapisany</h5>
-<div>Nr: {{documentNumber}}</div>
-<div>
-    <button class="btn btn-primary">
+<div>Numer: {{documentNumber}}</div>
+<div class="mt-3">
+    <button class="btn btn-primary me-3">
         Drukuj
+    </button>
+    <button *ngIf="paymentId != undefined && paymentId > 0" class="btn btn-primary">
+        Drukuj tylko KP
     </button>
 </div>
 

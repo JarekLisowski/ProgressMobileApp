@@ -149,6 +149,16 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Product, opt => opt.MapFrom(src => src.ObTow))
 				.ForMember(dst => dst.LineNet, opt => opt.MapFrom(src => src.ObWartNetto))
 				.ForMember(dst => dst.LineGross, opt => opt.MapFrom(src => src.ObWartBrutto));
+
+			CreateMap<NzFinanse, CashReceipt>()
+				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.NzfId))
+				.ForMember(dst => dst.Number, opt => opt.MapFrom(src => src.NzfNumerPelny))
+				.ForMember(dst => dst.Amount, opt => opt.MapFrom(src => src.NzfWartosc))
+				.ForMember(dst => dst.Date, opt => opt.MapFrom(src => src.NzfData))
+				.ForMember(dst => dst.UserId, opt => opt.MapFrom(src => src.NzfIdWystawil))
+				.ForMember(dst => dst.UserName, opt => opt.MapFrom(src => src.NzfWystawil))
+				.ForMember(dst => dst.Description, opt => opt.MapFrom(src => src.NzfTytulem))
+				.ForMember(dst => dst.Customer, opt => opt.MapFrom(src => src.NzfIdAdresuNavigation));
 		}
 
     private Customer CreateCustomer(IfVwDokument src)

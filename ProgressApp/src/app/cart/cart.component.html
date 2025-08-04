@@ -48,7 +48,7 @@
 
   <div class="tab-pane fade " id="summary-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="0">
     <h3>Finalizacja</h3>
-    <cart-finalize (SaveTransaction)="saveTransaction()">
+    <cart-finalize (SaveTransaction)="saveTransaction()" [saving]="saving" [errorMessage]="errorMessage">
     </cart-finalize>
   </div>
 

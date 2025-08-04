@@ -25,6 +25,7 @@ export class CustomerListComponent {
   loading: boolean = false;
 
   @Output() customerSelectedEvent = new EventEmitter<Customer>();
+  @Output() customerAddEvent = new EventEmitter<any>();
 
   set searchPattern(v: string) {
     this._searchPattern = v
@@ -50,6 +51,7 @@ export class CustomerListComponent {
   }
 
   addCustomer() {
+    this.customerAddEvent.emit();
     this.router.navigate(['customer', 0]);
   }
 

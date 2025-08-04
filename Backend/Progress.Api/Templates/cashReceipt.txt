@@ -1,0 +1,19 @@
+﻿                          Dowód wpłaty
+          Numer: {{Number}} z dnia: {{Date | format_date: "dd.MM.yyyy"}}
+-----------------------------------------------------------------
+Sprzedawca:
+  {{Seller.AdrName}}
+  {{Seller.AdrStreet}} {{Seller.AdrStreetNo}}
+  {{Seller.AdrZipCode}} {{Seller.AdrCity}}
+  NIP: {{Seller.AdrNip}}
+
+Wpłacający:
+  {{Customer.AdrName}}
+  {{Customer.AdrStreet}} {{Customer.AdrStreetNo}}
+  {{Customer.AdrZipCode}} {{Customer.AdrCity}}
+  NIP: {{Customer.AdrNip}}
+-----------------------------------------------------------------
+Kwota: {{Amount}}
+Tytułem: {{Description}}
+-----------------------------------------------------------------
+Wystawił: {{UserName}}

@@ -37,6 +37,7 @@ namespace Progress.Api
 			builder.Services.AddScoped<PromoManager>();
 			builder.Services.AddScoped<CustomerManager>();
 			builder.Services.AddScoped<DocumentManager>();
+			builder.Services.AddScoped<FinanceManager>();
 			builder.Services.AddScoped<AuthManager>();
 			builder.Services.AddScoped<BusinessLogic.ConfigurationManager>();
       builder.Services.AddScoped<Domain.Interfaces.IUserRepository, UserRepository>();
@@ -63,6 +64,8 @@ namespace Progress.Api
 			});
 
 			var app = builder.Build();
+
+      var test = app.Configuration.GetConnectionString("Navireo");
 
 			// Configure the HTTP request pipeline.
 			if (app.Environment.IsDevelopment())

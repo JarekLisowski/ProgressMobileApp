@@ -24,11 +24,16 @@ namespace Progress.Api
         var stream = new StreamReader(result.Content.ReadAsStream());
         var data = stream.ReadToEnd();
         Console.WriteLine(data);
+        return new SaveDocumentResponse
+        {
+          IsError = true,
+          Message = $"Wystąpił błąd połączenia z Navireo. Serwer zwrócił status: {result.StatusCode}. {data}"
+        };
       }
       return new SaveDocumentResponse
       {
         IsError = true,
-        Message = "Wystąpił błąd."
+        Message = "Wystąpił nieznany błąd połączenia z Navireo."
       };
     }
 
