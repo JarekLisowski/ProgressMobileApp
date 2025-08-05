@@ -84,7 +84,7 @@ export class CartComponent {
 
           //   })
           // });
-          this.router.navigate(['/saveDocumentSummary', x.documentId], { queryParams: { number: x.documentNumber, payment: x.payDocumentId } });
+          this.router.navigate(['/saveDocumentSummary', x.documentId], { queryParams: { number: x.documentNumber, payment: x.payDocumentId, docType: x.documentType } });
         }
         else {
           this.saving = false;

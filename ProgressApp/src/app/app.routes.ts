@@ -13,6 +13,9 @@ import { CustomerComponent } from './customer/customer.component';
 import { InvoicesComponent } from './invoices/invoices.component';
 import { InvoiceComponent } from './invoice/invoice.component';
 import { SaveDocSummaryComponent } from './save-doc-summary/save-doc-summary.component';
+import { StatsComponent } from './stats/stats.component';
+import { OrdersComponent } from './orders/orders.component';
+import { OrderComponent } from './order/order.component';
 
 export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent, canActivate: [AuthGuard] },
@@ -24,10 +27,15 @@ export const routes: Routes = [
     { path: 'promoCreate/:id', component: SpecialOfferEditComponent, canActivate: [AuthGuard] },
     { path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
+    { path: 'stats', component: StatsComponent },
     { path: 'customers', component: CustomersComponent },
     { path: 'customer/:id', component: CustomerComponent, canActivate: [AuthGuard] },
     { path: 'invoices', component: InvoicesComponent, canActivate: [AuthGuard] },
     { path: 'invoice/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
+    { path: 'orders', component: OrdersComponent, canActivate: [AuthGuard] },
+    { path: 'order/:id', component: OrderComponent, canActivate: [AuthGuard] },
+    { path: 'internal-orders', component: InvoicesComponent, canActivate: [AuthGuard] },
+    { path: 'internal-order/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
     { path: 'saveDocumentSummary/:id', component: SaveDocSummaryComponent, canActivate: [AuthGuard] },
     { path: '', redirectTo: '/categories', pathMatch: 'full' },
     { path: '**', redirectTo: '/categories' }

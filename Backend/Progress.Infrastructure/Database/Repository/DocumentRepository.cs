@@ -21,12 +21,29 @@ namespace Progress.Infrastructure.Database.Repository
     {
       if (customerId != null)
       {
-        var data = EntitySet.Where(it => it.DokPlatnikId == customerId && it.DokTyp == (int)dokType).ToArray();
+        var data = EntitySet.AsNoTracking()
+          .Where(it => it.DokPlatnikId == customerId && it.DokTyp == (int)dokType)
+          .OrderByDescending(it => it.DokId)
+          .ToArray();
         if (data != null)
         {
           var result = Mapper.Map<Document[]>(data);
           return result;
         }
+      }
+      return [];
+    }
+
+    public Document[] GetDocuments(int dokType, int definiowalnyId, int userId)
+    {
+      var data = EntitySet.AsNoTracking()
+        .Where(it => it.DokPersonelId == userId && it.DokTyp == dokType && it.DokDefiniowalnyId == definiowalnyId)
+        .OrderByDescending(it => it.DokId)
+        .ToArray();
+      if (data != null)
+      {
+        var result = Mapper.Map<Document[]>(data);
+        return result;
       }
       return [];
     }

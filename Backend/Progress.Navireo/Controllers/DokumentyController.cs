@@ -31,8 +31,8 @@ namespace Progress.Navireo.Controllers
         {
           DocumentId = result.DocumentId,
           PayDocumentId = result.PayDocumentId,
-          DocumentNumber = result.DocumentNumber
-
+          DocumentNumber = result.DocumentNumber,
+          DocumentType = result.DocumentType
         };
       }
       catch (Exception ex)

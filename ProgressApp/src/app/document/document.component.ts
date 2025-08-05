@@ -14,6 +14,7 @@ import { ApiService } from '../../services/api.service';
 export class DocumentComponent {
 
   @Input() document: Document | undefined;
+  @Input() printButton: boolean = true;
 
   @Output() onPay: EventEmitter<any> = new EventEmitter();
   @Output() onPrint: EventEmitter<any> = new EventEmitter();

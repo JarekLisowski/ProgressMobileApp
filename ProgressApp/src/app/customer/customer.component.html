@@ -6,7 +6,7 @@
       <div class="">
         <button class="btn btn-primary btn-sm " (click)="edit()">
           <i class="bi bi-pencil-square"></i>
-        </button>     
+        </button>
       </div>
     </div>
     <div>{{ customer.adrStreet }} {{ customer.adrStreetNo }}</div>
@@ -52,5 +52,27 @@
 </div>
 
 <div *ngIf="!editMode && customerId" class="mb-3">
-  <invoices [customerId]="customerId"></invoices>
+
+  <div class="border-bottom">
+    <ul class="nav nav-underline mb-1" id="cartTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#invoices-tab-pane"
+          type="button" role="tab" aria-controls="products-tab-pane" aria-selected="true">Faktury</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#orders-tab-pane" type="button"
+          role="tab" aria-controls="customer-tab-pane" aria-selected="false">Zamówienia</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="tab-content mt-3">
+
+  <div class="tab-pane fade show active" id="invoices-tab-pane" role="tabpanel" tabindex="0">
+    <invoices [customerId]="customerId"></invoices>
+  </div>
+  <div class="tab-pane fade show active" id="invoices-tab-pane" role="tabpanel" tabindex="0">
+    <orders [customerId]="customerId"></orders>
+  </div>
+
 </div>

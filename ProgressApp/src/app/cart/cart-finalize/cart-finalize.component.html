@@ -1,5 +1,10 @@
 <div>
     <ul class="list-group">
+        <li  class="list-group-item">
+            <h5>
+                {{nazwaDokumentu}}
+            </h5>
+        </li>
         <li class="list-group-item">
             <h6>Kontrahent</h6>
             <strong>{{transaction?.customer?.adrName}}</strong><br />
@@ -13,7 +18,7 @@
             <strong>{{transaction?.totalGross | number : '1.2-2'}} PLN </strong><br>
             {{transaction?.totalNet | number : '1.2-2'}} PLN netto
         </li>
-        <li class="list-group-item">
+        <li *ngIf="isInvoice" class="list-group-item">
             <h6>Płatność</h6>
             Gotówka: <strong>{{transaction?.cashAmount | number : '1.2-2'}}</strong> PLN<br />
             <div *ngIf="secondPaymentMethod">
@@ -24,7 +29,7 @@
                 </span>
             </div>
         </li>
-        <li class="list-group-item">
+        <li *ngIf="isInvoice" class="list-group-item">
             <h6>Dostawa</h6>
             <div *ngIf="deliveryMethod">
                 <div>

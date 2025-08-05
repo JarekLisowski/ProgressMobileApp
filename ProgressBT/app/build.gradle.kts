@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.progressbt"
+    namespace = "pl.com.ifox.progressbt"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.progressbt"
+        applicationId = "pl.com.ifox.progressbt"
         minSdk = 31
         targetSdk = 31
         versionCode = 1

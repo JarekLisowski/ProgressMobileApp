@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Progress.Domain.Extensions;
 using Progress.Domain.Navireo;
 using Progress.Domain.Navireo.Api;
 using Progress.Navireo.Exceptions;
@@ -151,6 +152,7 @@ namespace Progress.Navireo.Managers
         suDokument.Zamknij();
         result.DocumentId = document.Id;
         result.DocumentNumber = document.FullNumber;
+        result.DocumentType = document.DocumentType.GetName();
 
         if (document.IsDeleted == false)
           SetPersonelId(document.Id, operatorId);

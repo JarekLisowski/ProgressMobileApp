@@ -8,11 +8,14 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of data">
-            <td scope="row"><a href="#" (click)="selectDocument(item); false">{{item.number}}</a></td>
+        <tr *ngFor="let item of data" [class.highlight]="item?.paymentToBeSettled ?? 0  > 0">
+            <td scope="row">
+                <a href="#" (click)="selectDocument(item); false">{{item.number}}</a><br>
+                <span class="text-danger" *ngIf="item?.paymentToBeSettled ?? 0  > 0">Do zapłaty</span>
+            </td>
             <td>{{item.issueDate | date:'shortDate'}}</td>
             <td class="text-end">{{item.totalGross | number:'1.2-2'}}<br/>
-                <span>
+                <span *ngIf="item?.paymentToBeSettled ?? 0  > 0">
                 {{item.paymentToBeSettled| number:'1.2-2'}}
                 </span>
             </td>

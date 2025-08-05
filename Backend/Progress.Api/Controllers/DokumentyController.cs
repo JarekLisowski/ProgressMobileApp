@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Progress.BusinessLogic;
 using Progress.Domain.Api;
 using Progress.Domain.Api.Response;
 using Progress.Infrastructure.Database.Repository;
@@ -15,16 +16,19 @@ namespace Progress.Api.Controllers
     IMapper _mapper;
     NavireoConnector _navireoConnector;
     DocumentRepository _documentRepository;
+    DocumentManager _documentManager;
 
     public DokumentyController(IMapper autoMapper,
       IServiceProvider serviceProvider,
       NavireoConnector navireoConnector,
-      DocumentRepository documentRepository)
+      DocumentRepository documentRepository,
+      DocumentManager documentManager)
       : base(serviceProvider)
     {
       _mapper = autoMapper;
       _navireoConnector = navireoConnector;
       _documentRepository = documentRepository;
+      _documentManager = documentManager;
     }
 
     [HttpGet("invoices/{customerId}")]
@@ -37,7 +41,7 @@ namespace Progress.Api.Controllers
       };
     }
 
-    [HttpGet("invoice/{id}")]
+    [HttpGet("document/{id}")]
     public DocumentResponse GetInvoice(int id)
     {
       var data = _documentRepository.GetDocument(id);
@@ -47,7 +51,7 @@ namespace Progress.Api.Controllers
       };
     }
 
-    [HttpPost("invoice")]
+    [HttpPost("document")]
     public async Task<SaveDocumentResponse> PostInvoice(Domain.Api.Document document)
     {
       document.UserId = GetUserId();
@@ -55,22 +59,29 @@ namespace Progress.Api.Controllers
       return result;
     }
 
-    [HttpGet("order/{id}")]
-    public string GetOrder(long id)
+    [HttpGet("orders/{customerId}")]
+    public DocumentResponse GetOrders(int? customerId, string? dateFrom = null, string? dateTo = null, int pageSize = 100, int page = 1)
     {
-      return "OK";
+      var data = _documentRepository.GetDocuments(16, customerId);
+      return new DocumentResponse()
+      {
+        Data = _mapper.Map<Document[]>(data)
+      };
     }
 
-    [HttpGet("orders")]
-    public string GetOrders(long? customerId, string? dateFrom, string dateTo, int pageSize = 100, int page = 1)
+    [HttpGet("internal-orders")]
+    public DocumentResponse GetInternalOrders(string? dateFrom = null, string? dateTo = null, int pageSize = 100, int page = 1)
     {
-      return "OK";
-    }
-
-    [HttpPost("order")]
-    public string PostOrder(long id)
-    {
-      return "OK";
+      var userId = GetUserId();
+      if (userId != null)
+      {
+        var data = _documentManager.GetInternalOrders(userId.Value);
+        return new DocumentResponse()
+        {
+          Data = _mapper.Map<Document[]>(data)
+        };
+      }
+      return new DocumentResponse();
     }
 
     [HttpPost("pay")]

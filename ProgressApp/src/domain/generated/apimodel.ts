@@ -2253,6 +2253,7 @@ export class SaveDocumentResponse implements ISaveDocumentResponse {
     documentId?: number;
     payDocumentId?: number;
     documentNumber?: string | undefined;
+    documentType?: string | undefined;
 
     constructor(data?: ISaveDocumentResponse) {
         if (data) {
@@ -2273,6 +2274,7 @@ export class SaveDocumentResponse implements ISaveDocumentResponse {
             this.documentId = _data["documentId"];
             this.payDocumentId = _data["payDocumentId"];
             this.documentNumber = _data["documentNumber"];
+            this.documentType = _data["documentType"];
         }
     }
 
@@ -2293,6 +2295,7 @@ export class SaveDocumentResponse implements ISaveDocumentResponse {
         data["documentId"] = this.documentId;
         data["payDocumentId"] = this.payDocumentId;
         data["documentNumber"] = this.documentNumber;
+        data["documentType"] = this.documentType;
         return data;
     }
 }
@@ -2306,6 +2309,7 @@ export interface ISaveDocumentResponse {
     documentId?: number;
     payDocumentId?: number;
     documentNumber?: string | undefined;
+    documentType?: string | undefined;
 }
 
 export class SearchResponse implements ISearchResponse {

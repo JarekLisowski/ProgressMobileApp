@@ -4,6 +4,7 @@ import { Document, IPayment } from '../../domain/generated/apimodel';
 import { ApiService } from '../../services/api.service';
 import { DocumentComponent } from "../document/document.component";
 import { PayModalComponent } from "../pay-modal/pay-modal.component";
+import { PrintService } from '../../services/printService';
 
 @Component({
   selector: 'invoice',
@@ -15,9 +16,10 @@ import { PayModalComponent } from "../pay-modal/pay-modal.component";
 export class InvoiceComponent implements OnInit {
 
   @ViewChild('payWindow') payWindowRef!: PayModalComponent;
-  
+
   route = inject(ActivatedRoute);
   apiService = inject(ApiService);
+  printService = inject(PrintService);
 
   invoice: Document | undefined;
 
@@ -28,7 +30,7 @@ export class InvoiceComponent implements OnInit {
 
   loadData(id: number) {
     if (id) {
-      this.apiService.getInvoice(id).subscribe(invoice => {
+      this.apiService.getDocument(id).subscribe(invoice => {
         if (invoice?.data != undefined && invoice.data.length > 0) {
           this.invoice = invoice.data[0];
         }
@@ -37,7 +39,7 @@ export class InvoiceComponent implements OnInit {
   }
 
   pay() {
-    if (this.invoice) {      
+    if (this.invoice) {
       this.payWindowRef.showObservable().subscribe(x => {
         if (x) {
           this.doPay(x);
@@ -56,11 +58,7 @@ export class InvoiceComponent implements OnInit {
 
   print() {
     if (this.invoice?.id) {
-      this.apiService.printInvoiceRequest(this.invoice.id).subscribe(x => {
-        if (!x.isError && x.data) {
-          window.open(`https://progress.ifox.com.pl/invoice/${x.data}`, '_blank');  
-        }
-      });
+      this.printService.printInvoice(this.invoice.id);
     }
   }
 

@@ -5,11 +5,13 @@ import { Customer, Document } from '../../domain/generated/apimodel';
 import { CommonModule } from '@angular/common';
 import { InvoicesComponent } from "../invoices/invoices.component";
 import { FormsModule } from '@angular/forms';
+import { OrdersComponent } from '../orders/orders.component';
+
 
 @Component({
   selector: 'app-customer',
   standalone: true,
-  imports: [CommonModule, InvoicesComponent, FormsModule],
+  imports: [CommonModule, InvoicesComponent, FormsModule, OrdersComponent],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.scss'
 })

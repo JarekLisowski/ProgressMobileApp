@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class CategoriesComponent implements OnInit {
   private readonly api = inject(ApiService);
 
-  @Input() showFilter: boolean = false;
+  @Input() showFilter: boolean = true;
 
   categoryList: ProductCategory[] = [];
   categoriesGrouped: { [key: string]: ProductCategory[] } = {};

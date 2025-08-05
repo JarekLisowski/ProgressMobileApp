@@ -63,15 +63,19 @@ export class ApiService {
   }
 
   sendDocument(document: IDocument):Observable<SaveDocumentResponse> {
-    return this.apiSerivce.post('api/document/invoice', document)
+    return this.apiSerivce.post('api/document/document', document)
   }
   
   getInvoices(customerId: number):Observable<DocumentResponse> {
     return this.apiSerivce.get(`api/document/invoices/${customerId}`)
   }
 
-  getInvoice(id: number):Observable<DocumentResponse> {
-    return this.apiSerivce.get(`api/document/invoice/${id}`)
+  getOrders(customerId: number):Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/orders/${customerId}`)
+  }
+
+  getDocument(id: number):Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/document/${id}`)
   }
 
   getCustomer(id: number): Observable<CustomerResponse> {

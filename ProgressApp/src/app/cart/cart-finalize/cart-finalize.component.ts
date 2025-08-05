@@ -31,6 +31,21 @@ export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() saving: boolean = false;
   @Input() errorMessage: string = "";
 
+  get nazwaDokumentu ():string {
+    switch(this.transaction?.document) {
+      case "Invoice": return "Faktura";
+      case "Order": return "Zamówienie";
+      case "Order internal": return "Zamówienie międzymagazynowe";
+      default: return "";
+    }
+  }
+
+  get isInvoice(): boolean {
+    return this.transaction?.document == "Invoice";
+  }
+
+  
+
   get cartTotalGross() {
     var sum = 0;
     this.cartItems.forEach(item => {

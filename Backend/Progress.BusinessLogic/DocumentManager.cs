@@ -8,10 +8,12 @@ namespace Progress.BusinessLogic
 	{
     DocumentRepository _documentRepository;
     CustomerRepository _customerRepository;
-    public DocumentManager(DocumentRepository documentRepository, CustomerRepository customerRepository)
+    UserRepository _userRepository;
+    public DocumentManager(DocumentRepository documentRepository, CustomerRepository customerRepository, UserRepository userRepository)
     {
       _documentRepository = documentRepository;
       _customerRepository = customerRepository;
+      _userRepository = userRepository;
     }
 
     public Document? GetDocument(int id)
@@ -25,6 +27,11 @@ namespace Progress.BusinessLogic
         return document;
       }
       return null;
+    }
+
+    public Document[] GetInternalOrders(int userId)
+    {
+      return _documentRepository.GetDocuments(15, 1, userId);
     }
   }
 }

@@ -287,7 +287,7 @@
         }
       }
     },
-    "/api/document/invoice/{id}": {
+    "/api/document/document/{id}": {
       "get": {
         "tags": [
           "Dokumenty"
@@ -327,7 +327,7 @@
         }
       }
     },
-    "/api/document/invoice": {
+    "/api/document/document": {
       "post": {
         "tags": [
           "Dokumenty"
@@ -375,47 +375,7 @@
         }
       }
     },
-    "/api/document/order/{id}": {
-      "get": {
-        "tags": [
-          "Dokumenty"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/document/orders": {
+    "/api/document/orders/{customerId}": {
       "get": {
         "tags": [
           "Dokumenty"
@@ -423,10 +383,11 @@
         "parameters": [
           {
             "name": "customerId",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "format": "int32"
             }
           },
           {
@@ -468,17 +429,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               }
             }
@@ -486,18 +447,42 @@
         }
       }
     },
-    "/api/document/order": {
-      "post": {
+    "/api/document/internal-orders": {
+      "get": {
         "tags": [
           "Dokumenty"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "dateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int64"
+              "format": "int32",
+              "default": 100
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
             }
           }
         ],
@@ -507,17 +492,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/DocumentResponse"
                 }
               }
             }
@@ -573,7 +558,7 @@
         }
       }
     },
-    "/api/print/invoice/{requestId}": {
+    "/api/print/getPrintout/{requestId}": {
       "get": {
         "tags": [
           "Print"
@@ -660,6 +645,86 @@
         "parameters": [
           {
             "name": "dokId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintDocumentResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintDocumentResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintDocumentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/print/request/cashReceipt/{nzId}": {
+      "post": {
+        "tags": [
+          "Print"
+        ],
+        "parameters": [
+          {
+            "name": "nzId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintRequestResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintRequestResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/print/test-request/cashReceipt/{nzId}": {
+      "post": {
+        "tags": [
+          "Print"
+        ],
+        "parameters": [
+          {
+            "name": "nzId",
             "in": "path",
             "required": true,
             "schema": {
@@ -2357,6 +2422,10 @@
             "format": "int32"
           },
           "documentNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "documentType": {
             "type": "string",
             "nullable": true
           }
