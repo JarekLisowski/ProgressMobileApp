@@ -1,5 +1,0 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target" : { "namespace": "android_app", "package_name": "com.example.progressbt",
-               "sha256_cert_fingerprints": ["B4:6A:20:89:1A:5B:48:4E:42:63:25:F9:D2:E1:59:4F:8E:48:6A:61:0F:7B:AB:32:D9:41:7B:98:E6:EF:66:02"] }
-}]
