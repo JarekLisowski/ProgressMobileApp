@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PrintService } from '../../services/printService';
@@ -6,7 +6,7 @@ import { PrintService } from '../../services/printService';
 @Component({
   selector: 'app-save-doc-summary',
   standalone: true,
-  imports: [NgIf, RouterModule],
+  imports: [NgIf, RouterModule, NgClass],
   templateUrl: './save-doc-summary.component.html',
   styleUrl: './save-doc-summary.component.scss'
 })
@@ -19,6 +19,7 @@ export class SaveDocSummaryComponent {
   route = inject(ActivatedRoute);
   printService = inject(PrintService);
 
+  printInProgress = false;
 
   constructor() {
     var sid = this.route.snapshot.paramMap.get('id');
@@ -32,11 +33,35 @@ export class SaveDocSummaryComponent {
   }
 
   printCashReceipt() {
-    this.printService.printCashReceipt(this.paymentId ?? 0);
+    if (!this.printInProgress && this.paymentId != null) {
+      this.printInProgress = true;
+      this.printService.printCashReceipt(this.paymentId ?? 0).subscribe({
+        next: x => {
+          console.log(x);
+          this.printInProgress = false;
+        },
+        error: err => {
+          console.error(err);
+          this.printInProgress = false;
+        }
+      });
+    }
   }
 
   printInvoice() {
-    this.printService.printInvoice(this.documentId ?? 0);
+    if (!this.printInProgress && this.documentId != null) {
+      this.printInProgress = true;
+      this.printService.printInvoice(this.documentId).subscribe({
+        next: x => {
+          console.log(x);
+          this.printInProgress = false;
+        },
+        error: err => {
+          console.error(err);
+          this.printInProgress = false;
+        }
+      });
+    }
   }
 
 }

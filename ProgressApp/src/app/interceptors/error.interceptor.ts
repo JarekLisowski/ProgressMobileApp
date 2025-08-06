@@ -13,7 +13,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             if (err.status === 401) {
                 this.authService.logout();
             }
-            const error = err.error.message || err.statusText;
+            const error = err.message ?? err.statusText ?? "Nieznany błąd HTTP.";
             return throwError(error);
         }))
     }

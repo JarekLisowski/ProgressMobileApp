@@ -1,3 +1,4 @@
 call env.cmd
-xcopy /E /I "Backend" "%target%\backend"
+net use \\192.168.1.37\Deploy
+xcopy /E /I /Y "Backend" "%target%\backend"
 pause

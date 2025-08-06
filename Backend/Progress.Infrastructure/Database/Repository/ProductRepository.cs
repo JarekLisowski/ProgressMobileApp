@@ -16,8 +16,8 @@ namespace Progress.Infrastructure.Database.Repository
     {
       var dataDb = DbContext.TwCechaTws.AsNoTracking()
         .Include(it => it.ChtIdTowarNavigation)
-        .ThenInclude(it => it.TwCena)
-        .Where(it => it.ChtIdCecha == id)
+          .ThenInclude(it => it.TwCena)
+        .Where(it => it.ChtIdCecha == id && it.ChtIdTowarNavigation.TwZablokowany == false)
         .Select(it => it.ChtIdTowarNavigation)
         .ToArray();
       var productList = Mapper.Map<Product[]>(dataDb);
@@ -30,7 +30,7 @@ namespace Progress.Infrastructure.Database.Repository
         .Include(it => it.TwCena)
         .Include(it => it.TwStans.Where(it2 => stockId == null || stockId == it2.StMagId))
         .Include(it => it.TwCechaTws).ThenInclude(it => it.ChtIdCechaNavigation)
-        .FirstOrDefault(it => it.TwId == id);
+        .FirstOrDefault(it => it.TwId == id && it.TwZablokowany == false);
       if (productDb != null)
       {
         var product = Mapper.Map<Product>(productDb);
@@ -51,17 +51,16 @@ namespace Progress.Infrastructure.Database.Repository
     {
       try
       {
-        var sql = $@"
-                SELECT TOP {topCount} s.Rank, t.tw_Symbol, t.tw_Nazwa
-                FROM [InsSearch].[Search_tw__Towar] ('{searchText}') s
-                INNER JOIN tw__Towar t ON s.[Key] = t.tw_Id
-                ORDER BY s.Rank DESC";
+        //var sql = $@"
+        //        SELECT TOP {topCount} s.Rank, t.tw_Symbol, t.tw_Nazwa
+        //        FROM [InsSearch].[Search_tw__Towar] ('{searchText}') s
+        //        INNER JOIN tw__Towar t ON s.[Key] = t.tw_Id
+        //        ORDER BY s.Rank DESC";
         //var dbResult = DbContext.TwSearchResult.FromSqlInterpolated(sql)
         var dbResult = DbContext.TwSearchResult.FromSqlInterpolated($@"
                 SELECT s.Rank [Rank], t.tw_Id [TwId], t.tw_Symbol [TwSymbol], t.tw_Nazwa [TwNazwa]
                 FROM [InsSearch].[Search_tw__Towar] ({searchText}) s
                 INNER JOIN tw__Towar t ON s.[Key] = t.tw_Id")
-                //ORDER BY s.Rank DESC")
               .OrderBy(it => it.Rank).Take(topCount).ToList();
         //return Mapper.Map<Product[]>(dbResult);
         return dbResult.Select(it => new Product

@@ -6,8 +6,14 @@ namespace Progress.Api
 {
   public class NavireoConnector
   {
-    string baseUrl = "http://localhost:5270/";
+    string baseUrl = "";// "http://localhost:5270/";
 
+    public NavireoConnector(IConfiguration configurationProvider)
+    {
+      var url = configurationProvider.GetValue<string>("NavireoApi");
+      if (url != null) 
+        baseUrl = url;
+    }
 
     public async Task<SaveDocumentResponse> SaveDocument(Document document)
     {
@@ -103,7 +109,7 @@ namespace Progress.Api
     private HttpClient GetHttpClient()
     {
       var client = new HttpClient();
-      client.BaseAddress = new Uri(baseUrl + "api/");
+      client.BaseAddress = new Uri(baseUrl + "/api/");
       return client; ;
     }
   }

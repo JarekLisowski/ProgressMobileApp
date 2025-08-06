@@ -7,7 +7,9 @@
     </div>
 </div>
 <h6 class="mt-3">
-    {{document?.customer?.adrName}}
+    <a [routerLink]="['/customer', document?.customer?.id]">
+        {{document?.customer?.adrName}}
+    </a>
 </h6>
 <div>
     {{document?.customer?.adrStreet}} {{document?.customer?.adrStreetNo}}

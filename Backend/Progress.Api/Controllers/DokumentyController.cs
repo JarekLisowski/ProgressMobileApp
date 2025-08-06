@@ -51,12 +51,22 @@ namespace Progress.Api.Controllers
       };
     }
 
-    [HttpPost("document")]
+    [HttpPost("send")]
     public async Task<SaveDocumentResponse> PostInvoice(Domain.Api.Document document)
     {
-      document.UserId = GetUserId();
-      var result = await _navireoConnector.SaveDocument(document);
-      return result;
+      try
+      {
+        document.UserId = GetUserId();
+        var result = await _navireoConnector.SaveDocument(document);
+        return result;
+      } catch(Exception ex)
+      {
+        return new SaveDocumentResponse
+        {
+          IsError = true,
+          Message = ex.Message
+        };
+      }
     }
 
     [HttpGet("orders/{customerId}")]

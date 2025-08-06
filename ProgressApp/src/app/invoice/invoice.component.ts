@@ -5,6 +5,7 @@ import { ApiService } from '../../services/api.service';
 import { DocumentComponent } from "../document/document.component";
 import { PayModalComponent } from "../pay-modal/pay-modal.component";
 import { PrintService } from '../../services/printService';
+import { LoggerService } from '../../services/loggerService';
 
 @Component({
   selector: 'invoice',
@@ -21,7 +22,9 @@ export class InvoiceComponent implements OnInit {
   apiService = inject(ApiService);
   printService = inject(PrintService);
 
+
   invoice: Document | undefined;
+  printInProgress = false;
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -58,7 +61,11 @@ export class InvoiceComponent implements OnInit {
 
   print() {
     if (this.invoice?.id) {
-      this.printService.printInvoice(this.invoice.id);
+      this.printInProgress = true;
+      this.printService.printInvoice(this.invoice.id).subscribe(x => {
+        console.log(x);
+        this.printInProgress = false;
+      });
     }
   }
 

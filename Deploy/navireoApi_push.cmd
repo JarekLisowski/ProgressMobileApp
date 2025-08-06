@@ -1,3 +1,3 @@
 call env.cmd
-xcopy /E /I "NavireoApi" "%target%\Navireo"
+xcopy /E /I /Y "NavireoApi" "%target%\Navireo"
 pause

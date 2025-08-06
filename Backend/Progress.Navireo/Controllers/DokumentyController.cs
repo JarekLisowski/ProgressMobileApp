@@ -12,15 +12,17 @@ namespace Progress.Navireo.Controllers
   {
     DocumentManager _documentManager;
     FinanceManager _financeManager;
+    ILogger<DokumentyController> _logger;
 
-    public DokumentyController(DocumentManager documentManager, FinanceManager financeManager)
+    public DokumentyController(DocumentManager documentManager, FinanceManager financeManager, ILogger<DokumentyController> logger)
     {
       _documentManager = documentManager;
       _financeManager = financeManager;
+      _logger = logger;
     }
 
     [HttpPost("saveDocument")]
-    public SaveDocumentResponse SaveDocument(Domain.Api.Document request)
+    public SaveDocumentResponse SaveDocument(Progress.Domain.Api.Document request)
     {
       try
       {
@@ -38,7 +40,12 @@ namespace Progress.Navireo.Controllers
       catch (Exception ex)
       {
         Console.WriteLine(ex);
-        throw;
+        _logger.LogError(ex, "SaveDocument Error");
+        return new SaveDocumentResponse
+        {
+          IsError = true,
+          Message = ex.Message,
+        };
       }
     }
 

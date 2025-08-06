@@ -63,7 +63,7 @@ export class ApiService {
   }
 
   sendDocument(document: IDocument):Observable<SaveDocumentResponse> {
-    return this.apiSerivce.post('api/document/document', document)
+    return this.apiSerivce.post('api/document/send', document)
   }
   
   getInvoices(customerId: number):Observable<DocumentResponse> {

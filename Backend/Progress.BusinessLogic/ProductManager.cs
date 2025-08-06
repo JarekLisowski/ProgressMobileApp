@@ -81,7 +81,7 @@ namespace Progress.BusinessLogic
     {
       try
       {
-        var bycode = dbProduct.SelectWhere(it => it.TwSymbol.StartsWith(searchtext), true).Take(10);
+        var bycode = dbProduct.SelectWhere(it => it.TwSymbol.StartsWith(searchtext) && it.TwZablokowany == false, true).Take(10);
         var byName = dbProductRepository.SearchProduct(searchtext, topCount - bycode.Count());
         var result = new List<Product>(bycode);
         result.AddRange(byName);

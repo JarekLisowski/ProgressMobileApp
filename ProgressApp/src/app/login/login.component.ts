@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { ApiService } from '../../services/api.service';
 import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
   password = '';
   error = '';
 
-  constructor(private api: ApiService, private userService: UserService) { }
+  constructor(private api: ApiService, private userService: UserService, private router: Router) { }
 
   onLogin() {
     this.api.login(this.username, this.password)
@@ -26,6 +27,7 @@ export class LoginComponent {
             console.log(data);
             this.userService.setUser(data.data.user).subscribe(x => {
               console.log("Login ok");
+              this.router.navigate(['/']);
             });
           }
         },

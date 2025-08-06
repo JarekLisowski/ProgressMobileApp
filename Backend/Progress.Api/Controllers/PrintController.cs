@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Progress.BusinessLogic;
 using Progress.Domain.Api.Response;
-using Progress.Infrastructure.Database.Repository;
-using System;
 
 namespace Progress.Api.Controllers
 {
@@ -12,20 +10,13 @@ namespace Progress.Api.Controllers
   public class PrintController : ApiControllerBase
   {
     IPrintService _printService;
-    IMapper _mapper;
-    NavireoConnector _navireoConnector;
-    DocumentRepository _documentRepository;
 
     public PrintController(IMapper autoMapper,
       IServiceProvider serviceProvider,
-      IPrintService printService,
-      NavireoConnector navireoConnector,
-      DocumentRepository documentRepository)
+      IPrintService printService
+      )
       : base(serviceProvider)
     {
-      _mapper = autoMapper;
-      _navireoConnector = navireoConnector;
-      _documentRepository = documentRepository;
       _printService = printService;
     }
 
@@ -83,17 +74,6 @@ namespace Progress.Api.Controllers
         };
       }
     }
-
-    //[HttpGet("cashReceipt/{requestId}")]
-    //public PrintDocumentResponse CashReceipt(string requestId)
-    //{
-    //  var printout = _printService.GetPrintout(requestId);
-    //  return new PrintDocumentResponse
-    //  {
-    //    Info = printout.DocNumber,
-    //    Lines = printout.Data.Split("\r\n")
-    //  };
-    //}
 
     [HttpPost("request/cashReceipt/{nzId}")]
     public PrintRequestResponse RequestCashReceipt(int nzId)
