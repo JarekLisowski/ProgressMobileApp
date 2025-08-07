@@ -61,7 +61,7 @@ namespace Progress.Infrastructure.Database.Repository
                 SELECT s.Rank [Rank], t.tw_Id [TwId], t.tw_Symbol [TwSymbol], t.tw_Nazwa [TwNazwa]
                 FROM [InsSearch].[Search_tw__Towar] ({searchText}) s
                 INNER JOIN tw__Towar t ON s.[Key] = t.tw_Id")
-              .OrderBy(it => it.Rank).Take(topCount).ToList();
+              .OrderByDescending(it => it.Rank).Take(topCount).ToList();
         //return Mapper.Map<Product[]>(dbResult);
         return dbResult.Select(it => new Product
         {
