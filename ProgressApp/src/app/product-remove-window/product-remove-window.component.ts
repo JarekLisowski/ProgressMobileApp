@@ -2,11 +2,10 @@ import { Component, ElementRef, EventEmitter, ViewChild } from '@angular/core';
 import { Modal } from 'bootstrap';
 
 @Component({
-  selector: 'product-remove-window',
-  standalone: true,
-  imports: [],
-  templateUrl: './product-remove-window.component.html',
-  styleUrl: './product-remove-window.component.scss'
+    selector: 'product-remove-window',
+    imports: [],
+    templateUrl: './product-remove-window.component.html',
+    styleUrl: './product-remove-window.component.scss'
 })
 export class ProductRemoveWindowComponent {
 

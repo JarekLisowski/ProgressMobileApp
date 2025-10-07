@@ -5,11 +5,10 @@ import { ApiService } from '../../services/api.service';
 import { DropDownItems } from '../../domain/dropDownItem';
 
 @Component({
-  selector: 'search-bar',
-  standalone: true,
-  imports: [FormsModule, NgFor, NgStyle],
-  templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.scss'
+    selector: 'search-bar',
+    imports: [FormsModule, NgFor, NgStyle],
+    templateUrl: './search-bar.component.html',
+    styleUrl: './search-bar.component.scss'
 })
 export class SearchBarComponent implements AfterViewInit {
 

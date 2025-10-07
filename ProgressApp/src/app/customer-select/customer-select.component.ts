@@ -4,11 +4,10 @@ import { CustomerListComponent } from "../customer-list/customer-list.component"
 import { Customer } from '../../domain/generated/apimodel';
 
 @Component({
-  selector: 'customer-select',
-  standalone: true,
-  imports: [CustomerListComponent],
-  templateUrl: './customer-select.component.html',
-  styleUrl: './customer-select.component.scss'
+    selector: 'customer-select',
+    imports: [CustomerListComponent],
+    templateUrl: './customer-select.component.html',
+    styleUrl: './customer-select.component.scss'
 })
 export class CustomerSelectComponent implements AfterViewInit {
 

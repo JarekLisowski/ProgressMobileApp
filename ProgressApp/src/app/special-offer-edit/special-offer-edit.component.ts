@@ -8,11 +8,10 @@ import { SpecialOfferEditItemComponent } from "./special-offer-edit-item/special
 import { CartItemWithId } from '../../domain/cartItem';
 
 @Component({
-  selector: 'app-special-offer-edit',
-  standalone: true,
-  imports: [NgFor, NgIf, SpecialOfferEditItemComponent],
-  templateUrl: './special-offer-edit.component.html',
-  styleUrl: './special-offer-edit.component.scss'
+    selector: 'app-special-offer-edit',
+    imports: [NgFor, NgIf, SpecialOfferEditItemComponent],
+    templateUrl: './special-offer-edit.component.html',
+    styleUrl: './special-offer-edit.component.scss'
 })
 export class SpecialOfferEditComponent implements OnInit {
 

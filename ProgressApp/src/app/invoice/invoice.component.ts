@@ -8,11 +8,10 @@ import { PrintService } from '../../services/printService';
 import { LoggerService } from '../../services/loggerService';
 
 @Component({
-  selector: 'invoice',
-  standalone: true,
-  imports: [DocumentComponent, PayModalComponent],
-  templateUrl: './invoice.component.html',
-  styleUrl: './invoice.component.scss'
+    selector: 'invoice',
+    imports: [DocumentComponent, PayModalComponent],
+    templateUrl: './invoice.component.html',
+    styleUrl: './invoice.component.scss'
 })
 export class InvoiceComponent implements OnInit {
 

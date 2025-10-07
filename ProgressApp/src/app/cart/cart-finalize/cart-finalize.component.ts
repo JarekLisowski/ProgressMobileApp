@@ -7,11 +7,10 @@ import { DeliveryMethod, PaymentMethod } from '../../../domain/generated/apimode
 import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'cart-finalize',
-  standalone: true,
-  imports: [NgIf, CommonModule],
-  templateUrl: './cart-finalize.component.html',
-  styleUrl: './cart-finalize.component.scss'
+    selector: 'cart-finalize',
+    imports: [NgIf, CommonModule],
+    templateUrl: './cart-finalize.component.html',
+    styleUrl: './cart-finalize.component.scss'
 })
 export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
 

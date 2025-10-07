@@ -5,11 +5,10 @@ import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'invoices',
-  standalone: true,
-  imports: [DocumentsComponent],
-  templateUrl: './invoices.component.html',
-  styleUrl: './invoices.component.scss'
+    selector: 'invoices',
+    imports: [DocumentsComponent],
+    templateUrl: './invoices.component.html',
+    styleUrl: './invoices.component.scss'
 })
 export class InvoicesComponent implements OnInit {
 

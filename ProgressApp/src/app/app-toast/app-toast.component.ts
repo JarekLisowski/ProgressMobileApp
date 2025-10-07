@@ -3,11 +3,10 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import bootstrap, { Toast } from 'bootstrap';
 
 @Component({
-  selector: 'app-toast',
-  standalone: true,
-  imports: [NgClass],
-  templateUrl: './app-toast.component.html',
-  styleUrl: './app-toast.component.scss'
+    selector: 'app-toast',
+    imports: [NgClass],
+    templateUrl: './app-toast.component.html',
+    styleUrl: './app-toast.component.scss'
 })
 export class AppToastComponent implements AfterViewInit {
 

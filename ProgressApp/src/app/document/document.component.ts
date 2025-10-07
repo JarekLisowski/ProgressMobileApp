@@ -6,11 +6,10 @@ import { ApiService } from '../../services/api.service';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'document',
-  standalone: true,
-  imports: [NgFor, CommonModule, RouterModule],
-  templateUrl: './document.component.html',
-  styleUrl: './document.component.scss'
+    selector: 'document',
+    imports: [NgFor, CommonModule, RouterModule],
+    templateUrl: './document.component.html',
+    styleUrl: './document.component.scss'
 })
 export class DocumentComponent {
 

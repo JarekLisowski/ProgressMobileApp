@@ -6,11 +6,10 @@ import { ProductGrid5Component } from "../product-grid-5/product-grid-5.componen
 import { SpecialOfferListComponent } from "../special-offer-list/special-offer-list.component";
 
 @Component({
-  selector: 'app-special-offers',
-  standalone: true,
-  imports: [SpecialOfferListComponent],
-  templateUrl: './special-offers.component.html',
-  styleUrl: './special-offers.component.scss'
+    selector: 'app-special-offers',
+    imports: [SpecialOfferListComponent],
+    templateUrl: './special-offers.component.html',
+    styleUrl: './special-offers.component.scss'
 })
 export class SpecialOffersComponent implements OnInit {
 

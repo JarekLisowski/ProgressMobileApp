@@ -3,11 +3,10 @@ import { Modal } from 'bootstrap';
 import { Observable, Subject, tap } from 'rxjs';
 
 @Component({
-  selector: 'confirm-modal-window',
-  standalone: true,
-  imports: [],
-  templateUrl: './confirm-modal-window.component.html',
-  styleUrl: './confirm-modal-window.component.scss'
+    selector: 'confirm-modal-window',
+    imports: [],
+    templateUrl: './confirm-modal-window.component.html',
+    styleUrl: './confirm-modal-window.component.scss'
 })
 
 export class ConfirmModalWindowComponent implements OnDestroy {

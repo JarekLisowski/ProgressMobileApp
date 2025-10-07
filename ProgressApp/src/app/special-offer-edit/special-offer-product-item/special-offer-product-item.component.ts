@@ -6,11 +6,10 @@ import { QuantityComponent } from "../../quantity/quantity.component";
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-special-offer-product-item',
-  standalone: true,
-  imports: [FormsModule, QuantityComponent, CommonModule],
-  templateUrl: './special-offer-product-item.component.html',
-  styleUrl: './special-offer-product-item.component.scss'
+    selector: 'app-special-offer-product-item',
+    imports: [FormsModule, QuantityComponent, CommonModule],
+    templateUrl: './special-offer-product-item.component.html',
+    styleUrl: './special-offer-product-item.component.scss'
 })
 export class SpecialOfferProductItemComponent {
 

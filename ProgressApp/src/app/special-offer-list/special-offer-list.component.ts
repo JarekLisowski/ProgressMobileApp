@@ -4,11 +4,10 @@ import { NgFor } from '@angular/common';
 import { IPromoSet } from '../../domain/generated/apimodel';
 
 @Component({
-  selector: 'app-special-offer-list',
-  standalone: true,
-  imports: [SpecialOfferItemComponent, NgFor],
-  templateUrl: './special-offer-list.component.html',
-  styleUrl: './special-offer-list.component.scss'
+    selector: 'app-special-offer-list',
+    imports: [SpecialOfferItemComponent, NgFor],
+    templateUrl: './special-offer-list.component.html',
+    styleUrl: './special-offer-list.component.scss'
 })
 export class SpecialOfferListComponent {
   @Input() items : IPromoSet[] | undefined;

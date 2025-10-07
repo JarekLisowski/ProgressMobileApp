@@ -9,11 +9,10 @@ import { ProductRemoveWindowComponent } from "../../product-remove-window/produc
 import { ConfirmModalWindowComponent } from "../../confirm-modal-window/confirm-modal-window.component";
 
 @Component({
-  selector: 'cart-items',
-  standalone: true,
-  imports: [NgFor, PromoContainerComponent, CartItemComponent, ConfirmModalWindowComponent],
-  templateUrl: './cart-items.component.html',
-  styleUrl: './cart-items.component.scss'
+    selector: 'cart-items',
+    imports: [NgFor, PromoContainerComponent, CartItemComponent, ConfirmModalWindowComponent],
+    templateUrl: './cart-items.component.html',
+    styleUrl: './cart-items.component.scss'
 })
 export class CartItemsComponent implements OnInit {
 

@@ -2,11 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'quantity',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './quantity.component.html',
-  styleUrl: './quantity.component.scss'
+    selector: 'quantity',
+    imports: [FormsModule],
+    templateUrl: './quantity.component.html',
+    styleUrl: './quantity.component.scss'
 })
 export class QuantityComponent {
 

@@ -9,11 +9,10 @@ import { OrdersComponent } from '../orders/orders.component';
 
 
 @Component({
-  selector: 'app-customer',
-  standalone: true,
-  imports: [CommonModule, InvoicesComponent, FormsModule, OrdersComponent],
-  templateUrl: './customer.component.html',
-  styleUrl: './customer.component.scss'
+    selector: 'app-customer',
+    imports: [CommonModule, InvoicesComponent, FormsModule, OrdersComponent],
+    templateUrl: './customer.component.html',
+    styleUrl: './customer.component.scss'
 })
 export class CustomerComponent implements OnInit {
 

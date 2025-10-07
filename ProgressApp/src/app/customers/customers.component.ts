@@ -4,11 +4,10 @@ import { Customer } from '../../domain/generated/apimodel';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-customers',
-  standalone: true,
-  imports: [CustomerListComponent],
-  templateUrl: './customers.component.html',
-  styleUrl: './customers.component.scss'
+    selector: 'app-customers',
+    imports: [CustomerListComponent],
+    templateUrl: './customers.component.html',
+    styleUrl: './customers.component.scss'
 })
 export class CustomersComponent {
 

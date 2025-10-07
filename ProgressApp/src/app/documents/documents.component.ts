@@ -4,11 +4,10 @@ import { CommonModule, NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'documents',
-  standalone: true,
-  imports: [NgFor, RouterModule, CommonModule],
-  templateUrl: './documents.component.html',
-  styleUrl: './documents.component.scss'
+    selector: 'documents',
+    imports: [NgFor, RouterModule, CommonModule],
+    templateUrl: './documents.component.html',
+    styleUrl: './documents.component.scss'
 })
 export class DocumentsComponent {
   @Input()

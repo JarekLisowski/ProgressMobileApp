@@ -8,11 +8,10 @@ import { CommonModule, NgFor } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'promo-cart-container',
-  standalone: true,
-  imports: [CartItemComponent, NgFor, RouterLink, CommonModule],
-  templateUrl: './promo-container.component.html',
-  styleUrl: './promo-container.component.scss'
+    selector: 'promo-cart-container',
+    imports: [CartItemComponent, NgFor, RouterLink, CommonModule],
+    templateUrl: './promo-container.component.html',
+    styleUrl: './promo-container.component.scss'
 })
 export class PromoContainerComponent implements OnInit {
 

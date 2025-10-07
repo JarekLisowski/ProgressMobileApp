@@ -8,11 +8,10 @@ import { ProductPromoItem } from '../../../domain/ProductPromoItem';
 import { PromoItemEdit } from '../../../domain/specialOfferEdit';
 
 @Component({
-  selector: 'app-special-offer-edit-item',
-  standalone: true,
-  imports: [NgIf, NgFor, NgClass, SpecialOfferProductItemComponent],
-  templateUrl: './special-offer-edit-item.component.html',
-  styleUrl: './special-offer-edit-item.component.scss'
+    selector: 'app-special-offer-edit-item',
+    imports: [NgIf, NgFor, NgClass, SpecialOfferProductItemComponent],
+    templateUrl: './special-offer-edit-item.component.html',
+    styleUrl: './special-offer-edit-item.component.scss'
 })
 export class SpecialOfferEditItemComponent implements AfterViewInit {
 

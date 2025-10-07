@@ -8,11 +8,10 @@ import { CartService } from '../../../services/cart.service';
 import { QuantityComponent } from "../../quantity/quantity.component";
 
 @Component({
-  selector: 'cart-item',
-  standalone: true,
-  imports: [FormsModule, NgIf, RouterModule, QuantityComponent, CommonModule ],
-  templateUrl: './cart-item.component.html',
-  styleUrl: './cart-item.component.scss'
+    selector: 'cart-item',
+    imports: [FormsModule, NgIf, RouterModule, QuantityComponent, CommonModule],
+    templateUrl: './cart-item.component.html',
+    styleUrl: './cart-item.component.scss'
 })
 export class CartItemComponent {
 

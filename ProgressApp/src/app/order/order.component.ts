@@ -6,11 +6,10 @@ import { DocumentComponent } from "../document/document.component";
 import { PayModalComponent } from "../pay-modal/pay-modal.component";
 
 @Component({
-  selector: 'order',
-  standalone: true,
-  imports: [DocumentComponent, PayModalComponent],
-  templateUrl: './order.component.html',
-  styleUrl: './order.component.scss'
+    selector: 'order',
+    imports: [DocumentComponent, PayModalComponent],
+    templateUrl: './order.component.html',
+    styleUrl: './order.component.scss'
 })
 export class OrderComponent implements OnInit {
 

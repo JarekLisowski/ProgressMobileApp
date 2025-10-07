@@ -4,11 +4,10 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PrintService } from '../../services/printService';
 
 @Component({
-  selector: 'app-save-doc-summary',
-  standalone: true,
-  imports: [NgIf, RouterModule, NgClass],
-  templateUrl: './save-doc-summary.component.html',
-  styleUrl: './save-doc-summary.component.scss'
+    selector: 'app-save-doc-summary',
+    imports: [NgIf, RouterModule, NgClass],
+    templateUrl: './save-doc-summary.component.html',
+    styleUrl: './save-doc-summary.component.scss'
 })
 export class SaveDocSummaryComponent {
   documentId: number | undefined;

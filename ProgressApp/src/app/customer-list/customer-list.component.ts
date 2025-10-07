@@ -6,11 +6,10 @@ import { Customer } from '../../domain/generated/apimodel';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'customer-list',
-  standalone: true,
-  imports: [FormsModule, NgFor, NgIf],
-  templateUrl: './customer-list.component.html',
-  styleUrl: './customer-list.component.scss'
+    selector: 'customer-list',
+    imports: [FormsModule, NgFor, NgIf],
+    templateUrl: './customer-list.component.html',
+    styleUrl: './customer-list.component.scss'
 })
 export class CustomerListComponent {
 

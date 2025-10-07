@@ -5,11 +5,10 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-categories',
-  standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
-  templateUrl: './categories.component.html',
-  styleUrl: './categories.component.scss'
+    selector: 'app-categories',
+    imports: [NgFor, NgIf, FormsModule],
+    templateUrl: './categories.component.html',
+    styleUrl: './categories.component.scss'
 })
 export class CategoriesComponent implements OnInit {
   private readonly api = inject(ApiService);

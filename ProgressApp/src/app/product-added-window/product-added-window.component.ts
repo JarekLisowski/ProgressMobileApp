@@ -3,11 +3,10 @@ import { RouterModule } from '@angular/router';
 import { Modal } from 'bootstrap';
 
 @Component({
-  selector: 'product-added-window',
-  standalone: true,
-  imports: [RouterModule],
-  templateUrl: './product-added-window.component.html',
-  styleUrl: './product-added-window.component.scss'
+    selector: 'product-added-window',
+    imports: [RouterModule],
+    templateUrl: './product-added-window.component.html',
+    styleUrl: './product-added-window.component.scss'
 })
 export class ProductAddedWindowComponent {
 

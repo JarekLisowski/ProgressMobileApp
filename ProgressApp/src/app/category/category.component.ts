@@ -5,11 +5,10 @@ import { ApiService } from '../../services/api.service';
 import { Product } from '../../domain/generated/apimodel';
 
 @Component({
-  selector: 'app-category',
-  standalone: true,
-  imports: [ProductGrid5Component],
-  templateUrl: './category.component.html',
-  styleUrl: './category.component.scss'
+    selector: 'app-category',
+    imports: [ProductGrid5Component],
+    templateUrl: './category.component.html',
+    styleUrl: './category.component.scss'
 })
 export class CategoryComponent implements OnInit {
 

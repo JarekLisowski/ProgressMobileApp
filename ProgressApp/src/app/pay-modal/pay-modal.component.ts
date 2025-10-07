@@ -7,11 +7,10 @@ import { ApiService } from '../../services/api.service';
 import { CommonModule, NgFor } from '@angular/common';
 
 @Component({
-  selector: 'pay-modal',
-  standalone: true,
-  imports: [NgFor, FormsModule, CommonModule],
-  templateUrl: './pay-modal.component.html',
-  styleUrl: './pay-modal.component.scss'
+    selector: 'pay-modal',
+    imports: [NgFor, FormsModule, CommonModule],
+    templateUrl: './pay-modal.component.html',
+    styleUrl: './pay-modal.component.scss'
 })
 export class PayModalComponent implements OnInit, AfterViewInit, OnDestroy {
   

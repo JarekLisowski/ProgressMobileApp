@@ -6,11 +6,10 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'cart-options',
-  standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
-  templateUrl: './cart-options.component.html',
-  styleUrl: './cart-options.component.scss'
+    selector: 'cart-options',
+    imports: [NgFor, NgIf, FormsModule],
+    templateUrl: './cart-options.component.html',
+    styleUrl: './cart-options.component.scss'
 })
 export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
 

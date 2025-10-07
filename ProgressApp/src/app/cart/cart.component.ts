@@ -15,11 +15,10 @@ import { Router } from '@angular/router';
 import { error } from 'jquery';
 
 @Component({
-  selector: 'app-cart',
-  standalone: true,
-  imports: [CartItemsComponent, CartCustomerComponent, CartOptionsComponent, CartFinalizeComponent],
-  templateUrl: './cart.component.html',
-  styleUrl: './cart.component.scss'
+    selector: 'app-cart',
+    imports: [CartItemsComponent, CartCustomerComponent, CartOptionsComponent, CartFinalizeComponent],
+    templateUrl: './cart.component.html',
+    styleUrl: './cart.component.scss'
 })
 
 export class CartComponent {

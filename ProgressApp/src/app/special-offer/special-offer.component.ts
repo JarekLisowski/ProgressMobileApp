@@ -4,11 +4,10 @@ import { PromoSet } from '../../domain/generated/apimodel';
 import { NgFor } from '@angular/common';
 
 @Component({
-  selector: 'app-special-offer',
-  standalone: true,
-  imports: [NgFor],
-  templateUrl: './special-offer.component.html',
-  styleUrl: './special-offer.component.scss'
+    selector: 'app-special-offer',
+    imports: [NgFor],
+    templateUrl: './special-offer.component.html',
+    styleUrl: './special-offer.component.scss'
 })
 export class SpecialOfferComponent implements OnInit {
 

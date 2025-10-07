@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideIndexedDb, DBConfig } from 'ngx-indexed-db';
 import { routes } from './app.routes';
@@ -61,11 +61,9 @@ export const appConfig: ApplicationConfig = {
     provideIndexedDb(dbConfig),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    {
-        provide: APP_INITIALIZER,
-        useFactory: initializeApp,
-        multi: true,
-        deps: [HttpClient, AppConfigService],
-    },
+    provideAppInitializer(() => {
+        const initializerFn = (initializeApp)(inject(HttpClient), inject(AppConfigService));
+        return initializerFn();
+      }),
   ]
 };

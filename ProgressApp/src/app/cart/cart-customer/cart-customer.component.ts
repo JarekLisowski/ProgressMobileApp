@@ -4,11 +4,10 @@ import { Customer } from '../../../domain/generated/apimodel';
 import { CartService } from '../../../services/cart.service';
 
 @Component({
-  selector: 'cart-customer',
-  standalone: true,
-  imports: [CustomerSelectComponent],
-  templateUrl: './cart-customer.component.html',
-  styleUrl: './cart-customer.component.scss'
+    selector: 'cart-customer',
+    imports: [CustomerSelectComponent],
+    templateUrl: './cart-customer.component.html',
+    styleUrl: './cart-customer.component.scss'
 })
 export class CartCustomerComponent implements OnInit {
   
