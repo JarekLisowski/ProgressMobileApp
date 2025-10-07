@@ -1,24 +1,26 @@
 <div class="promo-group border border-primary rounded mb-3">
-    <div class="promo-header p-2">
-        <h6>
-            {{cartPromoItem?.name}}
-        </h6>
-        <div class="d-flex flex-row">
-            <div>
-                <span class="fw-medium">b: {{cartPromoItem?.priceGross | number : '1.2-2'}} PLN</span>
-                <span class="ms-2">n: {{cartPromoItem?.priceNet | number : '1.2-2'}} PLN</span>
-            </div>
-            <div class="me-0 ms-auto">
-                <a class="ms-2" (click)="deletePromo(cartPromoItem)">
-                    <i class="bi bi-x-square"></i>
-                </a>
-                <a class="ms-4 me-2" [routerLink]="['/promoEdit', cartPromoItem?.id]">
-                    <i class="bi bi-pencil-square"></i>
-                </a>
-            </div>
-        </div>
+  <div class="promo-header p-2">
+    <h6>
+      {{cartPromoItem?.name}}
+    </h6>
+    <div class="d-flex flex-row">
+      <div>
+        <span class="fw-medium">b: {{cartPromoItem?.priceGross | number : '1.2-2'}} PLN</span>
+        <span class="ms-2">n: {{cartPromoItem?.priceNet | number : '1.2-2'}} PLN</span>
+      </div>
+      <div class="me-0 ms-auto">
+        <a class="ms-2" (click)="deletePromo(cartPromoItem)">
+          <i class="bi bi-x-square"></i>
+        </a>
+        <a class="ms-4 me-2" [routerLink]="['/promoEdit', cartPromoItem?.id]">
+          <i class="bi bi-pencil-square"></i>
+        </a>
+      </div>
     </div>
-    <div class="promo-items ">
-        <cart-item *ngFor="let item of cartItems" [cartItem]="item" [readonly]="true"></cart-item>
-    </div>
+  </div>
+  <div class="promo-items ">
+    @for (item of cartItems; track item) {
+      <cart-item [cartItem]="item" [readonly]="true"></cart-item>
+    }
+  </div>
 </div>

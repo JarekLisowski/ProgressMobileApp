@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartItem, CartItemWithId } from '../../../domain/cartItem';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { CartService } from '../../../services/cart.service';
@@ -9,7 +9,7 @@ import { QuantityComponent } from "../../quantity/quantity.component";
 
 @Component({
     selector: 'cart-item',
-    imports: [FormsModule, NgIf, RouterModule, QuantityComponent, CommonModule],
+    imports: [FormsModule, RouterModule, QuantityComponent, CommonModule],
     templateUrl: './cart-item.component.html',
     styleUrl: './cart-item.component.scss'
 })

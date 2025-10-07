@@ -1,13 +1,13 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { FormsModule, NgModel } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
+
 import { Customer } from '../../domain/generated/apimodel';
 import { Router } from '@angular/router';
 
 @Component({
     selector: 'customer-list',
-    imports: [FormsModule, NgFor, NgIf],
+    imports: [FormsModule],
     templateUrl: './customer-list.component.html',
     styleUrl: './customer-list.component.scss'
 })

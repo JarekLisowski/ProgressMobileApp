@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { IPromoItem, Product } from '../../../domain/generated/apimodel';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ApiService } from '../../../services/api.service';
 import { Modal } from 'bootstrap';
 import { SpecialOfferProductItemComponent } from "../special-offer-product-item/special-offer-product-item.component";
@@ -9,7 +9,7 @@ import { PromoItemEdit } from '../../../domain/specialOfferEdit';
 
 @Component({
     selector: 'app-special-offer-edit-item',
-    imports: [NgIf, NgFor, NgClass, SpecialOfferProductItemComponent],
+    imports: [NgClass, SpecialOfferProductItemComponent],
     templateUrl: './special-offer-edit-item.component.html',
     styleUrl: './special-offer-edit-item.component.scss'
 })

@@ -1,26 +1,31 @@
 <div class="container">
-    <div *ngIf="showFilter" class="row">
-        <div class="col">
-             <input type="text" [(ngModel)]="filter" (keyup)="filterProducts($event)" class="form-control" placeholder="Filtruj"/>
-        </div>
+  @if (showFilter) {
+    <div class="row">
+      <div class="col">
+        <input type="text" [(ngModel)]="filter" (keyup)="filterProducts($event)" class="form-control" placeholder="Filtruj"/>
+      </div>
     </div>
-    <div *ngFor="let groupKey of categoriesGroupedKeys">
-        <div class="row">
-            <div class="col category-key mt-4 mb-1">
-                <h4>
-                    {{groupKey}}
-                </h4>
-            </div>
+  }
+  @for (groupKey of categoriesGroupedKeys; track groupKey) {
+    <div>
+      <div class="row">
+        <div class="col category-key mt-4 mb-1">
+          <h4>
+            {{groupKey}}
+          </h4>
         </div>
-        <div class="row row-cols-lg-5 row-cols-1 row-cols-md-3">
-
-            <div *ngFor="let item of categoriesGrouped[groupKey]" class="col mt-1">
-                <a href="/category/{{item.id}}">
-                    <div class="border rounded p-2 border-primary">
-                        {{item.name}}
-                    </div>
-                </a>
-            </div>
-        </div>
+      </div>
+      <div class="row row-cols-lg-5 row-cols-1 row-cols-md-3">
+        @for (item of categoriesGrouped[groupKey]; track item) {
+          <div class="col mt-1">
+            <a href="/category/{{item.id}}">
+              <div class="border rounded p-2 border-primary">
+                {{item.name}}
+              </div>
+            </a>
+          </div>
+        }
+      </div>
     </div>
+  }
 </div>

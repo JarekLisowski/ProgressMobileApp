@@ -1,6 +1,8 @@
 <div class="row g-4 row-cols-lg-5 row-cols-1 row-cols-md-3 mt-2">
-    <div *ngFor="let item of items" class="col">       
-        <app-special-offer-item [data]="item">            
-        </app-special-offer-item>
+  @for (item of items; track item) {
+    <div class="col">
+      <app-special-offer-item [data]="item">
+      </app-special-offer-item>
     </div>
+  }
 </div>

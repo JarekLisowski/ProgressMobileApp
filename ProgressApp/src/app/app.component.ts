@@ -4,7 +4,7 @@ import { HeaderComponent } from "./header/header.component";
 import { NavbarComponent } from "./navbar/navbar.component";
 import { BottomBarComponent } from "./bottom-bar/bottom-bar.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
-import { CommonModule } from '@angular/common';
+
 import { AuthService } from '../services/auth.service';
 import { User } from './domain/user';
 import { AppToastComponent } from './app-toast/app-toast.component';
@@ -12,7 +12,7 @@ import { LoggerService } from '../services/loggerService';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, HeaderComponent, HeaderComponent, NavbarComponent, BottomBarComponent, SidebarComponent, CommonModule, AppToastComponent],
+    imports: [RouterOutlet, HeaderComponent, HeaderComponent, NavbarComponent, BottomBarComponent, SidebarComponent, AppToastComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })

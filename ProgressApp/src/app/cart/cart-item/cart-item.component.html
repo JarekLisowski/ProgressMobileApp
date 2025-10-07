@@ -1,83 +1,89 @@
 <li class="list-group-item pt-1 pb-1 mb-2 px-0 border-bottom shadow-sm">
-    <!-- row small screen-->
-    <div class="d-lg-none ms-1 me-1">
-        <h6 class="mb-2">
-            <a href="#" class="" [routerLink]="['/product', cartItem?.productId]">
-                {{cartItem?.name}}
-            </a>
-        </h6>
-        <div class="row align-items-center ">
-            <div class="col-3 col-md-2">
-                <a href="#" [routerLink]="['/product', cartItem?.productId]">
-                    <!-- img --> <img src="{{cartItem?.imageUrl}}" alt="Ecommerce" class="img-fluid">
-                </a>
-            </div>
-            <div class="col">
-                <div class="">
-                    <span class="text-muted">{{cartItem?.code}}</span>
-                </div>
-                <div class="ms-auto">
-                    <span class="fw-medium">b: {{cartItem?.priceGross | number : '1.2-2'}} PLN</span>
-                    <span class="">, n: {{cartItem?.priceNet | number : '1.2-2'}} PLN</span>
-                </div>
-                <div *ngIf="readonly == false" class="d-flex pt-2">
-                    <quantity [minQuantity]="1" [quantity]="quantity" (quntityChanged)="quantityChanged($event)">
-                    </quantity>
-                    <div class="ms-4 fs-4">
-                        <a href="#" (click)="deleteCartItem(cartItem); false">
-                            <i class="bi bi-x-square"></i>
-                        </a>
-                    </div>
-                    <div class="ms-auto">
-                        <span class="fs-4">{{cartItem?.sumGross | number : '1.2-2'}}</span>                        
-                    </div>
-                </div>
-                <div *ngIf="readonly == true" class="d-flex pt-2">
-                    ilość: {{cartItem?.quantity}} 
-                </div>
-            </div>
+  <!-- row small screen-->
+  <div class="d-lg-none ms-1 me-1">
+    <h6 class="mb-2">
+      <a href="#" class="" [routerLink]="['/product', cartItem?.productId]">
+        {{cartItem?.name}}
+      </a>
+    </h6>
+    <div class="row align-items-center ">
+      <div class="col-3 col-md-2">
+        <a href="#" [routerLink]="['/product', cartItem?.productId]">
+          <!-- img --> <img src="{{cartItem?.imageUrl}}" alt="Ecommerce" class="img-fluid">
+        </a>
+      </div>
+      <div class="col">
+        <div class="">
+          <span class="text-muted">{{cartItem?.code}}</span>
         </div>
-    </div>
-
-
-    <!-- row large screen -->
-    <div class="d-none d-lg-block">
-        <h5 class="mb-0 mt-2 ms-2">
-            <a href="#" class="" [routerLink]="['/product', cartItem?.productId]">
-                {{cartItem?.name}}
-            </a>
-        </h5>
-        <div class="row align-items-center me-2">
-            <div class="col-3 col-md-2">
-                <a href="#" [routerLink]="['/product', cartItem?.productId]">
-                    <!-- img --> <img src="{{cartItem?.imageUrl}}" alt="Ecommerce" class="img-fluid">
-                </a>
-            </div>
-            <div class="col">
-                <div class="">
-                    <span class="text-muted">{{cartItem?.code}}</span>
-                </div>
-                <div class="ms-auto">
-                    <span class="fw-medium">brutto: {{cartItem?.priceGross | number : '1.2-2'}} PLN</span>
-                    <span class="">, netto: {{cartItem?.priceNet | number : '1.2-2'}} PLN</span>
-                </div>
-                <div *ngIf="readonly == false" class="d-flex pt-2">
-                    <quantity [minQuantity]="1" [quantity]="quantity" (quntityChanged)="quantityChanged($event)">
-                    </quantity>
-                    <div class="ms-4 fs-4">
-                        <a href="#" (click)="deleteCartItem(cartItem); false">
-                            <i class="bi bi-x-square"></i>
-                        </a>
-                    </div>
-                    <div class="ms-auto">
-                        <span class="fs-4 fw-medium">{{cartItem?.sumGross | number : '1.2-2'}}</span><br/>
-                        <span class="fs-5">{{cartItem?.sumNetto | number : '1.2-2'}}</span>
-                    </div>
-                </div>
-
-            </div>
+        <div class="ms-auto">
+          <span class="fw-medium">b: {{cartItem?.priceGross | number : '1.2-2'}} PLN</span>
+          <span class="">, n: {{cartItem?.priceNet | number : '1.2-2'}} PLN</span>
         </div>
+        @if (readonly == false) {
+          <div class="d-flex pt-2">
+            <quantity [minQuantity]="1" [quantity]="quantity" (quntityChanged)="quantityChanged($event)">
+            </quantity>
+            <div class="ms-4 fs-4">
+              <a href="#" (click)="deleteCartItem(cartItem); false">
+                <i class="bi bi-x-square"></i>
+              </a>
+            </div>
+            <div class="ms-auto">
+              <span class="fs-4">{{cartItem?.sumGross | number : '1.2-2'}}</span>
+            </div>
+          </div>
+        }
+        @if (readonly == true) {
+          <div class="d-flex pt-2">
+            ilość: {{cartItem?.quantity}}
+          </div>
+        }
+      </div>
     </div>
+  </div>
+
+
+  <!-- row large screen -->
+  <div class="d-none d-lg-block">
+    <h5 class="mb-0 mt-2 ms-2">
+      <a href="#" class="" [routerLink]="['/product', cartItem?.productId]">
+        {{cartItem?.name}}
+      </a>
+    </h5>
+    <div class="row align-items-center me-2">
+      <div class="col-3 col-md-2">
+        <a href="#" [routerLink]="['/product', cartItem?.productId]">
+          <!-- img --> <img src="{{cartItem?.imageUrl}}" alt="Ecommerce" class="img-fluid">
+        </a>
+      </div>
+      <div class="col">
+        <div class="">
+          <span class="text-muted">{{cartItem?.code}}</span>
+        </div>
+        <div class="ms-auto">
+          <span class="fw-medium">brutto: {{cartItem?.priceGross | number : '1.2-2'}} PLN</span>
+          <span class="">, netto: {{cartItem?.priceNet | number : '1.2-2'}} PLN</span>
+        </div>
+        @if (readonly == false) {
+          <div class="d-flex pt-2">
+            <quantity [minQuantity]="1" [quantity]="quantity" (quntityChanged)="quantityChanged($event)">
+            </quantity>
+            <div class="ms-4 fs-4">
+              <a href="#" (click)="deleteCartItem(cartItem); false">
+                <i class="bi bi-x-square"></i>
+              </a>
+            </div>
+            <div class="ms-auto">
+              <span class="fs-4 fw-medium">{{cartItem?.sumGross | number : '1.2-2'}}</span><br/>
+              <span class="fs-5">{{cartItem?.sumNetto | number : '1.2-2'}}</span>
+            </div>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
 
 
 </li>

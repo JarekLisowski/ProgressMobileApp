@@ -1,66 +1,73 @@
 <div class="d-flex justify-content-between mb-3">
-    <h5>{{document?.number}}</h5>
-    <div *ngIf="printButton">
-        <button class="btn btn-primary btn-sm " (click)="print()">
-            <i class="bi bi-printer"></i>
-        </button>
+  <h5>{{document?.number}}</h5>
+  @if (printButton) {
+    <div>
+      <button class="btn btn-primary btn-sm " (click)="print()">
+        <i class="bi bi-printer"></i>
+      </button>
     </div>
+  }
 </div>
 <h6 class="mt-3">
-    <a [routerLink]="['/customer', document?.customer?.id]">
-        {{document?.customer?.adrName}}
-    </a>
+  <a [routerLink]="['/customer', document?.customer?.id]">
+    {{document?.customer?.adrName}}
+  </a>
 </h6>
 <div>
-    {{document?.customer?.adrStreet}} {{document?.customer?.adrStreetNo}}
+  {{document?.customer?.adrStreet}} {{document?.customer?.adrStreetNo}}
 </div>
 <div>
-    {{document?.customer?.adrCity}} {{document?.customer?.adrZipCode}}
+  {{document?.customer?.adrCity}} {{document?.customer?.adrZipCode}}
 </div>
 
 <div>
-    NIP: {{document?.customer?.adrNip}}
+  NIP: {{document?.customer?.adrNip}}
 </div>
 <div class="row mt-2 border-top">
-    <div class="col-3">Data:</div>
-    <div class="col-4 text-end fw-medium">{{document?.issueDate | date:'shortDate'}}</div>
+  <div class="col-3">Data:</div>
+  <div class="col-4 text-end fw-medium">{{document?.issueDate | date:'shortDate'}}</div>
 </div>
 <div class="row">
-    <div class="col-3">Netto:</div>
-    <div class="col-4 text-end fw-medium">{{document?.totalNet | number : '1.2-2'}} PLN</div>
+  <div class="col-3">Netto:</div>
+  <div class="col-4 text-end fw-medium">{{document?.totalNet | number : '1.2-2'}} PLN</div>
 </div>
 <div class="row">
-    <div class="col-3">Brutto:</div>
-    <div class="col-4 text-end fw-bold">{{document?.totalGross | number : '1.2-2'}} PLN</div>
+  <div class="col-3">Brutto:</div>
+  <div class="col-4 text-end fw-bold">{{document?.totalGross | number : '1.2-2'}} PLN</div>
 </div>
-<div *ngIf="(document?.paymentToBeSettled ?? 0) > 0" class="row">
+@if ((document?.paymentToBeSettled ?? 0) > 0) {
+  <div class="row">
     <div class="col-3">Do zapł.:</div>
     <div class="col-4 text-end fw-bold">{{document?.paymentToBeSettled | number : '1.2-2'}} PLN</div>
-    <div *ngIf="(document?.paymentToBeSettled ?? 0) > 0" class="col-5">
+    @if ((document?.paymentToBeSettled ?? 0) > 0) {
+      <div class="col-5">
         <input type="button" class="btn btn-primary btn-sm" value="Zapłać" (click)="pay()">
-    </div>
-</div>
+      </div>
+    }
+  </div>
+}
 
 <div class="mt-3 border-top">
-    <div *ngFor="let item of document?.items" class="row border-bottom pb-2">
-        <div class="col-sm-12 fw-medium">
-            {{item?.product?.name}}
-        </div>
-        <div class="col-4 col-lg-2">
-            {{item?.quantity}} {{item.product?.unit}}
-        </div>
-        <div class="col-4 col-lg-2">
-            Netto: {{item?.priceNet | number : '1.2-2'}}
-        </div>
-        <div class="col-4 col-lg-2">
-            Brutto: {{item?.priceGross | number : '1.2-2'}}
-        </div>
-
-        <div class="col-6 col-lg-2">
-            Suma N.: {{item?.lineNet | number : '1.2-2'}}
-        </div>
-        <div class="col-6 col-lg-2">
-            Suma B.: {{item?.lineGross | number : '1.2-2'}}
-        </div>
+  @for (item of document?.items; track item) {
+    <div class="row border-bottom pb-2">
+      <div class="col-sm-12 fw-medium">
+        {{item?.product?.name}}
+      </div>
+      <div class="col-4 col-lg-2">
+        {{item?.quantity}} {{item.product?.unit}}
+      </div>
+      <div class="col-4 col-lg-2">
+        Netto: {{item?.priceNet | number : '1.2-2'}}
+      </div>
+      <div class="col-4 col-lg-2">
+        Brutto: {{item?.priceGross | number : '1.2-2'}}
+      </div>
+      <div class="col-6 col-lg-2">
+        Suma N.: {{item?.lineNet | number : '1.2-2'}}
+      </div>
+      <div class="col-6 col-lg-2">
+        Suma B.: {{item?.lineGross | number : '1.2-2'}}
+      </div>
     </div>
+  }
 </div>

@@ -3,14 +3,14 @@ import { CartPromoItemWithId } from '../../../domain/cartPromoItem';
 import { CartItemWithId } from '../../../domain/cartItem';
 import { PromoContainerComponent } from "../promo-container/promo-container.component";
 import { CartItemComponent } from "../cart-item/cart-item.component";
-import { NgFor } from '@angular/common';
+
 import { CartService } from '../../../services/cart.service';
 import { ProductRemoveWindowComponent } from "../../product-remove-window/product-remove-window.component";
 import { ConfirmModalWindowComponent } from "../../confirm-modal-window/confirm-modal-window.component";
 
 @Component({
     selector: 'cart-items',
-    imports: [NgFor, PromoContainerComponent, CartItemComponent, ConfirmModalWindowComponent],
+    imports: [PromoContainerComponent, CartItemComponent, ConfirmModalWindowComponent],
     templateUrl: './cart-items.component.html',
     styleUrl: './cart-items.component.scss'
 })

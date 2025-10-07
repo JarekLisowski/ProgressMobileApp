@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { PromoSet } from '../../domain/generated/apimodel';
-import { NgFor } from '@angular/common';
+
 
 @Component({
     selector: 'app-special-offer',
-    imports: [NgFor],
+    imports: [],
     templateUrl: './special-offer.component.html',
     styleUrl: './special-offer.component.scss'
 })

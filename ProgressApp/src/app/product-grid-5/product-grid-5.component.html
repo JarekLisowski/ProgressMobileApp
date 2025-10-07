@@ -1,8 +1,10 @@
 <div class="row g-4 row-cols-lg-5 row-cols-1 row-cols-md-3 mt-2">
 
-    <!-- col -->
-    <div *ngFor="let item of items" class="col">       
-        <app-product-5 [data]="item">            
-        </app-product-5>
+  <!-- col -->
+  @for (item of items; track item) {
+    <div class="col">
+      <app-product-5 [data]="item">
+      </app-product-5>
     </div>
+  }
 </div>

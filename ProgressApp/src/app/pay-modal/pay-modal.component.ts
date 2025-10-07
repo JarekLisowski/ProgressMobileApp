@@ -4,11 +4,11 @@ import { Observable, Subject, tap } from 'rxjs';
 import { Document, IPayment, Payment, PaymentMethod } from '../../domain/generated/apimodel';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'pay-modal',
-    imports: [NgFor, FormsModule, CommonModule],
+    imports: [FormsModule, CommonModule],
     templateUrl: './pay-modal.component.html',
     styleUrl: './pay-modal.component.scss'
 })

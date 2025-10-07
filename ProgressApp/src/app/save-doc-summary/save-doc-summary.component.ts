@@ -1,11 +1,11 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PrintService } from '../../services/printService';
 
 @Component({
     selector: 'app-save-doc-summary',
-    imports: [NgIf, RouterModule, NgClass],
+    imports: [RouterModule, NgClass],
     templateUrl: './save-doc-summary.component.html',
     styleUrl: './save-doc-summary.component.scss'
 })

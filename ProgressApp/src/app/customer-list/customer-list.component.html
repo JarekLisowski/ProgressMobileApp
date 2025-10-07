@@ -1,19 +1,25 @@
 <!-- <h5>Kontrahenci</h5> -->
 <div class="d-flex justify-content-between">
-    <div>
-        <input type="text" placeholder="Szukaj kontrahenta" [(ngModel)]="searchPattern" />
-        <div *ngIf="loading" class="spinner-border" role="status"></div>
-    </div>
-    <div>
-        <button class="btn btn-primary btn-sm" (click)="addCustomer()">
-            <i class="bi bi-plus-lg"></i>
-        </button>
-    </div>
+  <div>
+    <input type="text" placeholder="Szukaj kontrahenta" [(ngModel)]="searchPattern" />
+    @if (loading) {
+      <div class="spinner-border" role="status"></div>
+    }
+  </div>
+  <div>
+    <button class="btn btn-primary btn-sm" (click)="addCustomer()">
+      <i class="bi bi-plus-lg"></i>
+    </button>
+  </div>
 </div>
-<div *ngIf="!loading">
-    <div *ngFor="let item of customerList">
+@if (!loading) {
+  <div>
+    @for (item of customerList; track item) {
+      <div>
         <a href="#" (click)="selectCustomer(item.id); false">
-            <span>{{item.adrName}}</span>
+          <span>{{item.adrName}}</span>
         </a>
-    </div>
-</div>
+      </div>
+    }
+  </div>
+}

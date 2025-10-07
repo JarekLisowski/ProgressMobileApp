@@ -1,13 +1,13 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Document } from '../../domain/generated/apimodel';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PayModalComponent } from '../pay-modal/pay-modal.component';
 import { ApiService } from '../../services/api.service';
 import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'document',
-    imports: [NgFor, CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule],
     templateUrl: './document.component.html',
     styleUrl: './document.component.scss'
 })

@@ -2,14 +2,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
-import { NgFor, NgIf } from '@angular/common';
+
 import { PromoItemEdit, SpecialOfferEdit } from '../../domain/specialOfferEdit';
 import { SpecialOfferEditItemComponent } from "./special-offer-edit-item/special-offer-edit-item.component";
 import { CartItemWithId } from '../../domain/cartItem';
 
 @Component({
     selector: 'app-special-offer-edit',
-    imports: [NgFor, NgIf, SpecialOfferEditItemComponent],
+    imports: [SpecialOfferEditItemComponent],
     templateUrl: './special-offer-edit.component.html',
     styleUrl: './special-offer-edit.component.scss'
 })

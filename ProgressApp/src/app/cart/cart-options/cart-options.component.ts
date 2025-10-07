@@ -2,12 +2,12 @@ import { AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit } from 
 import { CartService } from '../../../services/cart.service';
 import { ApiService } from '../../../services/api.service';
 import { DeliveryMethod, PaymentMethod } from '../../../domain/generated/apimodel';
-import { NgFor, NgIf } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'cart-options',
-    imports: [NgFor, NgIf, FormsModule],
+    imports: [FormsModule],
     templateUrl: './cart-options.component.html',
     styleUrl: './cart-options.component.scss'
 })

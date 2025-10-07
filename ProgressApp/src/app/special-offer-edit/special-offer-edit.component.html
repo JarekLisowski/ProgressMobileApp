@@ -1,34 +1,44 @@
 <h5>Zestaw promocyjny</h5>
 <h6>{{promoSet.name}}</h6>
 
-<div *ngIf="isReady && isNew">
+@if (isReady && isNew) {
+  <div>
     <button type="button" class="btn btn-primary btn-sm mb-2" (click)="addPromoSetToCart()">
-        <i class="bi bi-plus-lg"></i>
-        Dodaj zestaw do koszyka
+      <i class="bi bi-plus-lg"></i>
+      Dodaj zestaw do koszyka
     </button>
-</div>
-<div *ngIf="!isReady && isNew">
+  </div>
+}
+@if (!isReady && isNew) {
+  <div>
     <div class="alert alert-warning" role="alert">
-        Skompletuj zestaw promocyjny, aby dodać go do koszyka.    
+      Skompletuj zestaw promocyjny, aby dodać go do koszyka.
     </div>
-</div>
-<div *ngIf="isReady && !isNew && isModified">
+  </div>
+}
+@if (isReady && !isNew && isModified) {
+  <div>
     <div class="alert alert-danger" role="alert">
-        Zestaw promocyjny został zmieniony ale nie jest zapisany. Kliknij poniżej aby zaktualizować go w koszyku.
+      Zestaw promocyjny został zmieniony ale nie jest zapisany. Kliknij poniżej aby zaktualizować go w koszyku.
     </div>
     <button type="button" class="btn btn-primary btn-sm mb-2" (click)="addPromoSetToCart()">
-        <i class="bi bi-plus-lg"></i>
-        Zaktualizuj zestaw w koszyku
+      <i class="bi bi-plus-lg"></i>
+      Zaktualizuj zestaw w koszyku
     </button>
-</div>
-<div *ngIf="!isReady && !isNew">
+  </div>
+}
+@if (!isReady && !isNew) {
+  <div>
     <div class="alert alert-warning" role="alert">
-        Zestaw niekompletny 
+      Zestaw niekompletny
     </div>
-</div>
+  </div>
+}
 
-<div *ngFor="let promoItem of promoSet.promoItemsEdit" class="row mb-3">
+@for (promoItem of promoSet.promoItemsEdit; track promoItem) {
+  <div class="row mb-3">
     <app-special-offer-edit-item [promoItemEdit]="promoItem" [promoSetId]="promoSet.id" (cartChangedEvent)="cartChangedEvent()"></app-special-offer-edit-item>
-</div>
+  </div>
+}
 
 

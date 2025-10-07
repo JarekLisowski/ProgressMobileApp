@@ -1,12 +1,12 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { ProductCategory } from '../../domain/generated/apimodel';
-import { NgFor, NgIf } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-categories',
-    imports: [NgFor, NgIf, FormsModule],
+    imports: [FormsModule],
     templateUrl: './categories.component.html',
     styleUrl: './categories.component.scss'
 })

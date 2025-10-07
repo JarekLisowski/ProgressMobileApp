@@ -1,23 +1,25 @@
 <div class="container vh-100 d-flex justify-content-center align-items-center">
-    <div class="col-md-8 col-lg-6">
-        <div class="card shadow-sm">
-            <div class="card-body p-5">
-                <h2 class="fw-bold mb-4 text-center">Login</h2>
-                <div *ngIf="error" class="alert alert-danger">{{error}}</div>
-                <form>
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" id="username" name="username" class="form-control" [(ngModel)]="username">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" [(ngModel)]="password">
-                    </div>
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-primary" (click)="onLogin()">Login</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body p-5">
+        <h2 class="fw-bold mb-4 text-center">Login</h2>
+        @if (error) {
+          <div class="alert alert-danger">{{error}}</div>
+        }
+        <form>
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" class="form-control" [(ngModel)]="username">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-control" [(ngModel)]="password">
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary" (click)="onLogin()">Login</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>

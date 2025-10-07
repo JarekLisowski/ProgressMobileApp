@@ -1,61 +1,79 @@
 <div>
-    <ul class="list-group">
-        <li  class="list-group-item">
-            <h5>
-                {{nazwaDokumentu}}
-            </h5>
-        </li>
-        <li class="list-group-item">
-            <h6>Kontrahent</h6>
-            <strong>{{transaction?.customer?.adrName}}</strong><br />
-            {{transaction?.customer?.adrNip}}<br />
-            {{transaction?.customer?.adrStreet}} {{transaction?.customer?.adrStreetNo}}
-            {{transaction?.customer?.adrNumber}}<br />
-            {{transaction?.customer?.adrCity}} {{transaction?.customer?.adrZipCode}}<br />
-        </li>
-        <li class="list-group-item">
-            <h6>Do zapłaty</h6>
-            <strong>{{transaction?.totalGross | number : '1.2-2'}} PLN </strong><br>
-            {{transaction?.totalNet | number : '1.2-2'}} PLN netto
-        </li>
-        <li *ngIf="isInvoice" class="list-group-item">
-            <h6>Płatność</h6>
-            Gotówka: <strong>{{transaction?.cashAmount | number : '1.2-2'}}</strong> PLN<br />
-            <div *ngIf="secondPaymentMethod">
-                <strong>{{secondPaymentMethod.name}}: {{transaction?.secondMethodAmount | number : '1.2-2'}}</strong>
-                PLN
-                <span *ngIf="secondPaymentMethod.deferred">
-                    , <strong>{{transaction?.paymentDueDays}}</strong> dni
-                </span>
+  <ul class="list-group">
+    <li  class="list-group-item">
+      <h5>
+        {{nazwaDokumentu}}
+      </h5>
+    </li>
+    <li class="list-group-item">
+      <h6>Kontrahent</h6>
+      <strong>{{transaction?.customer?.adrName}}</strong><br />
+      {{transaction?.customer?.adrNip}}<br />
+      {{transaction?.customer?.adrStreet}} {{transaction?.customer?.adrStreetNo}}
+      {{transaction?.customer?.adrNumber}}<br />
+      {{transaction?.customer?.adrCity}} {{transaction?.customer?.adrZipCode}}<br />
+    </li>
+    <li class="list-group-item">
+      <h6>Do zapłaty</h6>
+      <strong>{{transaction?.totalGross | number : '1.2-2'}} PLN </strong><br>
+      {{transaction?.totalNet | number : '1.2-2'}} PLN netto
+    </li>
+    @if (isInvoice) {
+      <li class="list-group-item">
+        <h6>Płatność</h6>
+        Gotówka: <strong>{{transaction?.cashAmount | number : '1.2-2'}}</strong> PLN<br />
+        @if (secondPaymentMethod) {
+          <div>
+            <strong>{{secondPaymentMethod.name}}: {{transaction?.secondMethodAmount | number : '1.2-2'}}</strong>
+            PLN
+            @if (secondPaymentMethod.deferred) {
+              <span>
+                , <strong>{{transaction?.paymentDueDays}}</strong> dni
+              </span>
+            }
+          </div>
+        }
+      </li>
+    }
+    @if (isInvoice) {
+      <li class="list-group-item">
+        <h6>Dostawa</h6>
+        @if (deliveryMethod) {
+          <div>
+            <div>
+              <strong>{{deliveryMethod.name}}</strong>
             </div>
-        </li>
-        <li *ngIf="isInvoice" class="list-group-item">
-            <h6>Dostawa</h6>
-            <div *ngIf="deliveryMethod">
-                <div>
-                    <strong>{{deliveryMethod.name}}</strong>
-                </div>
-                <div>
-                    Opłata za dostawę: <strong>{{transaction?.deliveryGross | number : '1.2-2'}}</strong> PLN
-                </div>
-                <div>
-                    Ilość paczek: {{transaction?.packagesNumber}}
-                </div>
+            <div>
+              Opłata za dostawę: <strong>{{transaction?.deliveryGross | number : '1.2-2'}}</strong> PLN
             </div>
-            <div *ngIf="!deliveryMethod">
-                Bez dostawy
+            <div>
+              Ilość paczek: {{transaction?.packagesNumber}}
             </div>
-        </li>
-    </ul>
+          </div>
+        }
+        @if (!deliveryMethod) {
+          <div>
+            Bez dostawy
+          </div>
+        }
+      </li>
+    }
+  </ul>
 </div>
-<div *ngIf="!saving" class="d-flex justify-content-center mt-3 mb-2">
+@if (!saving) {
+  <div class="d-flex justify-content-center mt-3 mb-2">
     <div>
-        <button class=" btn btn-primary" (click)="saveTransaction()">Zapisz</button>
+      <button class=" btn btn-primary" (click)="saveTransaction()">Zapisz</button>
     </div>
-</div>
-<div *ngIf="saving"  class="alert alert-primary" role="alert">
+  </div>
+}
+@if (saving) {
+  <div  class="alert alert-primary" role="alert">
     Zapisywanie. Czekaj...
-</div>
-<div *ngIf="errorMessage != ''"  class="alert alert-danger" role="alert">
+  </div>
+}
+@if (errorMessage != '') {
+  <div  class="alert alert-danger" role="alert">
     {{errorMessage}}
-</div>
+  </div>
+}
