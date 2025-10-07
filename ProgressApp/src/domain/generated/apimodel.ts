@@ -641,6 +641,28 @@ export interface IDocument {
     issueDate?: Date;
 }
 
+export enum DocumentEnum {
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+    _6 = 6,
+    _7 = 7,
+    _8 = 8,
+    _9 = 9,
+    _10 = 10,
+    _11 = 11,
+    _12 = 12,
+    _13 = 13,
+    _14 = 14,
+    _15 = 15,
+    _16 = 16,
+    _17 = 17,
+    _18 = 18,
+    _19 = 19,
+}
+
 export class DocumentItem implements IDocumentItem {
     productId?: number;
     quantity?: number;
@@ -787,6 +809,62 @@ export interface IDocumentResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: IDocument[] | undefined;
+}
+
+export class DocumentSummary implements IDocumentSummary {
+    type?: DocumentEnum;
+    typeName?: string | undefined;
+    count?: number;
+    totalNet?: number;
+    totalGross?: number;
+    totalCashGross?: number;
+
+    constructor(data?: IDocumentSummary) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.typeName = _data["typeName"];
+            this.count = _data["count"];
+            this.totalNet = _data["totalNet"];
+            this.totalGross = _data["totalGross"];
+            this.totalCashGross = _data["totalCashGross"];
+        }
+    }
+
+    static fromJS(data: any): DocumentSummary {
+        data = typeof data === 'object' ? data : {};
+        let result = new DocumentSummary();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["typeName"] = this.typeName;
+        data["count"] = this.count;
+        data["totalNet"] = this.totalNet;
+        data["totalGross"] = this.totalGross;
+        data["totalCashGross"] = this.totalCashGross;
+        return data;
+    }
+}
+
+export interface IDocumentSummary {
+    type?: DocumentEnum;
+    typeName?: string | undefined;
+    count?: number;
+    totalNet?: number;
+    totalGross?: number;
+    totalCashGross?: number;
 }
 
 export class Login implements ILogin {
@@ -2242,6 +2320,134 @@ export interface IPromoSetResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: IPromoSet;
+}
+
+export class SaleSummary implements ISaleSummary {
+    currentCash?: number;
+    saleNet?: number;
+    saleGross?: number;
+    saleCashGross?: number;
+    receivedCash?: number;
+    documentSummary?: DocumentSummary[] | undefined;
+
+    constructor(data?: ISaleSummary) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.documentSummary) {
+                this.documentSummary = [];
+                for (let i = 0; i < data.documentSummary.length; i++) {
+                    let item = data.documentSummary[i];
+                    this.documentSummary[i] = item && !(<any>item).toJSON ? new DocumentSummary(item) : <DocumentSummary>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.currentCash = _data["currentCash"];
+            this.saleNet = _data["saleNet"];
+            this.saleGross = _data["saleGross"];
+            this.saleCashGross = _data["saleCashGross"];
+            this.receivedCash = _data["receivedCash"];
+            if (Array.isArray(_data["documentSummary"])) {
+                this.documentSummary = [] as any;
+                for (let item of _data["documentSummary"])
+                    this.documentSummary!.push(DocumentSummary.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SaleSummary {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaleSummary();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["currentCash"] = this.currentCash;
+        data["saleNet"] = this.saleNet;
+        data["saleGross"] = this.saleGross;
+        data["saleCashGross"] = this.saleCashGross;
+        data["receivedCash"] = this.receivedCash;
+        if (Array.isArray(this.documentSummary)) {
+            data["documentSummary"] = [];
+            for (let item of this.documentSummary)
+                data["documentSummary"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ISaleSummary {
+    currentCash?: number;
+    saleNet?: number;
+    saleGross?: number;
+    saleCashGross?: number;
+    receivedCash?: number;
+    documentSummary?: IDocumentSummary[] | undefined;
+}
+
+export class SaleSummaryResponse implements ISaleSummaryResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: SaleSummary;
+
+    constructor(data?: ISaleSummaryResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.data = data.data && !(<any>data.data).toJSON ? new SaleSummary(data.data) : <SaleSummary>this.data;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.data = _data["data"] ? SaleSummary.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): SaleSummaryResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaleSummaryResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ISaleSummaryResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: ISaleSummary;
 }
 
 export class SaveDocumentResponse implements ISaveDocumentResponse {

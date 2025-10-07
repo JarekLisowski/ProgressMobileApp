@@ -55,6 +55,8 @@
     /// </summary>
     public string? Kasa { get; set; }
 
+    public int? KasaId { get; set; }
+
     /// <summary>
     /// Id przypisanej cechy
     /// </summary>

@@ -43,6 +43,41 @@ namespace Progress.Api
       };
     }
 
+    public async Task<SaleSummaryResponse> GetSaleSummary(int operatorId, DateTime dateFrom, DateTime dateTo, string currencyCode = "PLN")
+    {
+      var httpClient = GetHttpClient();
+      var request = new SaleSummaryRequest
+      {
+        CurrencyCode = currencyCode,
+        OperatorId = operatorId,
+        DateFrom = dateFrom,
+        DateTo = dateTo,
+      };
+      var result = await httpClient.PostAsJsonAsync("finance/getSaleSummary", request, default);
+      if (result != null)
+      {
+        if (result.IsSuccessStatusCode)
+        {
+          var navireoResult = await result.Content.ReadFromJsonAsync<SaleSummaryResponse>();
+          if (navireoResult != null)
+            return navireoResult;
+        }
+        var stream = new StreamReader(result.Content.ReadAsStream());
+        var data = stream.ReadToEnd();
+        Console.WriteLine(data);
+        return new SaleSummaryResponse
+        {
+          IsError = true,
+          Message = $"Wystąpił błąd połączenia z Navireo. Serwer zwrócił status: {result.StatusCode}. {data}"
+        };
+      }
+      return new SaleSummaryResponse
+      {
+        IsError = true,
+        Message = "Wystąpił nieznany błąd połączenia z Navireo."
+      };
+    }
+
     internal async Task<string> SaveCustomer(Customer customer, int userId)
     {
       var httpClient = GetHttpClient();

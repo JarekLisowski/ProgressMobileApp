@@ -12,6 +12,7 @@ import { LoggerService } from '../services/loggerService';
 
 @Component({
     selector: 'app-root',
+    standalone: true,
     imports: [RouterOutlet, HeaderComponent, HeaderComponent, NavbarComponent, BottomBarComponent, SidebarComponent, AppToastComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'

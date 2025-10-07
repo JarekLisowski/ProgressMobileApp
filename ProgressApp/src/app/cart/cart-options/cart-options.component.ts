@@ -60,6 +60,16 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
     return this._selectedDocument;
   }
 
+  get paymentMethodsAvailable(): boolean {
+    var _selectedDocument = this.selectedDocument;
+    return _selectedDocument == "Invoice" || _selectedDocument == "Order";
+  }
+
+  get deliveryMethodsAvailable(): boolean {
+    var _selectedDocument = this.selectedDocument;
+    return _selectedDocument == "Invoice" || _selectedDocument == "Order";
+  }
+
   set selectedPayment(value: string) {
     var nValue = Number(value);
     var paymentMethod = this.paymentMethods.find(x => x.id == nValue);

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RESTClientService } from "./RESTClient.service";
 import { Observable } from "rxjs";
-import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IPayment, IProductListRequest, LoginResponse, Payment, PaymentMethodsResponse, PrintRequestResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse, SaveDocumentResponse, SearchResponse, StringApiResult } from "../domain/generated/apimodel";
+import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IPayment, IProductListRequest, LoginResponse, Payment, PaymentMethodsResponse, PrintRequestResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse, SaleSummaryResponse, SaveDocumentResponse, SearchResponse, StringApiResult } from "../domain/generated/apimodel";
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +80,10 @@ export class ApiService {
 
   getCustomer(id: number): Observable<CustomerResponse> {
     return this.apiSerivce.get<CustomerResponse>(`api/customer/${id}`);
+  }
+
+  getSaleSummary(dateFrom: string, dateTo: string): Observable<SaleSummaryResponse> {
+    return this.apiSerivce.get<SaleSummaryResponse>(`api/document/sale-summary?from=${dateFrom}&to=${dateTo}`);
   }
 
   addOrUpdateCustomer(customer: Customer): Observable<StringApiResult> {

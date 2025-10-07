@@ -1,0 +1,84 @@
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="dateRange" class="form-label">Okres:</label>
+      <select class="form-select" id="dateRange" [ngModel]="selectedRange" (ngModelChange)="onDateRangeChange($event)">
+        @for (range of dateRanges; track range) {
+        <option [value]="range">{{ range }}</option>
+        }
+      </select>
+    </div>
+    @if (selectedRange === 'Niestandardowy') {
+    <div class="col-md-3 mt-2">
+      <label for="dateFrom" class="form-label">Od</label>
+      <input type="date" class="form-control" id="dateFrom" [(ngModel)]="dateFrom">
+    </div>
+    <div class="col-md-3 mt-2">
+      <label for="dateTo" class="form-label">Do</label>
+      <input type="date" class="form-control" id="dateTo" [(ngModel)]="dateTo">
+    </div>
+    <div class="col-md-3 mt-2 d-flex align-items-end">
+      <button class="btn btn-primary" (click)="loadSummary()">Odśwież</button>
+    </div>
+    }
+  </div>
+
+  @if (saleSummary) {
+  <div>
+    <fieldset disabled>
+      <div class="mb-3">
+        <label for="currentCash" class="form-label">Stan kasy</label>
+        <input type="text" class="form-control" id="currentCash" [value]="saleSummary.currentCash | number:'1.2-2'">
+      </div>
+      <div class="mb-3">
+        <label for="saleNet" class="form-label">Sprzedaż netto</label>
+        <input type="text" class="form-control" id="saleNet" [value]="saleSummary.saleNet | number:'1.2-2'">
+      </div>
+      <div class="mb-3">
+        <label for="saleGross" class="form-label">Sprzedaż brutto</label>
+        <input type="text" class="form-control" id="saleGross" [value]="saleSummary.saleGross | number:'1.2-2'">
+      </div>
+      <div class="mb-3">
+        <label for="saleCashGross" class="form-label">Sprzedaż gotówkowa brutto</label>
+        <input type="text" class="form-control" id="saleCashGross" [value]="saleSummary.saleCashGross | number:'1.2-2'">
+      </div>
+      <div class="mb-3">
+        <label for="receivedCash" class="form-label">Wpłaty gotówkowe</label>
+        <input type="text" class="form-control" id="receivedCash" [value]="saleSummary.receivedCash | number:'1.2-2'">
+      </div>
+    </fieldset>
+
+    <h4 class="mt-4">Podsumowanie dokumentów</h4>
+    <div class="table-responsive">
+
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Typ dokumentu</th>
+            <th>Ilość</th>
+            <th>Suma netto</th>
+            <th>Suma brutto</th>
+            <th>Suma gotówki</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (doc of saleSummary.documentSummary; track doc.type) {
+          <tr>
+            <td>{{ doc.typeName }}</td>
+            <td>{{ doc.count }}</td>
+            <td>{{ doc.totalNet | number:'1.2-2' }}</td>
+            <td>{{ doc.totalGross | number:'1.2-2' }}</td>
+            <td>{{ doc.totalCashGross | number:'1.2-2' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  } @else {
+  <div class="alert alert-info mt-4">
+    Brak danych do wyświetlenia. Wybierz zakres dat i kliknij Odśwież.
+  </div>
+  }
+</div>

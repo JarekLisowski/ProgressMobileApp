@@ -5,6 +5,7 @@ using Progress.BusinessLogic;
 using Progress.Domain.Api;
 using Progress.Domain.Api.Response;
 using Progress.Infrastructure.Database.Repository;
+using System.Globalization;
 
 namespace Progress.Api.Controllers
 {
@@ -119,6 +120,43 @@ namespace Progress.Api.Controllers
         IsError = true,
         Message = "No user"
       };
+    }
+
+    [HttpGet("sale-summary")]
+    public async Task<SaleSummaryResponse> GetSaleSummary(string from, string to)
+    {
+      try
+      {
+        var userId = GetUserId();
+        if (userId != null)
+        {
+          var dfp = CultureInfo.InvariantCulture.DateTimeFormat;
+          if (DateTime.TryParse(from, dfp, out var dateFrom)
+            && DateTime.TryParse(to, dfp, out var dateTo))
+          {
+            var result = await _navireoConnector.GetSaleSummary(userId.Value, dateFrom, dateTo, "PLN");
+            return result;
+          }
+          return new SaleSummaryResponse
+          {
+            IsError = true,
+            Message = "Incorrect Date format"
+          };
+        }
+        return new SaleSummaryResponse
+        {
+          IsError = true,
+          Message = "Incorrect user"
+        };
+      }
+      catch (Exception ex)
+      {
+        return new SaleSummaryResponse
+        {
+          IsError = true,
+          Message = ex.Message
+        };
+      }
     }
 
   }

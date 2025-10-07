@@ -11,7 +11,7 @@ import { AppConfigService } from "./app-config.service";
 export class RESTClientService {
         
     public baseUrl() {
-        return this.appConfigService.getCurrentConfig().backendApiUrl;
+        return this.appConfigService.getConfig().getBackendApiUrl();
     }
 
     constructor(private appConfigService: AppConfigService, private httpClient : HttpClient) {

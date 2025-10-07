@@ -38,6 +38,7 @@ namespace Progress.Infrastructure.Database.Repository
         user.DeviceId = apiUzytkownik.DeviceId;
         user.StoreName = apiUzytkData.pd.UzIdMagazynuNavigation?.MagNazwa;
         user.Kasa = apiUzytkData.pd.UzIdKasyNavigation?.KsNazwa;
+        user.KasaId = apiUzytkData.pd.UzIdKasy;
         user.MaxSpecialPayment = apiUzytkownik.MaxPlatnoscOdroczona.GetValueOrDefault();
         user.MinSpecialPayment = apiUzytkownik.MaxPlatnoscOdroczona.GetValueOrDefault();
 

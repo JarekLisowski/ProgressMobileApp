@@ -16,6 +16,7 @@ import { SaveDocSummaryComponent } from './save-doc-summary/save-doc-summary.com
 import { StatsComponent } from './stats/stats.component';
 import { OrdersComponent } from './orders/orders.component';
 import { OrderComponent } from './order/order.component';
+import { SummaryComponent } from './summary/summary.component';
 
 export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent, canActivate: [AuthGuard] },
@@ -28,6 +29,7 @@ export const routes: Routes = [
     { path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'stats', component: StatsComponent },
+    { path: 'summary', component: SummaryComponent, canActivate: [AuthGuard] },
     { path: 'customers', component: CustomersComponent },
     { path: 'customer/:id', component: CustomerComponent, canActivate: [AuthGuard] },
     { path: 'invoices', component: InvoicesComponent, canActivate: [AuthGuard] },

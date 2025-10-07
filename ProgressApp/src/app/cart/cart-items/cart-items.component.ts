@@ -7,10 +7,12 @@ import { CartItemComponent } from "../cart-item/cart-item.component";
 import { CartService } from '../../../services/cart.service';
 import { ProductRemoveWindowComponent } from "../../product-remove-window/product-remove-window.component";
 import { ConfirmModalWindowComponent } from "../../confirm-modal-window/confirm-modal-window.component";
+import { Transaction } from '../../../domain/transaction';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'cart-items',
-    imports: [PromoContainerComponent, CartItemComponent, ConfirmModalWindowComponent],
+    imports: [PromoContainerComponent, CartItemComponent, ConfirmModalWindowComponent, CommonModule],
     templateUrl: './cart-items.component.html',
     styleUrl: './cart-items.component.scss'
 })
@@ -21,6 +23,8 @@ export class CartItemsComponent implements OnInit {
   @ViewChild('productRemoveWindow') removeProductWindowRef!: ConfirmModalWindowComponent;
 
   _cartItems: CartItemWithId[] = [];
+
+  transaction: Transaction | undefined = undefined;
 
   set cartItems(cartItems: CartItemWithId[]) {
     this._cartItems = cartItems;
@@ -75,6 +79,9 @@ export class CartItemsComponent implements OnInit {
     });
     this.cartService.getPromoItems().subscribe(items => {
       this.cartPromoItems = items;
+    });
+    this.cartService.getCurrentTransaction().subscribe(tran => {
+      this.transaction = tran;
     });
 
   }

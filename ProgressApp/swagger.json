@@ -327,7 +327,7 @@
         }
       }
     },
-    "/api/document/document": {
+    "/api/document/send": {
       "post": {
         "tags": [
           "Dokumenty"
@@ -551,6 +551,51 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ApiResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/document/sale-summary": {
+      "get": {
+        "tags": [
+          "Dokumenty"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleSummaryResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleSummaryResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleSummaryResponse"
                 }
               }
             }
@@ -1593,6 +1638,31 @@
         },
         "additionalProperties": false
       },
+      "DocumentEnum": {
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
       "DocumentItem": {
         "type": "object",
         "properties": {
@@ -1673,6 +1743,35 @@
               "$ref": "#/components/schemas/Document"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DocumentSummary": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/DocumentEnum"
+          },
+          "typeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalNet": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalGross": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalCashGross": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -2386,6 +2485,68 @@
           },
           "data": {
             "$ref": "#/components/schemas/PromoSet"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SaleSummary": {
+        "type": "object",
+        "properties": {
+          "currentCash": {
+            "type": "number",
+            "format": "double"
+          },
+          "saleNet": {
+            "type": "number",
+            "format": "double"
+          },
+          "saleGross": {
+            "type": "number",
+            "format": "double"
+          },
+          "saleCashGross": {
+            "type": "number",
+            "format": "double"
+          },
+          "receivedCash": {
+            "type": "number",
+            "format": "double"
+          },
+          "documentSummary": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentSummary"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SaleSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/SaleSummary"
           }
         },
         "additionalProperties": false

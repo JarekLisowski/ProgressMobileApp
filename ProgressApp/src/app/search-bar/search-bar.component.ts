@@ -1,4 +1,3 @@
-import { NgStyle } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
@@ -6,7 +5,7 @@ import { DropDownItems } from '../../domain/dropDownItem';
 
 @Component({
     selector: 'search-bar',
-    imports: [FormsModule, NgStyle],
+    imports: [FormsModule],
     templateUrl: './search-bar.component.html',
     styleUrl: './search-bar.component.scss'
 })

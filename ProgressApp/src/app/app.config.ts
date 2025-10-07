@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
-import { AppConfigService } from '../services/app-config.service';
+//import { AppConfigService } from '../services/app-config.service';
 
 const dbConfig: DBConfig  = {
   name: 'ProgressDb',
@@ -40,18 +40,18 @@ const dbConfig: DBConfig  = {
   ]
 };
 
-export function initializeApp(http: HttpClient, appConfig: AppConfigService ) {
+// export function initializeApp(http: HttpClient, appConfig: AppConfigService ) {
 
-    return () => new Promise<any>(res => {
-        http
-          .get("/config.json")
-          .subscribe(data => {
-            console.log("Read /config.json.");
-            appConfig.config = data            
-            res('ok');
-          });
-    });
-  }
+//     return () => new Promise<any>(res => {
+//         http
+//           .get("/config.json")
+//           .subscribe(data => {
+//             console.log("Read /config.json.");
+//             appConfig.config = data            
+//             res('ok');
+//           });
+//     });
+//   }
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -61,9 +61,9 @@ export const appConfig: ApplicationConfig = {
     provideIndexedDb(dbConfig),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    provideAppInitializer(() => {
-        const initializerFn = (initializeApp)(inject(HttpClient), inject(AppConfigService));
-        return initializerFn();
-      }),
+    // provideAppInitializer(() => {
+    //     const initializerFn = (initializeApp)(inject(HttpClient), inject(AppConfigService));
+    //     return initializerFn();
+    //   }),
   ]
 };

@@ -8,9 +8,10 @@ namespace Progress.Domain.Extensions
     {
       switch (doc)
       {
-        case DocumentEnum.SalesInvoice: return "Invoice";
-        case DocumentEnum.CustomerOrder: return "Order";
-        case DocumentEnum.StoreOrder: return "Internal order";
+        case DocumentEnum.SalesInvoice: return "Faktura";
+        case DocumentEnum.CustomerOrder: return "Zamówienie";
+        case DocumentEnum.StoreOrder: return "Zamówienie wenętrzne";
+        case DocumentEnum.Receipt: return "Paragon";
       }
       return "";
     }

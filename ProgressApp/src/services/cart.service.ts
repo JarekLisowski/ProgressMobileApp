@@ -262,8 +262,8 @@ export class CartService {
         return this.getCurrentTransaction().pipe(
             switchMap(tran => {
                 if (cash != undefined) {
-                    tran.cashAmount = cash;
-                    tran.secondMethodAmount = tran.totalGross - cash;
+                    tran.cashAmount = this.round2(cash);
+                    tran.secondMethodAmount = this.round2(tran.totalGross - tran.cashAmount);
                 }
                 else if (other != undefined) {
                     tran.cashAmount = tran.totalGross - other;

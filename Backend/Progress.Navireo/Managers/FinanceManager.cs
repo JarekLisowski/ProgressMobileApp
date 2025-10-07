@@ -101,6 +101,8 @@ namespace Progress.Navireo.Managers
     {
       decimal cash = 0;
       var connection = dbContext.Database.GetDbConnection();
+      if (connection.State == ConnectionState.Closed)
+        connection.Open();
 
       using (var command = connection.CreateCommand())
       {

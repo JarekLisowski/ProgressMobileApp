@@ -7,7 +7,7 @@
   </select>
 </div>
 
-@if (selectedDocument == 'Invoice') {
+@if (paymentMethodsAvailable) {
   <div class="mt-3">
     <h6>Płatność</h6>
     <div class="input-group mb-3">
@@ -17,7 +17,7 @@
     </div>
     <div class="input-group mb-3">
       <select class="form-select" id="input-payment-other" [(ngModel)]="selectedPayment">
-        <option selected value="0">Tylko gotwka</option>
+        <option selected value="0">Tylko gotówka</option>
         @for (item of paymentMethods; track item) {
           <option value="{{item.id}}">{{item.name}}</option>
         }
@@ -35,7 +35,7 @@
   </div>
 }
 
-@if (selectedDocument == 'Invoice') {
+@if (deliveryMethodsAvailable) {
   <div class="mt-3">
     <h6>Dostawa</h6>
     <div class="input-group mb-3">

@@ -1,3 +1,16 @@
+<div class="mb-3 p-2 border rounded-2 shadow-sm fs-6">
+  <div>
+    Wartość koszyka: 
+  </div>
+  <div>
+    brutto: 
+    <strong>{{transaction?.itemsGross| number:'1.2-2'}} PLN</strong>
+  </div>
+  <div>
+    netto: 
+    <strong>{{transaction?.itemsNet | number:'1.2-2'}} PLN</strong>
+  </div>
+</div>
 <ul class="cart-list ps-0">
   @for (item of cartPromoItems; track item; let i = $index) {
     <div>
