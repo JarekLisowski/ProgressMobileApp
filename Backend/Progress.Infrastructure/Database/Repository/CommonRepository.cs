@@ -25,12 +25,12 @@ namespace Progress.Infrastructure.Database.Repository
 
     public IEnumerable<PaymentMethod> GetPaymentMethods()
     {
-      return paymentMethodRepository.SelectWhere(it => true).OrderBy(it => it.Name).ToArray();
+      return paymentMethodRepository.SelectWhere(it => it.Aktywna).OrderBy(it => it.Name).ToArray();
     }
 
     public IEnumerable<DeliveryMethod> GetDeliverMethods()
     {
-      return deliveryMethodRepository.SelectWhere(it => true).OrderBy(it => it.Name).ToArray();
+      return deliveryMethodRepository.SelectWhere(it => it.Aktywny).OrderBy(it => it.Name).ToArray();
     }
 
 

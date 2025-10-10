@@ -1,20 +1,17 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Document, IPayment } from '../../domain/generated/apimodel';
+import { Document } from '../../domain/generated/apimodel';
 import { ApiService } from '../../services/api.service';
 import { DocumentComponent } from "../document/document.component";
-import { PayModalComponent } from "../pay-modal/pay-modal.component";
 
 @Component({
     selector: 'order',
-    imports: [DocumentComponent, PayModalComponent],
+    imports: [DocumentComponent],
     templateUrl: './order.component.html',
     styleUrl: './order.component.scss'
 })
 export class OrderComponent implements OnInit {
 
-  @ViewChild('payWindow') payWindowRef!: PayModalComponent;
-  
   route = inject(ActivatedRoute);
   apiService = inject(ApiService);
 

@@ -1,42 +1,56 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CustomerSelectComponent } from "../../customer-select/customer-select.component";
 import { Customer } from '../../../domain/generated/apimodel';
 import { CartService } from '../../../services/cart.service';
+import { Transaction } from '../../../domain/transaction';
+import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'cart-customer',
-    imports: [CustomerSelectComponent],
-    templateUrl: './cart-customer.component.html',
-    styleUrl: './cart-customer.component.scss'
+  selector: 'cart-customer',
+  imports: [CustomerSelectComponent],
+  templateUrl: './cart-customer.component.html',
+  styleUrl: './cart-customer.component.scss'
 })
-export class CartCustomerComponent implements OnInit {
-  
+export class CartCustomerComponent {
+
   private readonly cartService = inject(CartService);
 
   customer: Customer | undefined;
 
-  ngOnInit(): void {
-    this.loadCustomer();
-  }
+  private transaction: Transaction | undefined;
+  private subscription: Subscription | undefined;
 
-  loadCustomer() {
-    this.cartService.getCurrentTransaction().subscribe(transaction => {
-      //console.log('Transaction:');
-      //console.log(transaction);
-      this.customer = transaction.customer;
+  ngOnInit(): void {
+    this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
+      console.log("Loading transaction data!");
+      this.transaction = trans;
+      this.customer = trans.customer;
     });
   }
 
-  customerSelected($event: Customer) {
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  // loadCustomer() {
+  //   this.cartService.getCurrentTransaction().subscribe(transaction => {
+  //     //console.log('Transaction:');
+  //     //console.log(transaction);
+  //     this.customer = transaction.customer;
+  //   });
+  // }
+
+  private zxc($event: Customer) {
     this.customer = $event;
-    this.cartService.getCurrentTransaction().subscribe(transaction => {
-      //console.log('Transaction:');
-      //console.log(transaction);
-      transaction.customer = this.customer;
-      this.cartService.updateTransaction(transaction).subscribe(x => {
+    if (this.transaction) 
+    {
+      this.transaction.customer = this.customer;
+      this.cartService.updateTransaction(this.transaction).subscribe(x => {
         console.log('Transaction updated:', x);
       });
-
-    });
+    }
   }
 }

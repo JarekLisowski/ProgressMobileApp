@@ -4,19 +4,21 @@ import { ApiService } from '../../../services/api.service';
 import { DeliveryMethod, PaymentMethod } from '../../../domain/generated/apimodel';
 
 import { FormsModule } from '@angular/forms';
+import { Transaction } from '../../../domain/transaction';
+import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'cart-options',
-    imports: [FormsModule],
-    templateUrl: './cart-options.component.html',
-    styleUrl: './cart-options.component.scss'
+  selector: 'cart-options',
+  imports: [FormsModule],
+  templateUrl: './cart-options.component.html',
+  styleUrl: './cart-options.component.scss'
 })
 export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly cartService = inject(CartService);
   private readonly apiService = inject(ApiService);
   private readonly elementRef = inject(ElementRef);
-  
+
   private intersectionObserver: IntersectionObserver | undefined;
 
   private _selectedDocument: string = "";
@@ -29,6 +31,10 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectedDeliveryMethod: DeliveryMethod | undefined;
   selectedPaymentMethod: PaymentMethod | undefined;
+
+  orderGross: number = 0;
+  orderNet: number = 0;
+
   _paymentDueDays: number = 14;
 
   get paymentDueDays(): number {
@@ -44,7 +50,7 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.cartService.setPaymentDueDays(value).subscribe(trans => {
         this._paymentDueDays = trans.paymentDueDays;
       })
-    } 
+    }
     else if (this.initializing) {
       this._paymentDueDays = value;
     }
@@ -113,7 +119,7 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
         this._selectedDelivery = nValue;
         this.selectedDeliveryMethod = deliveryMethod;
         this.secondPaymentAmount = trans.secondMethodAmount;
-        this.cashAmount = trans.cashAmount;        
+        this.cashAmount = trans.cashAmount;
       });
     }
     if (this.initializing) {
@@ -164,50 +170,62 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private initializing: boolean = true;
 
+  private transaction: Transaction | undefined;
+  private subscription: Subscription | undefined;
 
   ngOnInit(): void {
-    //this.loadTransactionData();
-  }
-
-  loadTransactionData() {
-    console.log("Loading transaction data");
     this.apiService.getPaymentMethods().subscribe(x => {
       if (!x.isError && x?.data != null)
         this.paymentMethods = x.data
 
+    });
+
+    this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
+      console.log("Loading transaction data");
+      this.transaction = trans;
+      this.selectedDocument = trans.document;
+      this.selectedPayment = trans.secondPaymentMethod?.toString() ?? "";
+      this.secondPaymentAmount = trans.secondMethodAmount;
+      this.cashAmount = trans.cashAmount;
+      this.selectedDelivery = trans.deliveryMethod?.toString() ?? "";
+      this.comment = trans.comment;
+      this.packages = trans.packagesNumber;
+      this.paymentDueDays = trans.paymentDueDays;
+      this.orderGross = trans.itemsGross ?? 0;
+      this.orderNet = trans.itemsNet ?? 0;
+
       this.apiService.getDeliveryMethods().subscribe(x => {
-        if (!x.isError && x?.data != null)
-          this.deliveryMethods = x.data
-
-        this.cartService.getCurrentTransaction().subscribe(trans => {
-          this.selectedDocument = trans.document;
-          this.selectedPayment = trans.secondPaymentMethod?.toString() ?? "";
-          this.secondPaymentAmount = trans.secondMethodAmount;
-          this.cashAmount = trans.cashAmount;
-          this.selectedDelivery = trans.deliveryMethod?.toString() ?? "";
-          this.comment = trans.comment;
-          this.packages = trans.packagesNumber;
-          this.paymentDueDays = trans.paymentDueDays;
-        });
-        this.initializing = false;
+        if (!x.isError && x?.data != null) {
+          this.deliveryMethods = x.data.filter(v => {
+            return (v.minValue == null || (this.orderGross >= v.minValue)) &&
+              (v.maxValue == null || (this.orderGross <= v.maxValue));
+          });
+        }
       });
+      this.initializing = false;
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.intersectionObserver = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        this.loadTransactionData();
-      }
-    });
-    this.intersectionObserver.observe(this.elementRef.nativeElement);
   }
 
   ngOnDestroy(): void {
-    if (this.intersectionObserver) {
-      this.intersectionObserver.disconnect();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
+
+  ngAfterViewInit(): void {
+  //   this.intersectionObserver = new IntersectionObserver(entries => {
+  //     if (entries[0].isIntersecting) {
+  //       this.loadTransactionData();
+  //     }
+  //   });
+  //   this.intersectionObserver.observe(this.elementRef.nativeElement);
+  }
+
+  // ngOnDestroy(): void {
+  //   if (this.intersectionObserver) {
+  //     this.intersectionObserver.disconnect();
+  //   }
+  // }
 
 
 

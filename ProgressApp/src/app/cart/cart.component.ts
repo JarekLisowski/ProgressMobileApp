@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CartItemsComponent } from "./cart-items/cart-items.component";
 import { CartCustomerComponent } from "./cart-customer/cart-customer.component";
 import { CartOptionsComponent } from "./cart-options/cart-options.component";
@@ -13,15 +13,16 @@ import { UserService } from '../../services/user.service';
 import { CartPromoItemWithId } from '../../domain/cartPromoItem';
 import { Router } from '@angular/router';
 import { error } from 'jquery';
+import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-cart',
-    imports: [CartItemsComponent, CartCustomerComponent, CartOptionsComponent, CartFinalizeComponent],
-    templateUrl: './cart.component.html',
-    styleUrl: './cart.component.scss'
+  selector: 'app-cart',
+  imports: [CartItemsComponent, CartCustomerComponent, CartOptionsComponent, CartFinalizeComponent],
+  templateUrl: './cart.component.html',
+  styleUrl: './cart.component.scss'
 })
 
-export class CartComponent {
+export class CartComponent implements OnInit, OnDestroy {
 
   cartService = inject(CartService);
   apiService = inject(ApiService);
@@ -31,14 +32,28 @@ export class CartComponent {
   saving: boolean = false;
   errorMessage: string = "";
 
+  private transaction: Transaction | undefined;
+  private subscription: Subscription | undefined;
+
+  ngOnInit(): void {
+    this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
+      console.log("Loading transaction data!");
+      this.transaction = trans;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
   sendDocument() {
     this.cartService.getCartItems().subscribe(items => {
       this.cartService.getPromoItems().subscribe(promoItems => {
-        this.cartService.getCurrentTransaction().subscribe(transaction => {
-          this.userService.getUser().subscribe(user => {
-            if (user != null)
-              this.sendDocument2(items, promoItems, transaction, user);
-          })
+        this.userService.getUser().subscribe(user => {
+          if (user && this.transaction)
+            this.sendDocument2(items, promoItems, this.transaction, user);
         })
       })
     });

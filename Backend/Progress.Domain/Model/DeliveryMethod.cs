@@ -9,5 +9,7 @@
     public decimal PriceNet { get; set; }
     public decimal PriceGross { get; set; }
     public decimal TaxRate { get; set; } = 23;
+    public decimal? MinValue { get; set; }
+    public decimal? MaxValue { get; set; }
   }
 }

@@ -1,13 +1,13 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Document } from '../../domain/generated/apimodel';
-import { CommonModule } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { PayModalComponent } from '../pay-modal/pay-modal.component';
 import { ApiService } from '../../services/api.service';
 import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'document',
-    imports: [CommonModule, RouterModule],
+    imports: [DecimalPipe, DatePipe, RouterModule],
     templateUrl: './document.component.html',
     styleUrl: './document.component.scss'
 })

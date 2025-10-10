@@ -3,11 +3,11 @@ import { Product } from '../../../domain/generated/apimodel';
 import { FormsModule } from '@angular/forms';
 import { ProductPromoItem } from '../../../domain/ProductPromoItem';
 import { QuantityComponent } from "../../quantity/quantity.component";
-import { CommonModule } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-special-offer-product-item',
-    imports: [FormsModule, QuantityComponent, CommonModule],
+    imports: [FormsModule, QuantityComponent, DecimalPipe],
     templateUrl: './special-offer-product-item.component.html',
     styleUrl: './special-offer-product-item.component.scss'
 })

@@ -1508,6 +1508,16 @@
           "taxRate": {
             "type": "number",
             "format": "double"
+          },
+          "minValue": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "maxValue": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false

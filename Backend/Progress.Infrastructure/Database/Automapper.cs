@@ -119,7 +119,9 @@ namespace Progress.Infrastructure.Database
 
 			CreateMap<IfxApiSposobDostawy, DeliveryMethod>()
 				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Nazwa))
-				.ForMember(dst => dst.Active, opt => opt.MapFrom(src => src.Aktywny));
+				.ForMember(dst => dst.Active, opt => opt.MapFrom(src => src.Aktywny))
+				.ForMember(dst => dst.MinValue, opt => opt.MapFrom(src => src.MinWartosc))
+				.ForMember(dst => dst.MaxValue, opt => opt.MapFrom(src => src.MaxWartosc));
 
 			CreateMap<IfVwDokument, Document>()
 				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.DokId))

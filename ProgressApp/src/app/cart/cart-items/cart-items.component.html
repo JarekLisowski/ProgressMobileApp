@@ -4,15 +4,19 @@
   </div>
   <div>
     brutto: 
-    <strong>{{transaction?.itemsGross| number:'1.2-2'}} PLN</strong>
+    <strong>{{itemsValueGross| number:'1.2-2'}} PLN</strong>
   </div>
   <div>
     netto: 
-    <strong>{{transaction?.itemsNet | number:'1.2-2'}} PLN</strong>
+    <strong>{{itemsValueNet | number:'1.2-2'}} PLN</strong>
   </div>
+  <!-- <div>
+    <span>{{0 }}</span> PLN
+    <span>{{0 }}</span> PLN
+  </div> -->
 </div>
 <ul class="cart-list ps-0">
-  @for (item of cartPromoItems; track item; let i = $index) {
+  @for (item of cartPromoItems; track item.id; let i = $index) {
     <div>
       <promo-cart-container [promoItem]="item" (itemRemove)="removePromoItem($event)">
       </promo-cart-container>
@@ -20,7 +24,7 @@
   }
 </ul>
 <ul class="cart-list ps-0">
-  @for (item of cartItemsNoPromos; track item) {
+  @for (item of cartItemsNoPromos; track item.id) {
     <div>
       <cart-item [cartItem]="item" (itemRemove)="removeItem($event)"></cart-item>
     </div>

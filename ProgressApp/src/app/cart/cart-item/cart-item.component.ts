@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CartItem, CartItemWithId } from '../../../domain/cartItem';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { CartService } from '../../../services/cart.service';
@@ -9,7 +9,7 @@ import { QuantityComponent } from "../../quantity/quantity.component";
 
 @Component({
     selector: 'cart-item',
-    imports: [FormsModule, RouterModule, QuantityComponent, CommonModule],
+    imports: [FormsModule, RouterModule, QuantityComponent, DecimalPipe],
     templateUrl: './cart-item.component.html',
     styleUrl: './cart-item.component.scss'
 })
@@ -44,22 +44,8 @@ export class CartItemComponent {
     }
   }
 
-  // amountIncrement() {
-  //   this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity + 1).subscribe(x => {
-  //     this.quantity = x.quantity;
-  //   });
-  // }
-
-  // amountDecrement() {
-  //   if (this.quantity > 1) {
-  //     this.cartService.updateCartItemQuntity(this.cartItem?.id ?? 0, this.quantity - 1).subscribe(x => {
-  //       this.quantity = x.quantity;
-  //     });
-  //   }
-  // }
-
   quantityChanged(quantity: number) {
-    if (quantity > 1 && this.cartItem?.id != null) {
+    if (quantity > 0 && this.cartItem?.id != null && this.cartItem.quantity != quantity) {
       this.cartService.updateCartItemQuntity(this.cartItem.id, quantity).subscribe(x => {
         var cartItem = x;
         x.imageUrl = this._cartItem!.imageUrl;

@@ -2,11 +2,11 @@ import { Component, inject, Inject, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { SaleSummary } from '../../domain/generated/apimodel';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-summary',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, DecimalPipe],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss',
   standalone: true

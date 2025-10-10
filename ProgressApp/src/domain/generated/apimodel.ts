@@ -390,6 +390,8 @@ export class DeliveryMethod implements IDeliveryMethod {
     priceNet?: number;
     priceGross?: number;
     taxRate?: number;
+    minValue?: number | undefined;
+    maxValue?: number | undefined;
 
     constructor(data?: IDeliveryMethod) {
         if (data) {
@@ -409,6 +411,8 @@ export class DeliveryMethod implements IDeliveryMethod {
             this.priceNet = _data["priceNet"];
             this.priceGross = _data["priceGross"];
             this.taxRate = _data["taxRate"];
+            this.minValue = _data["minValue"];
+            this.maxValue = _data["maxValue"];
         }
     }
 
@@ -428,6 +432,8 @@ export class DeliveryMethod implements IDeliveryMethod {
         data["priceNet"] = this.priceNet;
         data["priceGross"] = this.priceGross;
         data["taxRate"] = this.taxRate;
+        data["minValue"] = this.minValue;
+        data["maxValue"] = this.maxValue;
         return data;
     }
 }
@@ -440,6 +446,8 @@ export interface IDeliveryMethod {
     priceNet?: number;
     priceGross?: number;
     taxRate?: number;
+    minValue?: number | undefined;
+    maxValue?: number | undefined;
 }
 
 export class DeliveryMethodsResponse implements IDeliveryMethodsResponse {

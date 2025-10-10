@@ -2,18 +2,18 @@
   <!-- View Mode -->
   <div *ngIf="!editMode && customer">
     <div class="d-flex justify-content-between mb-3">
-      <h2>{{ customer.adrName }}</h2>
+      <h2>{{ customer?.adrName }}</h2>
       <div class="">
         <button class="btn btn-primary btn-sm " (click)="edit()">
           <i class="bi bi-pencil-square"></i>
         </button>
       </div>
     </div>
-    <div>{{ customer.adrStreet }} {{ customer.adrStreetNo }}</div>
-    <div>{{ customer.adrCity }} {{ customer.adrZipCode }}</div>
+    <div>{{ customer?.adrStreet }} {{ customer?.adrStreetNo }}</div>
+    <div>{{ customer?.adrCity }} {{ customer?.adrZipCode }}</div>
     <div>
       <div>
-        NIP: {{ customer.adrNip }}
+        NIP: {{ customer?.adrNip }}
       </div>
     </div>
   </div>

@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Document } from '../../domain/generated/apimodel';
-import { CommonModule } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'documents',
-    imports: [RouterModule, CommonModule],
+    imports: [RouterModule, DecimalPipe, DatePipe],
     templateUrl: './documents.component.html',
     styleUrl: './documents.component.scss'
 })

@@ -34,19 +34,19 @@
     </cart-items>
   </div>
 
-  <div class="tab-pane fade" id="customer-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="0">
+  <div class="tab-pane fade" id="customer-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="1">
     <h3>Kontrahent</h3>
     <cart-customer>
     </cart-customer>
   </div>
 
-  <div class="tab-pane fade " id="options-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="0">
+  <div class="tab-pane fade " id="options-tab-pane" role="tabpanel" aria-labelledby="options-tab" tabindex="2">
     <h3>Parametry</h3>
     <cart-options>
     </cart-options>
   </div>
 
-  <div class="tab-pane fade " id="summary-tab-pane" role="tabpanel" aria-labelledby="customer-tab" tabindex="0">
+  <div class="tab-pane fade " id="summary-tab-pane" role="tabpanel" aria-labelledby="summary-tab" tabindex="3">
     <h3>Finalizacja</h3>
     <cart-finalize (SaveTransaction)="saveTransaction()" [saving]="saving" [errorMessage]="errorMessage">
     </cart-finalize>
