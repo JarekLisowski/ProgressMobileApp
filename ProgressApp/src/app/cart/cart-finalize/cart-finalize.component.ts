@@ -44,6 +44,16 @@ export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.transaction?.document == "Invoice";
   }
 
+  get paymentMethodsAvailable(): boolean {
+    var _selectedDocument = this.transaction?.document;
+    return _selectedDocument == "Invoice" || _selectedDocument == "Order";
+  }
+
+  get deliveryMethodsAvailable(): boolean {
+    var _selectedDocument = this.transaction?.document;
+    return _selectedDocument == "Invoice" || _selectedDocument == "Order";
+  }
+
   get cartTotalGross() {
     var sum = 0;
     this.cartItems.forEach(item => {
@@ -56,20 +66,31 @@ export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription: Subscription | undefined;
 
   ngOnInit(): void {
-    this.apiService.getPaymentMethods().subscribe(payment => {
-      if (!payment.isError && payment.data != null) {
-        this._paymentMethods = payment.data;
-      }
-    });
+
     this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
       this.transaction = trans;
+
+      this.apiService.getPaymentMethods().subscribe(payment => {
+        if (!payment.isError && payment.data != null) {
+          this._paymentMethods = payment.data;
+        }
+        this.secondPaymentMethod = this._paymentMethods.find(x => x.id == this.transaction?.secondPaymentMethod);
+      });
       console.log("Loading transaction data!");
       this.cartService.getCartItems().subscribe(x => {
         this.cartItems = x;
       });
-      this.deliveryMethod = this._deliveryMethods.find(x => x.id == this.transaction?.deliveryMethod);
-      this.secondPaymentMethod = this._paymentMethods.find(x => x.id == this.transaction?.secondPaymentMethod);
-      this.loadDeliveryMethods();
+
+      this.apiService.getDeliveryMethods().subscribe(delivery => {
+        if (!delivery.isError && delivery.data != null) {
+          this._deliveryMethods = delivery.data.filter(v => {
+            return (v.minValue == null || (this.transaction?.itemsGross && this.transaction?.itemsGross >= v.minValue)) &&
+              (v.maxValue == null || (this.transaction?.itemsGross && this.transaction?.itemsGross <= v.maxValue));
+          });
+          this.deliveryMethod = this._deliveryMethods.find(x => x.id == this.transaction?.deliveryMethod);
+        }
+      });
+
     });
   }
 

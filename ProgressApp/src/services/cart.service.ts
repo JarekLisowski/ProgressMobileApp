@@ -75,7 +75,7 @@ export class CartService {
                     };
                     return this.dbService.add('cart', cartItem).pipe(
                         switchMap(addedItem => {
-                            console.log("Add item to cart: " + addedItem.name + " " + addedItem.quantity);                            
+                            console.log("Add item to cart: " + addedItem.name + " " + addedItem.quantity);
                             return this.getPromoItems().pipe(
                                 switchMap(promoItems => {
                                     this._promoItems$.next(promoItems);
@@ -156,11 +156,7 @@ export class CartService {
         );
     }
 
-    clearCart(): Observable<any> {
-        return this.dbService.clear('cart').pipe(
-            switchMap(x => this.calculateTotalTransactionValues() )
-        );;
-    }
+
 
     addOrUpdatePromoSetOnCart(promoSet: SpecialOfferEdit): Observable<CartPromoItemWithId> {
         if (promoSet.id != undefined && promoSet.id > 0) {
@@ -277,7 +273,7 @@ export class CartService {
 
     updateTransaction(transaction: Transaction): Observable<Transaction> {
         return this.dbService.update('transaction', transaction).pipe(
-            tap(x => this._transaction$.next(x) )
+            tap(x => this._transaction$.next(x))
         );
     }
 
@@ -285,13 +281,21 @@ export class CartService {
         return this.dbService.clear('transaction').pipe(
             switchMap(x => {
                 return this.getFirstOrCreateTransaction().pipe(
-                    tap(newTran => {
+                    switchMap(newTran => {
                         this._transaction$.next(newTran);
-                        this._cartItems$.next([]);
-                        this._promoItems$.next([]);
-                        return this.calculateTotalTransactionValues();
+                        return this.clearCart();
                     })
                 )
+            })
+        );
+    }
+
+    clearCart(): Observable<any> {
+        return this.dbService.clear('cart').pipe(
+            switchMap(x => {
+                this._cartItems$.next([]);
+                this._promoItems$.next([]);
+                return this.calculateTotalTransactionValues()
             })
         );
     }

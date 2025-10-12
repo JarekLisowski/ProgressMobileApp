@@ -43,7 +43,7 @@ export class CartCustomerComponent {
   //   });
   // }
 
-  private zxc($event: Customer) {
+  customerSelected($event: Customer) {
     this.customer = $event;
     if (this.transaction) 
     {

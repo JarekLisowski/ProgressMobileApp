@@ -93,11 +93,7 @@ export class CartComponent implements OnInit, OnDestroy {
         //console.log(x);
         if (x.isError == false) {
           this.saving = true;
-          // this.cartService.clearTransaction(transaction).subscribe(x => {
-          //   this.cartService.clearCart().subscribe(x=> {
-
-          //   })
-          // });
+          this.cartService.clearTransaction(transaction).subscribe(x => {});
           this.router.navigate(['/saveDocumentSummary', x.documentId], { queryParams: { number: x.documentNumber, payment: x.payDocumentId, docType: x.documentType } });
         }
         else {

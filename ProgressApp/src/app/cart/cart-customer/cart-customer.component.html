@@ -1,6 +1,6 @@
 <ul class="list-unstyled">
   <li>
-    
+    <customer-select (customerSelectedEvent)="customerSelected($event)" [customer]="customer"></customer-select>
   </li>
   <li>
     {{customer?.adrNip}}

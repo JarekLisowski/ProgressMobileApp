@@ -37,6 +37,10 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   _paymentDueDays: number = 14;
 
+  get cashReadOnly(): boolean {
+    return Number(this.selectedPaymentMethod?.id ?? 0) == 0;
+  }
+
   get paymentDueDays(): number {
     return this._paymentDueDays;
   }
@@ -46,6 +50,10 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
       value = 14;
     else if (value < 1)
       value = 1;
+    if (this.transaction?.paymentDueDays == value) {
+      this._paymentDueDays = value;
+      return;
+    }
     if (!this.initializing) {
       this.cartService.setPaymentDueDays(value).subscribe(trans => {
         this._paymentDueDays = trans.paymentDueDays;
@@ -57,6 +65,10 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   set selectedDocument(value: string) {
+    if (this.transaction?.document == value) {
+      this._selectedDocument = value;
+      return;
+    }
     this.cartService.setDocument(value).subscribe(x => {
       this._selectedDocument = x.document;
     });
@@ -79,6 +91,11 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   set selectedPayment(value: string) {
     var nValue = Number(value);
     var paymentMethod = this.paymentMethods.find(x => x.id == nValue);
+    if (this.transaction?.secondPaymentMethod == nValue) {
+      this._selectedPayment = nValue;
+      this.selectedPaymentMethod = paymentMethod;
+      return;
+    }
     if (!this.initializing && this._selectedPayment != nValue) {
       this.cartService.setPayment(nValue).subscribe(x => {
         this._selectedPayment = x.secondPaymentMethod;
@@ -99,6 +116,11 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   set secondPaymentAmount(value: number) {
+    if (this.transaction?.secondMethodAmount == value) {
+      this._secondPaymentAmount = value;
+      this._cashAmount = this.transaction?.cashAmount ?? 0;
+      return;
+    }
     this.cartService.setPaymentValues(undefined, value).subscribe(x => {
       this._secondPaymentAmount = x.secondMethodAmount;
       this._cashAmount = x.cashAmount;
@@ -110,22 +132,22 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   set selectedDelivery(value: string) {
-    console.log("selectedDelivery: " + value);
     var nValue = Number(value);
     var deliveryMethod = this.deliveryMethods.find(x => x.id == nValue);
-    if (!this.initializing && deliveryMethod?.id != this._selectedDelivery) {
-      console.log("selectedDelivery in transaction: " + value);
-      this.cartService.setDelivery(deliveryMethod?.id ?? nValue, deliveryMethod?.twId, deliveryMethod?.priceGross, deliveryMethod?.priceNet, deliveryMethod?.taxRate).subscribe(trans => {
-        this._selectedDelivery = nValue;
+    var deliveryMethodId = deliveryMethod?.id ?? 0;
+    if (this.transaction?.deliveryMethod == deliveryMethodId) {
+      this._selectedDelivery = deliveryMethodId;
+      this.selectedDeliveryMethod = deliveryMethod;
+      return;
+    }
+    console.log("selectedDelivery: " + deliveryMethod);
+      this.cartService.setDelivery(deliveryMethodId ?? nValue, deliveryMethod?.twId, deliveryMethod?.priceGross, deliveryMethod?.priceNet, deliveryMethod?.taxRate).subscribe(trans => {
+        this._selectedDelivery = deliveryMethodId;
         this.selectedDeliveryMethod = deliveryMethod;
         this.secondPaymentAmount = trans.secondMethodAmount;
         this.cashAmount = trans.cashAmount;
       });
-    }
-    if (this.initializing) {
-      this._selectedDelivery = nValue;
-      this.selectedDeliveryMethod = deliveryMethod;
-    }
+
   }
 
   get selectedDelivery(): string {
@@ -133,6 +155,10 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   set packages(value: number) {
+    if (this.transaction?.packagesNumber == value) {
+      this._packages = value;
+      return;
+    }
     this.cartService.setPackages(value).subscribe(x => {
       this._packages = x.packagesNumber;
     });
@@ -143,6 +169,11 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   set cashAmount(value: number) {
+    if (this.transaction?.cashAmount == value) {
+      this._cashAmount = value;
+      this._secondPaymentAmount = this.transaction?.secondMethodAmount ?? 0;
+      return;
+    }
     this.cartService.setPaymentValues(value, this.secondPaymentAmount).subscribe(x => {
       this._cashAmount = x.cashAmount;
       this._secondPaymentAmount = x.secondMethodAmount;
@@ -154,9 +185,13 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   set comment(value: string) {
+    if (this.transaction?.comment == value) {
+      this._comment = value;
+      return;
+    }
     this.cartService.setComment(value).subscribe(x => {
       this._comment = x.comment;
-    });;
+    });
   }
 
   get comment(): string {
@@ -174,35 +209,41 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription: Subscription | undefined;
 
   ngOnInit(): void {
-    this.apiService.getPaymentMethods().subscribe(x => {
-      if (!x.isError && x?.data != null)
-        this.paymentMethods = x.data
-
-    });
 
     this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
-      console.log("Loading transaction data");
-      this.transaction = trans;
-      this.selectedDocument = trans.document;
-      this.selectedPayment = trans.secondPaymentMethod?.toString() ?? "";
-      this.secondPaymentAmount = trans.secondMethodAmount;
-      this.cashAmount = trans.cashAmount;
-      this.selectedDelivery = trans.deliveryMethod?.toString() ?? "";
-      this.comment = trans.comment;
-      this.packages = trans.packagesNumber;
-      this.paymentDueDays = trans.paymentDueDays;
-      this.orderGross = trans.itemsGross ?? 0;
-      this.orderNet = trans.itemsNet ?? 0;
+      if ((<any>trans).id === undefined)
+        return;
 
-      this.apiService.getDeliveryMethods().subscribe(x => {
+      this.apiService.getPaymentMethods().subscribe(x => {
         if (!x.isError && x?.data != null) {
-          this.deliveryMethods = x.data.filter(v => {
-            return (v.minValue == null || (this.orderGross >= v.minValue)) &&
-              (v.maxValue == null || (this.orderGross <= v.maxValue));
-          });
+          this.paymentMethods = x.data;
         }
+        
+        console.log("Loading transaction data");
+        this.transaction = trans;
+        this.selectedDocument = trans.document;
+        this.selectedPayment = trans.secondPaymentMethod?.toString() ?? "";
+        this.secondPaymentAmount = trans.secondMethodAmount;
+        this.cashAmount = trans.cashAmount;
+        this.comment = trans.comment;
+        this.packages = trans.packagesNumber;
+        this.paymentDueDays = trans.paymentDueDays;
+        this.orderGross = trans.itemsGross ?? 0;
+        this.orderNet = trans.itemsNet ?? 0;
+
+        this.apiService.getDeliveryMethods().subscribe(x => {
+          if (!x.isError && x?.data != null) {
+            this.deliveryMethods = x.data.filter(v => {
+              return (v.minValue == null || (this.orderGross >= v.minValue)) &&
+                (v.maxValue == null || (this.orderGross <= v.maxValue));
+            });
+            this.selectedDelivery = trans.deliveryMethod?.toString() ?? "";
+          }
+        });
+        
+        // });
+        this.initializing = false;
       });
-      this.initializing = false;
     });
   }
 
@@ -213,12 +254,12 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-  //   this.intersectionObserver = new IntersectionObserver(entries => {
-  //     if (entries[0].isIntersecting) {
-  //       this.loadTransactionData();
-  //     }
-  //   });
-  //   this.intersectionObserver.observe(this.elementRef.nativeElement);
+    //   this.intersectionObserver = new IntersectionObserver(entries => {
+    //     if (entries[0].isIntersecting) {
+    //       this.loadTransactionData();
+    //     }
+    //   });
+    //   this.intersectionObserver.observe(this.elementRef.nativeElement);
   }
 
   // ngOnDestroy(): void {

@@ -12,7 +12,7 @@
     <h6>Płatność</h6>
     <div class="input-group mb-3">
       <span class="input-group-text">Gotówka</span>
-      <input type="number" class="form-control" id="payment-cash" [(ngModel)]="cashAmount" [readOnly]="(selectedPaymentMethod?.id ?? 0) == 0" min="0">
+      <input type="number" class="form-control" id="payment-cash" [(ngModel)]="cashAmount" [readOnly]="cashReadOnly" min="0">
       <span class="input-group-text">PLN</span>
     </div>
     <div class="input-group mb-3">
