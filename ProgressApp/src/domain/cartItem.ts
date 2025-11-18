@@ -11,6 +11,7 @@ export class CartItem {
     imageUrl: string = "";
     sumNetto: number = 0;
     sumGross: number = 0;
+    stock: number | undefined;
 }
 
 export class CartItemWithId extends CartItem {

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  url: 'http://192.168.33.5',
+  url: 'http://192.168.33.2',
   getBackendApiUrl() {
     return `${this.url}:5085/`;
   },

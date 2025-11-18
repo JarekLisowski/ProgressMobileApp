@@ -112,7 +112,8 @@ export class SpecialOfferEditComponent implements OnInit {
                       promoItemId: cartItem.promoItemId,
                       imageUrl: cartItem.imageUrl,
                       sumNetto: cartItem.sumNetto,
-                      sumGross: cartItem.sumGross
+                      sumGross: cartItem.sumGross,
+                      stock: undefined
                     };
                     promoItem.cartItems.push(cartItemEdit);
                   }

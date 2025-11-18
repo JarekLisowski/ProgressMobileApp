@@ -1426,6 +1426,7 @@ export class Product implements IProduct {
     name?: string | undefined;
     description?: string | undefined;
     stock?: number;
+    stockSecondary?: number;
     price?: Price;
     prices?: { [key: string]: Price; } | undefined;
     categoryName?: string | undefined;
@@ -1461,6 +1462,7 @@ export class Product implements IProduct {
             this.name = _data["name"];
             this.description = _data["description"];
             this.stock = _data["stock"];
+            this.stockSecondary = _data["stockSecondary"];
             this.price = _data["price"] ? Price.fromJS(_data["price"]) : <any>undefined;
             if (_data["prices"]) {
                 this.prices = {} as any;
@@ -1492,6 +1494,7 @@ export class Product implements IProduct {
         data["name"] = this.name;
         data["description"] = this.description;
         data["stock"] = this.stock;
+        data["stockSecondary"] = this.stockSecondary;
         data["price"] = this.price ? this.price.toJSON() : <any>undefined;
         if (this.prices) {
             data["prices"] = {};
@@ -1516,6 +1519,7 @@ export interface IProduct {
     name?: string | undefined;
     description?: string | undefined;
     stock?: number;
+    stockSecondary?: number;
     price?: IPrice;
     prices?: { [key: string]: IPrice; } | undefined;
     categoryName?: string | undefined;
@@ -1923,6 +1927,182 @@ export interface IProductResponse {
     totalPages?: number | undefined;
     itemsPerPage?: number | undefined;
     data?: IProduct;
+}
+
+export class ProductStock implements IProductStock {
+    stTowId?: number;
+    stMagId?: number;
+    stStan?: number;
+    stStanMin?: number;
+    stStanRez?: number;
+    stStanMax?: number;
+    stTow?: Product;
+
+    constructor(data?: IProductStock) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            this.stTow = data.stTow && !(<any>data.stTow).toJSON ? new Product(data.stTow) : <Product>this.stTow;
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.stTowId = _data["stTowId"];
+            this.stMagId = _data["stMagId"];
+            this.stStan = _data["stStan"];
+            this.stStanMin = _data["stStanMin"];
+            this.stStanRez = _data["stStanRez"];
+            this.stStanMax = _data["stStanMax"];
+            this.stTow = _data["stTow"] ? Product.fromJS(_data["stTow"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ProductStock {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductStock();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["stTowId"] = this.stTowId;
+        data["stMagId"] = this.stMagId;
+        data["stStan"] = this.stStan;
+        data["stStanMin"] = this.stStanMin;
+        data["stStanRez"] = this.stStanRez;
+        data["stStanMax"] = this.stStanMax;
+        data["stTow"] = this.stTow ? this.stTow.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IProductStock {
+    stTowId?: number;
+    stMagId?: number;
+    stStan?: number;
+    stStanMin?: number;
+    stStanRez?: number;
+    stStanMax?: number;
+    stTow?: IProduct;
+}
+
+export class ProductStocksRequest implements IProductStocksRequest {
+    productIds?: number[] | undefined;
+
+    constructor(data?: IProductStocksRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["productIds"])) {
+                this.productIds = [] as any;
+                for (let item of _data["productIds"])
+                    this.productIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): ProductStocksRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductStocksRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.productIds)) {
+            data["productIds"] = [];
+            for (let item of this.productIds)
+                data["productIds"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface IProductStocksRequest {
+    productIds?: number[] | undefined;
+}
+
+export class ProductsStockResponse implements IProductsStockResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: ProductStock[] | undefined;
+
+    constructor(data?: IProductsStockResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+            if (data.data) {
+                this.data = [];
+                for (let i = 0; i < data.data.length; i++) {
+                    let item = data.data[i];
+                    this.data[i] = item && !(<any>item).toJSON ? new ProductStock(item) : <ProductStock>item;
+                }
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(ProductStock.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ProductsStockResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductsStockResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IProductsStockResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    data?: IProductStock[] | undefined;
 }
 
 export class PromoItem implements IPromoItem {

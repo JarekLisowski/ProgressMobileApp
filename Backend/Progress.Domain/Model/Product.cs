@@ -16,4 +16,6 @@ public class Product
   public string BarCode { get; set; } = string.Empty;
   public int ImagesCount { get; set; } = 0;
   public string Unit { get; set; } = "szt.";
+  public decimal StockSecondary { get; set; }
+  public ProductStock[] Stocks { get; set; } = [];
 }

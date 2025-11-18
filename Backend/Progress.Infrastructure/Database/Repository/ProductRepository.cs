@@ -12,23 +12,30 @@ namespace Progress.Infrastructure.Database.Repository
     {
     }
 
-    public IEnumerable<Product> GetProductsByCategory(int id)
+    public IEnumerable<Product> GetProductsByCategory(int id, int? stockId = null, int? stockId2 = null)
     {
       var dataDb = DbContext.TwCechaTws.AsNoTracking()
         .Include(it => it.ChtIdTowarNavigation)
           .ThenInclude(it => it.TwCena)
+        .Include(it => it.ChtIdTowarNavigation)
+          .ThenInclude(it => it.TwStans.Where(it2 => (stockId == null || stockId == it2.StMagId || stockId2 == it2.StMagId)))
         .Where(it => it.ChtIdCecha == id && it.ChtIdTowarNavigation.TwZablokowany == false)
         .Select(it => it.ChtIdTowarNavigation)
         .ToArray();
       var productList = Mapper.Map<Product[]>(dataDb);
+      foreach(var product in productList)
+      {
+        product.Stock = product.Stocks.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;
+        product.StockSecondary = product.Stocks.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
+      }
       return productList;
     }
 
-    public Product? GetProduct(int id, int priceLevel = 1, int? stockId = null)
+    public Product? GetProduct(int id, int priceLevel = 1, int? stockId = null, int? stockId2 = null)
     {
       var productDb = DbContext.TwTowars.AsNoTracking()
         .Include(it => it.TwCena)
-        .Include(it => it.TwStans.Where(it2 => stockId == null || stockId == it2.StMagId))
+        .Include(it => it.TwStans.Where(it2 => (stockId == null || stockId == it2.StMagId || stockId2 == it2.StMagId) ))
         .Include(it => it.TwCechaTws).ThenInclude(it => it.ChtIdCechaNavigation)
         .FirstOrDefault(it => it.TwId == id && it.TwZablokowany == false);
       if (productDb != null)
@@ -40,7 +47,8 @@ namespace Progress.Infrastructure.Database.Repository
           product.Price = product.Prices[priceLevel];
           product.CategoryName = productDb.TwCechaTws.FirstOrDefault()?.ChtIdCechaNavigation.CtwNazwa ?? "";
           product.CategoryId = productDb.TwCechaTws.FirstOrDefault()?.ChtIdCechaNavigation.CtwId ?? 0;
-          product.Stock = productDb.TwStans.FirstOrDefault()?.StStan ?? 0;
+          product.Stock = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;
+          product.StockSecondary = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
         }
         return product;
       }
@@ -74,6 +82,21 @@ namespace Progress.Infrastructure.Database.Repository
       {
       }
       return [];
+    }
+
+    public IEnumerable<ProductStock> GetStocks(int stockId, int[] productIds)
+    {
+
+      try
+      {
+        var data = DbContext.TwStans.Where(it => it.StMagId == stockId && productIds.Contains(it.StTowId));
+        var result = Mapper.Map<ProductStock[]>(data);
+        return result;
+      }
+      catch (Exception ex)
+      {
+        return [];
+      }
     }
   }
 }

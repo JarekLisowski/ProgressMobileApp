@@ -1,11 +1,13 @@
 import { NgxIndexedDBService, WithID } from "ngx-indexed-db";
 import { BehaviorSubject, from, map, Observable, of, switchMap, tap } from "rxjs";
-import { Customer, Product, PromoSet } from "../domain/generated/apimodel";
+import { Customer, Product } from "../domain/generated/apimodel";
 import { CartItem, CartItemWithId } from "../domain/cartItem";
-import { inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { SpecialOfferEdit } from "../domain/specialOfferEdit";
 import { CartPromoItem, CartPromoItemWithId } from "../domain/cartPromoItem";
 import { Transaction } from "../domain/transaction";
+import { CartChangeResult } from "../domain/cartChangeResult";
+import { ProductStockInfo } from "../domain/productStock";
 
 @Injectable({
     providedIn: 'root'
@@ -47,7 +49,7 @@ export class CartService {
         });
     }
 
-    addItemToCart(product: Product, quantity: number): Observable<any> {
+    addItemToCart(product: Product, quantity: number, stock: number | undefined): Observable<CartChangeResult> {
         var res = this.dbService.getAllByIndex<CartItemWithId>('cart', 'code', IDBKeyRange.only(product.code)).pipe(
             tap(x => {
                 console.log(x);
@@ -55,9 +57,16 @@ export class CartService {
             map(itemsWithCode => itemsWithCode.find(item => item.promoSetId == 0)),
             switchMap(itemExistsingOrEmpty => {
                 if (itemExistsingOrEmpty) {
-                    return this.updateCartItemQuntity(itemExistsingOrEmpty.id, itemExistsingOrEmpty.quantity + quantity);
+                    var quantityToSet = itemExistsingOrEmpty.quantity + quantity;
+                    return this.updateCartItemQuntity(itemExistsingOrEmpty.id, quantityToSet, stock);
                 }
                 else {
+                    var message = "Artykuł został dodany do koszyka.";
+                    var quantityToAdd = quantity;
+                    if (stock != undefined && stock < quantity) {
+                        quantityToAdd = stock;
+                        message = "Ilość dodana do koszyja została ograniczona do maksymalnej dostępnej ilości: " + stock + ".";
+                    }
                     var cartItem: CartItem =
                     {
                         productId: product.id ?? 0,
@@ -66,12 +75,13 @@ export class CartService {
                         priceNet: product.price?.priceNet ?? 0,
                         priceGross: product.price?.priceGross ?? 0,
                         taxRate: product.price?.taxPercent ?? 23,
-                        quantity: quantity,
+                        quantity: quantityToAdd,
                         promoSetId: 0,
                         promoItemId: 0,
                         imageUrl: "",
-                        sumNetto: this.round2((product.price?.priceNet ?? 0) * quantity),
-                        sumGross: this.round2(((product.price?.priceNet ?? 0) * quantity) * (1 + (product.price?.taxPercent ?? 23) / 100)),
+                        stock: undefined,
+                        sumNetto: this.round2((product.price?.priceNet ?? 0) * quantityToAdd),
+                        sumGross: this.round2(((product.price?.priceNet ?? 0) * quantityToAdd) * (1 + (product.price?.taxPercent ?? 23) / 100)),
                     };
                     return this.dbService.add('cart', cartItem).pipe(
                         switchMap(addedItem => {
@@ -83,7 +93,14 @@ export class CartService {
                                         switchMap(cartItems => {
                                             this._cartItems$.next(cartItems);
                                             return this.calculateTotalTransactionValues().pipe(
-                                                switchMap(y => of(addedItem))
+                                                switchMap(y => {
+                                                    //of(addedItem)
+                                                    var result = new CartChangeResult();
+                                                    result.productId = addedItem.productId;
+                                                    result.quantity = addedItem.quantity;
+                                                    result.message = message;
+                                                    return of(result);
+                                                })
                                             );
                                         })
                                     );
@@ -97,10 +114,18 @@ export class CartService {
         return res;
     }
 
-    updateCartItemQuntity(id: number, quantity: number): Observable<CartItemWithId> {
+    updateCartItemQuntity(id: number, quantity: number, stock: number | undefined): Observable<CartChangeResult> {
         return this.dbService.getByID<CartItemWithId>('cart', id).pipe(
             switchMap(item => {
+                var message = "Ilość pozostała bez zmian.";
+                if (stock != undefined && stock < quantity) {
+                    quantity = stock;
+                    message = "Ustawiono maksymalną dostępną ilość " + stock + ".";
+                    if (item.quantity == quantity)
+                        message = "Osiągniętao dostępną ilość. Ilość w koszyku pozostała bez zmian.";
+                }
                 if (item.quantity != quantity) {
+                    message = "Ilość zmieniona z " + item.quantity + " na " + quantity + ".";
                     item.quantity = quantity;
                     item.sumNetto = this.round2(item.priceNet * item.quantity);
                     item.sumGross = this.round2(item.sumNetto * (1 + item.taxRate / 100));
@@ -111,17 +136,27 @@ export class CartService {
                                 switchMap(cartItems => {
                                     this._cartItems$.next(cartItems);
                                     return this.calculateTotalTransactionValues().pipe(
-                                        switchMap(y => of(item))
+                                        switchMap(y => {
+                                            var result = new CartChangeResult();
+                                            result.productId = x.productId;
+                                            result.quantity = x.quantity;
+                                            result.message = message;
+                                            return of(result);
+                                        })
                                     );
                                 })
                             );
                         })
                     );
                 } else {
-                    return new Observable<CartItemWithId>();
+                    var result = new CartChangeResult();
+                    result.productId = item.productId;
+                    result.quantity = item.quantity;
+                    result.message = message;
+                    return of(result);
                 }
             }
-            ));
+        ));
     }
 
     getCartItems(): Observable<(CartItem & WithID)[]> {
@@ -458,4 +493,56 @@ export class CartService {
         const vatRate = Number(numberString);
         return vatRate;
     }
+
+    checkProductsAvailability(productStocks: ProductStockInfo[]): Observable<ProductStockInfo[]> {
+        var result = this.getCartItems().pipe(
+            map(cartItems => {
+                var cartItemsStocks: ProductStockInfo[] = cartItems.map(item => {
+                    return new ProductStockInfo(item.productId, item.quantity, undefined);
+                });
+                var mergedItems = this.mergeProductStocks(cartItemsStocks, null);
+                var resultStock : ProductStockInfo[] = [];
+                for (let item of mergedItems) {
+                    let stockAvailable = productStocks.find(ps => ps.productId === item.productId);
+                    resultStock.push(
+                        new ProductStockInfo(item.productId, item.quantity, stockAvailable?.stock)
+                    );
+                }
+                return resultStock;
+            })
+        );
+        return result;  
+    }
+
+    private mergeProductStocks(array1: ProductStockInfo[], array2: ProductStockInfo[] | null): ProductStockInfo[] {
+    const stockMap = new Map();
+
+    const allStocks = [] as ProductStockInfo[];
+    if (array1) {
+        allStocks.push(...array1);
+    }
+    if (array2) {
+        allStocks.push(...array2);
+    }
+
+    for (const item of allStocks) {
+        const { productId, quantity } = item;
+
+        if (stockMap.has(productId)) {
+            // If the product ID is already in the map, add the current stock to the existing sum
+            stockMap.set(productId, stockMap.get(productId) + quantity);
+        } else {
+            // Otherwise, add the product ID and its stock to the map
+            stockMap.set(productId, quantity);
+        }
+    }
+
+    // 3. Convert the Map back into an array of ProductStockInfo objects
+    const mergedArray = [];
+    for (const [productId, totalQuantity] of stockMap.entries()) {
+        mergedArray.push(new ProductStockInfo(productId, totalQuantity, undefined));
+    }
+
+    return mergedArray;
+}
 }

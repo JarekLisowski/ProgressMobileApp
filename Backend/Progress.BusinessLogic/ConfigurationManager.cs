@@ -2,7 +2,6 @@
 using Progress.Database;
 using Progress.Domain.Model;
 using Progress.Infrastructure.Database.Repository;
-using System.Security.Cryptography;
 
 namespace Progress.BusinessLogic
 {

@@ -37,6 +37,7 @@ namespace Progress.Infrastructure.Database.Repository
         user.SpecialPaymentExtendDeadline = apiUzytkownik.PlatnosciOdroczoneWydluzenieTerminu;
         user.DeviceId = apiUzytkownik.DeviceId;
         user.StoreName = apiUzytkData.pd.UzIdMagazynuNavigation?.MagNazwa;
+        user.StoreId = apiUzytkData.pd.UzIdMagazynu;
         user.Kasa = apiUzytkData.pd.UzIdKasyNavigation?.KsNazwa;
         user.KasaId = apiUzytkData.pd.UzIdKasy;
         user.MaxSpecialPayment = apiUzytkownik.MaxPlatnoscOdroczona.GetValueOrDefault();

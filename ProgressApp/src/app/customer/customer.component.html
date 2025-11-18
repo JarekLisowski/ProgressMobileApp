@@ -1,6 +1,8 @@
 <div>
   <!-- View Mode -->
-  <div *ngIf="!editMode && customer">
+  @if (!editMode && customer)
+  {
+  <div>
     <div class="d-flex justify-content-between mb-3">
       <h2>{{ customer?.adrName }}</h2>
       <div class="">
@@ -17,10 +19,15 @@
       </div>
     </div>
   </div>
-
+  }
   <!-- Edit Mode -->
-  <div *ngIf="editMode && customerEdit">
-    <h5 *ngIf="customerId == 0">Dodawanie kontrahenta</h5>
+  @if (editMode && customerEdit)
+  {
+  <div>
+    @if (customerId == 0)
+    {
+    <h5>Dodawanie kontrahenta</h5>
+    }
     <div class="mb-3 mt-3">
       <label for="name" class="form-label">Nazwa: </label>
       <input id="name" class="form-control" [(ngModel)]="customerEdit.adrName" />
@@ -49,9 +56,11 @@
     <input type="button" class="btn btn-primary me-3" (click)="save()" value="Zapisz" />
     <button class="btn btn-secondary" (click)="cancel()">Anuluj</button>
   </div>
+  }
 </div>
-
-<div *ngIf="!editMode && customerId" class="mb-3">
+@if (!editMode && customerId)
+{
+<div class="mb-3">
 
   <div class="border-bottom">
     <ul class="nav nav-underline mb-1" id="cartTab" role="tablist">
@@ -68,11 +77,13 @@
 
   <div class="tab-content mt-3">
 
-  <div class="tab-pane fade show active" id="invoices-tab-pane" role="tabpanel" tabindex="0">
-    <invoices [customerId]="customerId"></invoices>
-  </div>
-  <div class="tab-pane fade show active" id="invoices-tab-pane" role="tabpanel" tabindex="0">
-    <orders [customerId]="customerId"></orders>
-  </div>
+    <div class="tab-pane fade show active" id="invoices-tab-pane" role="tabpanel" tabindex="0">
+      <invoices [customerId]="customerId"></invoices>
+    </div>
+    <div class="tab-pane fade show active" id="invoices-tab-pane" role="tabpanel" tabindex="0">
+      <orders [customerId]="customerId"></orders>
+    </div>
 
+  </div>
 </div>
+}

@@ -968,6 +968,54 @@
         }
       }
     },
+    "/api/product/stocks": {
+      "patch": {
+        "tags": [
+          "Product"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductStocksRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductStocksRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductStocksRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsStockResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsStockResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsStockResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/product/category/info/{id}": {
       "post": {
         "tags": [
@@ -2074,6 +2122,10 @@
             "type": "number",
             "format": "double"
           },
+          "stockSecondary": {
+            "type": "number",
+            "format": "double"
+          },
           "price": {
             "$ref": "#/components/schemas/Price"
           },
@@ -2288,6 +2340,86 @@
           },
           "data": {
             "$ref": "#/components/schemas/Product"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductStock": {
+        "type": "object",
+        "properties": {
+          "stTowId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "stMagId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "stStan": {
+            "type": "number",
+            "format": "double"
+          },
+          "stStanMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "stStanRez": {
+            "type": "number",
+            "format": "double"
+          },
+          "stStanMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "stTow": {
+            "$ref": "#/components/schemas/Product"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductStocksRequest": {
+        "type": "object",
+        "properties": {
+          "productIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductsStockResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductStock"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

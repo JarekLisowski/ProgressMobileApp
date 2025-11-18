@@ -80,7 +80,8 @@ export class PromoItemEdit implements IPromoItem {
                 promoItemId: x.promoItemId,
                 imageUrl: x.imageUrl,
                 sumNetto: x.sumNetto,
-                sumGross: x.sumGross
+                sumGross: x.sumGross,
+                stock: undefined
             };
             return cartItem;
         });

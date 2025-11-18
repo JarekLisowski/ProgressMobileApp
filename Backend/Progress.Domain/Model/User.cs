@@ -104,5 +104,6 @@
     public bool DiscountAllowed { get; set; }
     public bool CanExtendPaymentDeadline { get; set; }
     public int DiscountMax { get; set; }
+    public int? StoreId { get; set; }
   }
 }

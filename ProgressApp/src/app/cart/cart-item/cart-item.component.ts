@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
 import { CartService } from '../../../services/cart.service';
 import { QuantityComponent } from "../../quantity/quantity.component";
+import { ProductStockInfo } from '../../../domain/productStock';
 
 @Component({
     selector: 'cart-item',
@@ -17,22 +18,27 @@ export class CartItemComponent {
 
   _cartItem: CartItemWithId | undefined;
 
+  respectStock: boolean = false;
+  
+  warnOverStock: boolean = true;
+
   constructor(private apiService: ApiService, private cartService: CartService) {
   }
 
   @Output() itemRemove = new EventEmitter<CartItemWithId>();
-
 
   @Input() set cartItem(item: CartItemWithId) {
     this._cartItem = item;
     this._cartItem.imageUrl = this.apiService.makeUrlImage(this._cartItem.productId, 0);
   }
 
+  @Input() readonly: boolean = false;
+
+  @Input() productStockInfo: ProductStockInfo | undefined;
+  
   get cartItem(): CartItemWithId | undefined {
     return this._cartItem;
   }
-
-  @Input() readonly: boolean = false;
 
   get quantity(): number {
     return this.cartItem?.quantity ?? 0;
@@ -46,10 +52,8 @@ export class CartItemComponent {
 
   quantityChanged(quantity: number) {
     if (quantity > 0 && this.cartItem?.id != null && this.cartItem.quantity != quantity) {
-      this.cartService.updateCartItemQuntity(this.cartItem.id, quantity).subscribe(x => {
-        var cartItem = x;
-        x.imageUrl = this._cartItem!.imageUrl;
-        this._cartItem = x;
+      var maxQuantity = this.respectStock ? this._cartItem?.stock ?? undefined : undefined;
+      this.cartService.updateCartItemQuntity(this.cartItem.id, quantity, maxQuantity).subscribe(x => {
         this.quantity = x.quantity;
       });
     }

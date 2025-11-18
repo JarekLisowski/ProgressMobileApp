@@ -16,7 +16,10 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Unit, opt => opt.MapFrom(src => src.TwJednMiary))
 				.ForMember(dst => dst.Prices, opt => opt.MapFrom((src, dst) => CreatePriceDictionary(src.TwCena)))
 				.ForMember(dst => dst.Stock, opt => opt.MapFrom((src, dst) => GetStan(src)))
+				.ForMember(dst => dst.Stocks, opt => opt.MapFrom((src, dst) => src.TwStans))
 				;
+
+			CreateMap<TwStan, ProductStock>();
 
 			CreateMap<TwTowarShort, TwTowar>();
 

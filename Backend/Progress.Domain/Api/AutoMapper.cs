@@ -20,6 +20,8 @@ namespace Progress.Domain.Api
 			CreateMap<Model.DeliveryMethod, DeliveryMethod>();
 			CreateMap<Model.Document, Document>();
 			CreateMap<Model.DocumentItem, DocumentItem>();
+			CreateMap<Model.ProductStock, ProductStock>();
+
 		}
 	}
 }

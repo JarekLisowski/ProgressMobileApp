@@ -1,3 +1,8 @@
+@if (outOfStock) {
+  <div class="alert alert-danger" role="alert">
+    Niektóre produkty w koszyku są niedostępne w wymaganej ilości. 
+  </div>
+}
 <div class="mb-3 p-2 border rounded-2 shadow-sm fs-6">
   <div>
     Wartość koszyka: 
@@ -10,15 +15,11 @@
     netto: 
     <strong>{{itemsValueNet | number:'1.2-2'}} PLN</strong>
   </div>
-  <!-- <div>
-    <span>{{0 }}</span> PLN
-    <span>{{0 }}</span> PLN
-  </div> -->
 </div>
 <ul class="cart-list ps-0">
   @for (item of cartPromoItems; track item.id; let i = $index) {
     <div>
-      <promo-cart-container [promoItem]="item" (itemRemove)="removePromoItem($event)">
+      <promo-cart-container [promoItem]="item" (itemRemove)="removePromoItem($event)" [productStockInfoMap]="productStocksMap">
       </promo-cart-container>
     </div>
   }
@@ -26,7 +27,8 @@
 <ul class="cart-list ps-0">
   @for (item of cartItemsNoPromos; track item.id) {
     <div>
-      <cart-item [cartItem]="item" (itemRemove)="removeItem($event)"></cart-item>
+      {{item.id}}
+      <cart-item [cartItem]="item" (itemRemove)="removeItem($event)" [productStockInfo]="getItemStockInfo(item.productId)"></cart-item>
     </div>
   }
 </ul>

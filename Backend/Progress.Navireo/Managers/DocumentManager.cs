@@ -126,6 +126,10 @@ namespace Progress.Navireo.Managers
         if (document.Payment != null)
           SetPayment(document, suDokument);
 
+        var userName = $"{pd_User.UzImie} {pd_User.UzNazwisko}".Trim();
+        suDokument.Wystawil = userName;
+        //SetPersonelId(document.Id, operatorId, userName);
+
         string uwagi = suDokument.Uwagi ?? "";
 
         try
@@ -155,8 +159,9 @@ namespace Progress.Navireo.Managers
         result.DocumentType = document.DocumentType.GetName();
 
         if (document.IsDeleted == false)
-          SetPersonelId(document.Id, operatorId);
-
+        {
+          SetPersonelId(document.Id, operatorId, userName);
+        }
         if (document.IsNew)
         {
           SetIFx_ApiDokumentyZapisane(document);
@@ -371,20 +376,23 @@ namespace Progress.Navireo.Managers
     /// </summary>
     /// <param name="documentId"></param>
     /// <param name="operatorId"></param>
-    private void SetPersonelId(int documentId, int operatorId)
+    private void SetPersonelId(int documentId, int operatorId, string userName)
     {
       {
         var document = dbContext.DokDokuments.FirstOrDefault(x => x.DokId == documentId);
         if (document != null)
+        {
           document.DokPersonelId = operatorId;
+        }
         else
           Logger.Log(LogType.Exception, string.Format("Nie udało się ustawić PersonelId: {0} na dokumencie o Id: {1}", documentId, operatorId), operatorId);
 
         var nz_finanse = dbContext.NzFinanses.Where(x => x.NzfIdDokumentAuto == documentId);
-        foreach (var nzf in nz_finanse)
-        {
-          nzf.NzfIdWystawil = operatorId;
-        }
+        //foreach (var nzf in nz_finanse)
+        //{
+        //  nzf.NzfIdWystawil = operatorId;
+        //  nzf.NzfWystawil = userName;
+        //}
         dbContext.SaveChanges();
       }
     }

@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
 import { RESTClientService } from "./RESTClient.service";
 import { Observable } from "rxjs";
-import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IPayment, IProductListRequest, LoginResponse, Payment, PaymentMethodsResponse, PrintRequestResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, PromoResponse, PromoSetListResponse, PromoSetResponse, SaleSummaryResponse, SaveDocumentResponse, SearchResponse, StringApiResult } from "../domain/generated/apimodel";
+import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IPayment, IProductListRequest, IProductStocksRequest, LoginResponse, Payment, PaymentMethodsResponse, PrintRequestResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, ProductsStockResponse, ProductStock, PromoResponse, PromoSetListResponse, PromoSetResponse, SaleSummaryResponse, SaveDocumentResponse, SearchResponse, StringApiResult } from "../domain/generated/apimodel";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ApiService {
+  
 
   constructor(private apiSerivce: RESTClientService) {
   }
@@ -21,6 +22,13 @@ export class ApiService {
       categoryId: categoryId
     };
     return this.apiSerivce.post<ProductListResponse>("api/product/list", request);
+  }
+
+  getStocksForProducts(itemIds: number[]): Observable<ProductsStockResponse> {
+    var request : IProductStocksRequest = {
+      productIds: itemIds
+    };
+    return this.apiSerivce.post<ProductsStockResponse>("api/product/stocks", request);
   }
 
   getProduct(productId: number): Observable<ProductResponse> {

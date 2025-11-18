@@ -6,6 +6,7 @@ import { CartPromoItem, CartPromoItemWithId } from '../../../domain/cartPromoIte
 import { CartItemComponent } from "../cart-item/cart-item.component";
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { ProductStockInfo } from '../../../domain/productStock';
 
 @Component({
     selector: 'promo-cart-container',
@@ -24,6 +25,8 @@ export class PromoContainerComponent implements OnInit {
     });
   }
 
+  @Input() productStockInfoMap: Map<number, ProductStockInfo> | undefined;
+
   @Output() itemRemove = new EventEmitter<CartPromoItemWithId>();
 
   cartPromoItem: CartPromoItemWithId | undefined;
@@ -40,6 +43,12 @@ export class PromoContainerComponent implements OnInit {
 
   ngOnInit(): void {
 
+  }
+
+  getItemStockInfo(productId: number): ProductStockInfo | undefined {
+    var result= this.productStockInfoMap?.get(productId);
+    //console.log(result);
+    return result;
   }
 
 

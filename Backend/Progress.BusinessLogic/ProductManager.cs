@@ -11,7 +11,6 @@ namespace Progress.BusinessLogic
     IDatabaseRepository<ProductImage, TwZdjecieTw> dbProductImage;
     IDatabaseRepository<ProductCategory, SlCechaTw> dbProductCategoryDictionary;
     IDatabaseRepository<ProductCategory, TwCechaTw> dbProductCategory;
-    IDatabaseRepository<ProductCategory, TwStan> dbProductStock;
     ProductRepository dbProductRepository;
 
     IMapper mapper;
@@ -36,9 +35,9 @@ namespace Progress.BusinessLogic
       automapperConfiguration = automapperConfigurationProvider;
     }
 
-    public IEnumerable<Product> GetProductsByCategory(int id)
+    public IEnumerable<Product> GetProductsByCategory(int id, int? stockId = null, int? stockId2 = null)
     {
-      var productList = dbProductRepository.GetProductsByCategory(id);
+      var productList = dbProductRepository.GetProductsByCategory(id, stockId, stockId2);
       return productList;
     }
 
@@ -55,9 +54,9 @@ namespace Progress.BusinessLogic
       return category;
     }
 
-    public Product? GetProduct(int id, int priceLevel = 1, int? stockId = null)
+    public Product? GetProduct(int id, int priceLevel = 1, int? stockId = null, int? stockId2 = null)
     {
-      return dbProductRepository.GetProduct(id, priceLevel, stockId);
+      return dbProductRepository.GetProduct(id, priceLevel, stockId, stockId2);
     }
 
     public ProductImage? GetProductImage(int productId, int number = 0)
@@ -87,6 +86,20 @@ namespace Progress.BusinessLogic
         result.AddRange(byName);
         return result.DistinctBy(it => it.Id).ToArray();
       } catch(Exception ex)
+      {
+        return [];
+      }
+    }
+
+    public IEnumerable<ProductStock> GetStocks(int stockId, int[] productIds)
+    {
+
+      try
+      {
+        var data = dbProductRepository.GetStocks(stockId, productIds);
+        return data;
+      }
+      catch (Exception ex)
       {
         return [];
       }

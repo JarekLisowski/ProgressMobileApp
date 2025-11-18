@@ -36,6 +36,11 @@ export class ProductDetailsComponent implements OnInit {
   slides: any[] = [];
 
   quantity: number = 1;
+  get quantityMax(): number {
+    return 999;
+    //Use this to limit by stock
+    return this.product?.stock ?? 999;
+  }
 
   set productId(id: number) {
     this._productId = id;
@@ -82,6 +87,8 @@ export class ProductDetailsComponent implements OnInit {
 
   quantityChanged(quantity: number) {
     if (this.quantity >= 0) {
+      if (this.product?.stock && quantity > this.product.stock) 
+        quantity = this.product.stock;
        this.quantity = quantity;
     }
   }
@@ -92,7 +99,7 @@ export class ProductDetailsComponent implements OnInit {
       console.log('Product is null');
       return;
     }
-    this.cartService.addItemToCart(this.product, this.quantity).subscribe(x => {
+    this.cartService.addItemToCart(this.product, this.quantity, this.product.stock).subscribe(x => {
       console.log('Added to cart: ');
       console.dir(x);
       this.productAddedWindow.show(this.product?.name);

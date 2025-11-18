@@ -65,7 +65,8 @@ export class SpecialOfferEditItemComponent implements AfterViewInit {
         promoSetId: 0,
         imageUrl: "",
         sumGross: (x.price?.priceGross ?? 0) * x.quantity,
-        sumNetto: (x.price?.priceNet ?? 0) * x.quantity
+        sumNetto: (x.price?.priceNet ?? 0) * x.quantity,
+        stock: undefined
       };
     });
     this.calculateTotalQuantity();

@@ -5,14 +5,12 @@ import { CartOptionsComponent } from "./cart-options/cart-options.component";
 import { CartFinalizeComponent } from "./cart-finalize/cart-finalize.component";
 import { ApiService } from '../../services/api.service';
 import { CartService } from '../../services/cart.service';
-import { WithID } from 'ngx-indexed-db';
-import { CartItem, CartItemWithId } from '../../domain/cartItem';
+import { CartItemWithId } from '../../domain/cartItem';
 import { Transaction } from '../../domain/transaction';
-import { Document, IDocument, User } from '../../domain/generated/apimodel';
+import { IDocument, User } from '../../domain/generated/apimodel';
 import { UserService } from '../../services/user.service';
 import { CartPromoItemWithId } from '../../domain/cartPromoItem';
 import { Router } from '@angular/router';
-import { error } from 'jquery';
 import { Subscription } from 'rxjs';
 
 @Component({

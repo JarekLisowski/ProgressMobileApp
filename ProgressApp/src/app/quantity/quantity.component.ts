@@ -12,6 +12,7 @@ export class QuantityComponent {
   @Output() quntityChanged = new EventEmitter<number>();
 
   private _minQuantity: number = 1;
+  @Input() quantityMax: number = 999;
   
   @Input() set minQuantity(value: number) {
     this._minQuantity = value;
@@ -31,6 +32,9 @@ export class QuantityComponent {
   set quantity(value: number) {
     if (value < this.minQuantity) {
       value = this.minQuantity;
+    }
+    if (value > this.quantityMax) {
+      value = this.quantityMax;
     }
     if (value != this._quantity) {
       this._quantity = value;

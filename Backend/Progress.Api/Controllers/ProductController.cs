@@ -32,7 +32,7 @@ namespace Progress.Api.Controllers
       var user = GetUser();
       if (request.CategoryId != null && user != null)
       {
-        var data = _productManager.GetProductsByCategory(request.CategoryId.Value);
+        var data = _productManager.GetProductsByCategory(request.CategoryId.Value, user.StoreId, 1);
         foreach (var item in data)
         {
           item.SetupUserPrices(user);
@@ -58,12 +58,20 @@ namespace Progress.Api.Controllers
     }
 
     [HttpPost("details")]
-    public ProductResponse? Get(ProductRequest request)
+    public ProductResponse Get(ProductRequest request)
     {
-      var priceLevel = GetUser().DefaultPrice;
-      var stockId = 1;
+      var user = GetUser();
+      if (user == null)
+        return new ProductResponse
+        {
+          IsError = true,
+          Message = "User not logged in"
+        };
+      var priceLevel = user.DefaultPrice;
+      var stockId = user.StoreId;
+      var stockId2 = 1;
 
-      var product = _productManager.GetProduct(request.ProductId, priceLevel, stockId);
+      var product = _productManager.GetProduct(request.ProductId, priceLevel, stockId, stockId2);
       if (product != null)
         return new ProductResponse
         {
@@ -84,6 +92,25 @@ namespace Progress.Api.Controllers
       return new ProductCategoryListResponse
       {
         Data = _mapper.Map<ProductCategory[]>(data)
+      };
+    }
+
+    [HttpPost("stocks")]
+    public ProductsStockResponse GetStocks(ProductStocksRequest request)
+    {
+      var user = GetUser();
+      if (user != null && user.StoreId != null)
+      {
+        var data = _productManager.GetStocks(user.StoreId.Value, request.ProductIds);
+        return new ProductsStockResponse
+        {
+          Data = _mapper.Map<ProductStock[]>(data)
+        };
+      }
+      return new ProductsStockResponse
+      {
+        IsError = true,
+        Message = "No user"
       };
     }
 

@@ -9,7 +9,10 @@ import { ProductRemoveWindowComponent } from "../../product-remove-window/produc
 import { ConfirmModalWindowComponent } from "../../confirm-modal-window/confirm-modal-window.component";
 import { Transaction } from '../../../domain/transaction';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { map, Observable, of, Subscription, switchMap, tap } from 'rxjs';
+import { ApiService } from '../../../services/api.service';
+import { ProductStock } from '../../../domain/generated/apimodel';
+import { ProductStockInfo } from '../../../domain/productStock';
 
 @Component({
   selector: 'cart-items',
@@ -29,15 +32,31 @@ export class CartItemsComponent implements OnInit, OnDestroy {
 
   private transaction: Transaction | undefined;
   private subscription: Subscription | undefined;
+  productStocksMap: Map<number, ProductStockInfo> = new Map<number, ProductStockInfo>();
   itemsValueGross: number = 0;
   itemsValueNet: number = 0;
   subscriptionCartItems: Subscription | undefined;
   subscriptionPromoItems: Subscription | undefined;
+  apiService = inject(ApiService);
+  outOfStock = false;
 
-  set cartItems(cartItems: CartItemWithId[]) {
+  SetCartItems(cartItems: CartItemWithId[]): Observable<boolean> {
     this._cartItems = cartItems;
-    this.cartItemsPromos = cartItems.filter(item => item.promoItemId !== 0).sort((a, b) => a.promoItemId - b.promoItemId);
-    this.cartItemsNoPromos = cartItems.filter(item => item.promoItemId === 0);
+    return this.getStocksForCartItems().pipe(
+      switchMap(stockInfo => {
+        return this.cartService.checkProductsAvailability(stockInfo).pipe(
+          switchMap(productStocks => {
+            this.productStocksMap = productStocks.reduce((accMap, item) => {
+              accMap.set(item.productId, item);
+              this.outOfStock = this.outOfStock || item.ouOfStock;
+              return accMap;
+            }, new Map());
+            this.cartItemsPromos = cartItems.filter(item => item.promoItemId !== 0).sort((a, b) => a.promoItemId - b.promoItemId);
+            this.cartItemsNoPromos = cartItems.filter(item => item.promoItemId === 0);
+            return of(true);
+          }));
+      })
+    );
   }
 
   cartItemsPromos: CartItemWithId[] = [];
@@ -48,23 +67,42 @@ export class CartItemsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
-       console.log("Loading transaction data!");
-       this.transaction = trans;
-       this.itemsValueGross = trans.itemsGross;
-       this.itemsValueNet = trans.itemsNet;
+      console.log("Loading transaction data!");
+      this.transaction = trans;
+      this.itemsValueGross = trans.itemsGross;
+      this.itemsValueNet = trans.itemsNet;
     });
-    this.subscriptionCartItems = this.cartService.subscribeCartItems$().subscribe(items => {
-      console.log("Cart items updated!");
-      this.cartItems = items;
-    });
-    this.subscriptionPromoItems = this.cartService.subscribePromoItems$().subscribe(items => {
-      console.log("Cart promo items updated!");
-      this.cartPromoItems = items;
+    this.subscriptionCartItems = this.cartService.subscribeCartItems$().pipe(
+      tap(items => console.log("Cart items updated!", items)),
+      switchMap(items => this.SetCartItems(items)),
+      switchMap(() => this.cartService.subscribePromoItems$()),
+      tap(promoItems => console.log("Cart promo items updated!", promoItems))
+    ).subscribe(promoItems => {
+      this.cartPromoItems = promoItems;
     });
   }
 
+  getStocksForCartItems(): Observable < ProductStockInfo[] > {
+      var itemIds = this._cartItems.map(x => x.productId);
+      var result = this.apiService.getStocksForProducts(itemIds).pipe(
+        map(x => {
+          var result: ProductStockInfo[] = [];
+          if (x != null && x.data != undefined) {
+            this._cartItems.forEach(item => {
+              item.stock = x.data!.find(stock => stock.stTowId == item.productId)?.stStan ?? undefined;
+            });
+            result = x.data!
+              .filter(stock => stock.stTowId !== undefined)
+              .map(stock => new ProductStockInfo(stock.stTowId!, 0, stock.stStan));
+          }
+          return result;
+        })
+      );
+      return result;
+    }
+
   ngOnDestroy(): void {
-    if (this.subscription) {
+      if(this.subscription) {
       this.subscription.unsubscribe();
     }
     if (this.subscriptionCartItems) {
@@ -102,6 +140,10 @@ export class CartItemsComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  getItemStockInfo(productId: number): ProductStockInfo | undefined {
+    return this.productStocksMap.get(productId);
   }
 
 }

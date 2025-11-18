@@ -1,11 +1,22 @@
 .product-image {
     max-width: 100%;
-    //height: auto;
-    display: inline-block;
-    max-height: 120px;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: auto;
   }
 
 .img-container {
-  height: 122px;
+  height: 150px;
   text-align: center;
+}
+
+.responsive-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block; /* Helps with alignment and avoids extra space below the image */
+  margin: auto; /* Centers the image inside the div if the image is smaller than the div */
 }
