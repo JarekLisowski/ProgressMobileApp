@@ -1,30 +1,34 @@
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Numer</th>
-      <th scope="col">Data</th>
-      <th scope="col">Wartość/<br/>Do zapłaty</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (item of data; track item) {
+<div class="table-responsive">
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Numer</th>
+        <th scope="col">Data</th>
+        <th scope="col">Wartość/<br />Do zapłaty</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of data; track item) {
       <tr [class.highlight]="item?.paymentToBeSettled ?? 0  > 0">
         <td scope="row">
           <a href="#" (click)="selectDocument(item); false">{{item.number}}</a><br>
-          @if (item?.paymentToBeSettled ?? 0  > 0) {
-            <span class="text-danger">Do zapłaty</span>
+          @if (item?.paymentToBeSettled ?? 0 > 0) {
+          <span class="text-danger">Do zapłaty</span>
           }
         </td>
         <td>{{item.issueDate | date:'shortDate'}}</td>
-        <td class="text-end">{{item.totalGross | number:'1.2-2'}}<br/>
-          @if (item?.paymentToBeSettled ?? 0  > 0) {
-            <span>
-              {{item.paymentToBeSettled| number:'1.2-2'}}
-            </span>
+        <td class="text-end">{{item.totalGross | number:'1.2-2'}}<br />
+          @if (item?.paymentToBeSettled ?? 0 > 0) {
+          <span>
+            {{item.paymentToBeSettled| number:'1.2-2'}}
+          </span>
           }
         </td>
       </tr>
-    }
-  </tbody>
-</table>
+      }
+    </tbody>
+  </table>
+
+</div>

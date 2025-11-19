@@ -7,7 +7,7 @@ import { ApiService } from './api.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthServiceOLD {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
 

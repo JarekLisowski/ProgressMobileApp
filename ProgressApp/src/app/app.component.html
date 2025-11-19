@@ -1,11 +1,11 @@
 <app-header></app-header>
-<app-navbar></app-navbar>
+<app-navbar (LogoutEvent)="logout()"></app-navbar>
 <app-bottom-bar></app-bottom-bar>
 <main>
   <div class="container">
-    @if (currentUser) {
+    <!-- @if (currentUser) {
       <a (click)="logout()" class="btn btn-danger">Logout</a>
-    }
+    } -->
     <app-sidebar></app-sidebar>
     <div class="mt-3">
       <router-outlet />

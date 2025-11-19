@@ -87,9 +87,9 @@ export class ProductDetailsComponent implements OnInit {
 
   quantityChanged(quantity: number) {
     if (this.quantity >= 0) {
-      if (this.product?.stock && quantity > this.product.stock) 
-        quantity = this.product.stock;
-       this.quantity = quantity;
+      if (quantity > this.quantityMax) 
+        quantity = this.quantityMax;
+      this.quantity = quantity;
     }
   }
 
@@ -99,7 +99,7 @@ export class ProductDetailsComponent implements OnInit {
       console.log('Product is null');
       return;
     }
-    this.cartService.addItemToCart(this.product, this.quantity, this.product.stock).subscribe(x => {
+    this.cartService.addItemToCart(this.product, this.quantity, this.quantityMax).subscribe(x => {
       console.log('Added to cart: ');
       console.dir(x);
       this.productAddedWindow.show(this.product?.name);

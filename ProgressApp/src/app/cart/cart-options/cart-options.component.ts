@@ -5,7 +5,7 @@ import { DeliveryMethod, PaymentMethod } from '../../../domain/generated/apimode
 
 import { FormsModule } from '@angular/forms';
 import { Transaction } from '../../../domain/transaction';
-import { Subscription } from 'rxjs';
+import { filter, map, Subscription, switchMap, take, tap } from 'rxjs';
 
 @Component({
   selector: 'cart-options',
@@ -17,9 +17,6 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly cartService = inject(CartService);
   private readonly apiService = inject(ApiService);
-  private readonly elementRef = inject(ElementRef);
-
-  private intersectionObserver: IntersectionObserver | undefined;
 
   private _selectedDocument: string = "";
   private _selectedPayment: number | undefined;
@@ -36,6 +33,9 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   orderNet: number = 0;
 
   _paymentDueDays: number = 14;
+  
+  outOfStock: boolean = false;
+  outOfStockSubscription: Subscription | undefined;
 
   get cashReadOnly(): boolean {
     return Number(this.selectedPaymentMethod?.id ?? 0) == 0;
@@ -141,12 +141,12 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
     console.log("selectedDelivery: " + deliveryMethod);
-      this.cartService.setDelivery(deliveryMethodId ?? nValue, deliveryMethod?.twId, deliveryMethod?.priceGross, deliveryMethod?.priceNet, deliveryMethod?.taxRate).subscribe(trans => {
-        this._selectedDelivery = deliveryMethodId;
-        this.selectedDeliveryMethod = deliveryMethod;
-        this.secondPaymentAmount = trans.secondMethodAmount;
-        this.cashAmount = trans.cashAmount;
-      });
+    this.cartService.setDelivery(deliveryMethodId ?? nValue, deliveryMethod?.twId, deliveryMethod?.priceGross, deliveryMethod?.priceNet, deliveryMethod?.taxRate).subscribe(trans => {
+      this._selectedDelivery = deliveryMethodId;
+      this.selectedDeliveryMethod = deliveryMethod;
+      this.secondPaymentAmount = trans.secondMethodAmount;
+      this.cashAmount = trans.cashAmount;
+    });
 
   }
 
@@ -209,17 +209,18 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscription: Subscription | undefined;
 
   ngOnInit(): void {
+    // 1. Subscribe to the transaction stream
+    this.subscription = this.cartService.subscribeTransaction$().pipe(
 
-    this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
-      if ((<any>trans).id === undefined)
-        return;
+      // --- PHASE 1: Initial Filter and Data Extraction ---
 
-      this.apiService.getPaymentMethods().subscribe(x => {
-        if (!x.isError && x?.data != null) {
-          this.paymentMethods = x.data;
-        }
-        
-        console.log("Loading transaction data");
+      // Use filter to skip processing if the transaction ID is undefined.
+      // The cast to <any> should be removed by fixing the 'trans' type definition if possible.
+      filter(trans => (<any>trans).id !== undefined),
+
+      // Use tap to perform initial synchronous state updates (if needed)
+      tap(trans => {
+        // Synchronously update the component state with transaction details
         this.transaction = trans;
         this.selectedDocument = trans.document;
         this.selectedPayment = trans.secondPaymentMethod?.toString() ?? "";
@@ -230,44 +231,109 @@ export class CartOptionsComponent implements OnInit, OnDestroy, AfterViewInit {
         this.paymentDueDays = trans.paymentDueDays;
         this.orderGross = trans.itemsGross ?? 0;
         this.orderNet = trans.itemsNet ?? 0;
+        console.log("Loading transaction data");
+      }),
 
-        this.apiService.getDeliveryMethods().subscribe(x => {
-          if (!x.isError && x?.data != null) {
-            this.deliveryMethods = x.data.filter(v => {
-              return (v.minValue == null || (this.orderGross >= v.minValue)) &&
-                (v.maxValue == null || (this.orderGross <= v.maxValue));
-            });
-            this.selectedDelivery = trans.deliveryMethod?.toString() ?? "";
-          }
+      // --- PHASE 2: Chaining Asynchronous Operations ---
+
+      // 2. Load Payment Methods (First Async Call)
+      // Use switchMap to wait for the API call and chain the next step.
+      switchMap(trans => this.apiService.getPaymentMethods().pipe(
+        // take(1) is kept inside the API pipe since it's the standard practice for HTTP calls
+        take(1),
+        // Return both the API result (x) and the original transaction (trans)
+        map(x => ({ paymentResult: x, trans: trans }))
+      )),
+
+      // 3. Process Payment Methods Result and Load Delivery Methods (Second Async Call)
+      switchMap(data => {
+        const { paymentResult: x, trans } = data;
+
+        // SIDE EFFECT 1: Update component state with payment methods
+        if (!x.isError && x?.data != null) {
+          this.paymentMethods = x.data;
+        }
+
+        // Now start the second async call: getDeliveryMethods()
+        return this.apiService.getDeliveryMethods().pipe(
+          take(1),
+          // Return both the API result (y) and the original data object
+          map(y => ({ deliveryResult: y, trans: trans }))
+        );
+      }),
+
+      // --- PHASE 3: Final Processing and Component Setup ---
+
+      // 4. Final Subscription Block (process delivery methods and set flags)
+    ).subscribe(data => {
+      const { deliveryResult: x, trans } = data;
+
+      // SIDE EFFECT 2: Process delivery methods and update component state
+      if (!x.isError && x?.data != null) {
+        this.deliveryMethods = x.data.filter(v => {
+          return (v.minValue == null || (this.orderGross >= v.minValue)) &&
+            (v.maxValue == null || (this.orderGross <= v.maxValue));
         });
-        
-        // });
-        this.initializing = false;
-      });
+        this.selectedDelivery = trans.deliveryMethod?.toString() ?? "";
+      }
+
+      // Final synchronous state update
+      this.initializing = false;
+    });
+
+    this.outOfStockSubscription = this.cartService.subscribeOutOfStock$().subscribe(value => {
+      this.outOfStock = value;
+      console.log("Out of stock status updated: " + value);
     });
   }
+
+  // ngOnInit(): void {
+
+  //   this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
+  //     if ((<any>trans).id === undefined)
+  //       return;
+
+  //     this.apiService.getPaymentMethods().pipe(take(1)).subscribe(x => {
+  //       if (!x.isError && x?.data != null) {
+  //         this.paymentMethods = x.data;
+  //       }
+
+  //       console.log("Loading transaction data");
+  //       this.transaction = trans;
+  //       this.selectedDocument = trans.document;
+  //       this.selectedPayment = trans.secondPaymentMethod?.toString() ?? "";
+  //       this.secondPaymentAmount = trans.secondMethodAmount;
+  //       this.cashAmount = trans.cashAmount;
+  //       this.comment = trans.comment;
+  //       this.packages = trans.packagesNumber;
+  //       this.paymentDueDays = trans.paymentDueDays;
+  //       this.orderGross = trans.itemsGross ?? 0;
+  //       this.orderNet = trans.itemsNet ?? 0;
+
+  //       this.apiService.getDeliveryMethods().pipe(take(1)).subscribe(x => {
+  //         if (!x.isError && x?.data != null) {
+  //           this.deliveryMethods = x.data.filter(v => {
+  //             return (v.minValue == null || (this.orderGross >= v.minValue)) &&
+  //               (v.maxValue == null || (this.orderGross <= v.maxValue));
+  //           });
+  //           this.selectedDelivery = trans.deliveryMethod?.toString() ?? "";
+  //         }
+  //       });
+
+  //       this.initializing = false;
+  //     });
+  //   });
+  // }
 
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    if (this.outOfStockSubscription) {
+      this.outOfStockSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit(): void {
-    //   this.intersectionObserver = new IntersectionObserver(entries => {
-    //     if (entries[0].isIntersecting) {
-    //       this.loadTransactionData();
-    //     }
-    //   });
-    //   this.intersectionObserver.observe(this.elementRef.nativeElement);
   }
-
-  // ngOnDestroy(): void {
-  //   if (this.intersectionObserver) {
-  //     this.intersectionObserver.disconnect();
-  //   }
-  // }
-
-
-
 }

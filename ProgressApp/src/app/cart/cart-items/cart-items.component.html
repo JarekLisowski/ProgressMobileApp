@@ -27,7 +27,6 @@
 <ul class="cart-list ps-0">
   @for (item of cartItemsNoPromos; track item.id) {
     <div>
-      {{item.id}}
       <cart-item [cartItem]="item" (itemRemove)="removeItem($event)" [productStockInfo]="getItemStockInfo(item.productId)"></cart-item>
     </div>
   }

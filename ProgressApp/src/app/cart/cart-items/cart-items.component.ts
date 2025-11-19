@@ -31,7 +31,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   _cartItems: CartItemWithId[] = [];
 
   private transaction: Transaction | undefined;
-  private subscription: Subscription | undefined;
+  private subscriptionTransaction: Subscription | undefined;
   productStocksMap: Map<number, ProductStockInfo> = new Map<number, ProductStockInfo>();
   itemsValueGross: number = 0;
   itemsValueNet: number = 0;
@@ -43,21 +43,46 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   SetCartItems(cartItems: CartItemWithId[]): Observable<boolean> {
     this._cartItems = cartItems;
     return this.getStocksForCartItems().pipe(
-      switchMap(stockInfo => {
-        return this.cartService.checkProductsAvailability(stockInfo).pipe(
-          switchMap(productStocks => {
-            this.productStocksMap = productStocks.reduce((accMap, item) => {
-              accMap.set(item.productId, item);
-              this.outOfStock = this.outOfStock || item.ouOfStock;
-              return accMap;
-            }, new Map());
-            this.cartItemsPromos = cartItems.filter(item => item.promoItemId !== 0).sort((a, b) => a.promoItemId - b.promoItemId);
-            this.cartItemsNoPromos = cartItems.filter(item => item.promoItemId === 0);
-            return of(true);
-          }));
+      switchMap(stockInfo => this.cartService.checkProductsAvailability(stockInfo)),
+      switchMap(productStocks => {
+        console.log("Product stocks received:")
+        console.dir(productStocks);
+        this.setProductStockMap(productStocks);
+        this.cartItemsPromos = cartItems.filter(item => item.promoItemId !== 0).sort((a, b) => a.promoItemId - b.promoItemId);
+        this.cartItemsNoPromos = cartItems.filter(item => item.promoItemId === 0);
+        return of(true);
       })
     );
   }
+
+  private setProductStockMap(productStocks: ProductStockInfo[]) {
+    this.outOfStock = false;
+    this.productStocksMap = productStocks.reduce((accMap, item) => {
+      accMap.set(item.productId, item);
+      this.outOfStock = this.outOfStock || item.ouOfStock;
+      return accMap;
+    }, new Map());
+    this.cartService.setOutOfStock(this.outOfStock);
+  }
+
+  // SetCartItems(cartItems: CartItemWithId[]): Observable<boolean> {
+  //   this._cartItems = cartItems;
+  //   return this.getStocksForCartItems().pipe(
+  //     switchMap(stockInfo => {
+  //       return this.cartService.checkProductsAvailability(stockInfo).pipe(
+  //         switchMap(productStocks => {
+  //           this.productStocksMap = productStocks.reduce((accMap, item) => {
+  //             accMap.set(item.productId, item);
+  //             this.outOfStock = this.outOfStock || item.ouOfStock;
+  //             return accMap;
+  //           }, new Map());
+  //           this.cartItemsPromos = cartItems.filter(item => item.promoItemId !== 0).sort((a, b) => a.promoItemId - b.promoItemId);
+  //           this.cartItemsNoPromos = cartItems.filter(item => item.promoItemId === 0);
+  //           return of(true);
+  //         }));
+  //     })
+  //   );
+  // }
 
   cartItemsPromos: CartItemWithId[] = [];
 
@@ -66,7 +91,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   cartItemsNoPromos: CartItemWithId[] = [];
 
   ngOnInit(): void {
-    this.subscription = this.cartService.subscribeTransaction$().subscribe(trans => {
+    this.subscriptionTransaction = this.cartService.subscribeTransaction$().subscribe(trans => {
       console.log("Loading transaction data!");
       this.transaction = trans;
       this.itemsValueGross = trans.itemsGross;
@@ -75,35 +100,40 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     this.subscriptionCartItems = this.cartService.subscribeCartItems$().pipe(
       tap(items => console.log("Cart items updated!", items)),
       switchMap(items => this.SetCartItems(items)),
-      switchMap(() => this.cartService.subscribePromoItems$()),
-      tap(promoItems => console.log("Cart promo items updated!", promoItems))
-    ).subscribe(promoItems => {
+      //switchMap(() => this.cartService.subscribePromoItems$()),
+      //tap(promoItems => console.log("Cart promo items updated!", promoItems))
+    ).subscribe();
+
+    this.subscriptionPromoItems = this.cartService.subscribePromoItems$().subscribe(promoItems => {
+      console.log("Cart promo items updated!", promoItems)
       this.cartPromoItems = promoItems;
     });
   }
 
-  getStocksForCartItems(): Observable < ProductStockInfo[] > {
-      var itemIds = this._cartItems.map(x => x.productId);
-      var result = this.apiService.getStocksForProducts(itemIds).pipe(
-        map(x => {
-          var result: ProductStockInfo[] = [];
-          if (x != null && x.data != undefined) {
-            this._cartItems.forEach(item => {
-              item.stock = x.data!.find(stock => stock.stTowId == item.productId)?.stStan ?? undefined;
-            });
-            result = x.data!
-              .filter(stock => stock.stTowId !== undefined)
-              .map(stock => new ProductStockInfo(stock.stTowId!, 0, stock.stStan));
-          }
-          return result;
-        })
-      );
-      return result;
-    }
+  getStocksForCartItems(): Observable<ProductStockInfo[]> {
+    var itemIds = this._cartItems.map(x => x.productId);
+    var result = this.apiService.getStocksForProducts(itemIds).pipe(
+      map(x => {
+        console.log("Stocks for products received:")
+        console.dir(x);
+        var productStocksResult: ProductStockInfo[] = [];
+        if (x != null && x.data != undefined) {
+          this._cartItems.forEach(item => {
+            item.stock = x.data!.find(stock => stock.stTowId == item.productId)?.stStan ?? undefined;
+          });
+          productStocksResult = x.data!
+            .filter(stock => stock.stTowId !== undefined)
+            .map(stock => new ProductStockInfo(stock.stTowId!, 0, stock.stStan));
+        }
+        return productStocksResult;
+      })
+    );
+    return result;
+  }
 
   ngOnDestroy(): void {
-      if(this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.subscriptionTransaction) {
+      this.subscriptionTransaction.unsubscribe();
     }
     if (this.subscriptionCartItems) {
       this.subscriptionCartItems.unsubscribe();

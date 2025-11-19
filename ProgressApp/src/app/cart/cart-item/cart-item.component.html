@@ -35,7 +35,7 @@
         </div>
         }
         @if (readonly == true) {
-        <div class="d-flex pt-2">
+        <div class="d-flex pt-0">
           ilość: {{cartItem?.quantity}}
         </div>
         }
@@ -89,8 +89,11 @@
           </div>
         </div>
         }
-
-
+        @if (readonly == true) {
+        <div class="d-flex pt-0">
+          ilość: {{cartItem?.quantity}}
+        </div>
+        }
       </div>
     </div>
   </div>

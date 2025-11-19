@@ -17,6 +17,7 @@ import { StatsComponent } from './stats/stats.component';
 import { OrdersComponent } from './orders/orders.component';
 import { OrderComponent } from './order/order.component';
 import { SummaryComponent } from './summary/summary.component';
+import { LogoffComponent } from './logoff/logoff.component';
 
 export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent, canActivate: [AuthGuard] },
@@ -39,6 +40,7 @@ export const routes: Routes = [
     { path: 'internal-orders', component: InvoicesComponent, canActivate: [AuthGuard] },
     { path: 'internal-order/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
     { path: 'saveDocumentSummary/:id', component: SaveDocSummaryComponent, canActivate: [AuthGuard] },
+    { path: 'logoff', component: LogoffComponent },
     { path: '', redirectTo: '/categories', pathMatch: 'full' },
     { path: '**', redirectTo: '/categories' }
 ];

@@ -28,7 +28,7 @@ namespace Progress.Navireo.Controllers
       {
         var document = request.ToNavireoDocument();
         document.IsNew = true;
-        var result = _documentManager.UpdateDocument(document);
+        var result = _documentManager.AddOrUpdateDocument(document);
         return new SaveDocumentResponse
         {
           DocumentId = result.DocumentId,

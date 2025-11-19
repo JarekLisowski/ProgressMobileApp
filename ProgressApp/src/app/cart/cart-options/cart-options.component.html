@@ -1,3 +1,9 @@
+@if (outOfStock && selectedDocument == 'Invoice') {
+  <div class="alert alert-danger" role="alert">
+    Sprzedaż na fakturę jest niemożliwa, ponieważ niektóre produkty są niedostępne w magazynie
+  </div>
+}
+
 <div>
   <h6>Dokument</h6>
   <select class="form-select" [(ngModel)]="selectedDocument">

@@ -8,7 +8,6 @@ import { from, map, Observable, of, ReplaySubject, switchMap } from "rxjs";
 })
 
 export class UserService {
-
     token: string | undefined;
 
     constructor(private dbService: NgxIndexedDBService) {
@@ -22,19 +21,20 @@ export class UserService {
                 }
                 return false;
             })
-        );        
+        );
     }
 
     getUser(): Observable<User | null> {
         return this.dbService.getAll<User>('user').pipe(
             map(x => {
                 if (x.length > 0) {
+                    this.token = x[0].token;
                     return x[0];
                 }
                 return null;
             })
         );
-        
+
     }
 
 
@@ -47,8 +47,8 @@ export class UserService {
                 if (x.length == 0) {
                     return undefined;
                 }
-                var token = x[0].token;
-                return token;;
+                this.token = x[0].token;
+                return this.token;
             })
         );
         return obs;
@@ -63,4 +63,7 @@ export class UserService {
         );
     }
 
+    logout(): Observable<any> {
+        return this.dbService.clear('user');
+    }
 }

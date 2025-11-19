@@ -20,7 +20,6 @@
   </div>
   <div class="promo-items ">
     @for (item of cartItems; track item.id) {
-      {{item.id}}
       <cart-item [cartItem]="item" [readonly]="true" [productStockInfo]="getItemStockInfo(item.productId)"></cart-item>
     }
   </div>

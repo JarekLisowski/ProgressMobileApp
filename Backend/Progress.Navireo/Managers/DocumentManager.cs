@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using IFoxCommerce.BL.Navireo.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Progress.Domain.Extensions;
 using Progress.Domain.Navireo;
 using Progress.Domain.Navireo.Api;
@@ -33,7 +34,7 @@ namespace Progress.Navireo.Managers
     /// <param name="document">Dokument do aktualizacji, dodania, usunięcia</param>
     /// <param name="operatorId">Id użytkownika</param>
     /// <returns>Lista par Id-GUID dodanych/zaktualizowanych obiektów</returns>
-    public DocumentSaveResponse UpdateDocument(CommerceDocumentBase document)
+    public DocumentSaveResponse AddOrUpdateDocument(CommerceDocumentBase document)
     {
       var result = new DocumentSaveResponse();
       if (NavireoInstance == null)
@@ -48,9 +49,9 @@ namespace Progress.Navireo.Managers
       int operatorId = document.UserId;
 
       var ifx_user = GetIFxUser(operatorId, dbContext);
-      var pd_User = dbContext.PdUzytkowniks.FirstOrDefault(x => x.UzId == operatorId);
-      if (pd_User == null)
-        throw new Exception("Brak użytkownika");
+      var pd_User = dbContext.PdUzytkowniks.Include(it => it.UzIdMagazynuNavigation).FirstOrDefault(x => x.UzId == operatorId);
+      if (pd_User == null || pd_User.UzIdKasy == null || pd_User.UzIdMagazynu == null || pd_User.UzIdMagazynuNavigation == null)
+        throw new Exception("Brak użytkownika lub niepoprawne dane użytkownika.");
 
       try
       {
@@ -63,27 +64,29 @@ namespace Progress.Navireo.Managers
         {
           suDokument = CreateDocument(operatorId, document, dokManager);
           SetKasaId(suDokument, (int)pd_User.UzIdKasy);
+          var numExt = pd_User.UzIdMagazynuNavigation.MagSymbol.LimitString(3);
+          suDokument.NumerRozszerzenie = numExt;
         }
-        else if (document.IsUpdated)
-        {
-          var dokDB = dbContext.DokDokuments.FirstOrDefault(x => x.DokId == document.Id);
-          if (dokDB == null)
-            throw new Exception(string.Format("Brak dokumentu o Id: {0}", document.Id));
-          suDokument = WczytajDokument(operatorId, document, dokManager, suDokument);
+        //else if (document.IsUpdated)
+        //{
+        //  var dokDB = dbContext.DokDokuments.FirstOrDefault(x => x.DokId == document.Id);
+        //  if (dokDB == null)
+        //    throw new Exception(string.Format("Brak dokumentu o Id: {0}", document.Id));
+        //  suDokument = WczytajDokument(operatorId, document, dokManager, suDokument);
 
-          int kh_Id = suDokument.KontrahentId;
-          if (ifx_user.CechaId != null)
-          {
-            var kh = dbContext.KhCechaKhs.FirstOrDefault(x => x.CkIdCecha == ifx_user.CechaId && x.CkIdKhnt == kh_Id);
-            if (kh == null)
-              throw new UserException(string.Format("Brak uprawnień użytkownika do odczytu dokumentu: '{0}' kontrahenta o Id: {1}", dokDB.DokNrPelny, kh_Id));
-          }
-        }
-        else if (document.IsDeleted)
-        {
-          DeleteDocument(document.Id, dokManager);
-          return result;
-        }
+        //  int kh_Id = suDokument.KontrahentId;
+        //  if (ifx_user.CechaId != null)
+        //  {
+        //    var kh = dbContext.KhCechaKhs.FirstOrDefault(x => x.CkIdCecha == ifx_user.CechaId && x.CkIdKhnt == kh_Id);
+        //    if (kh == null)
+        //      throw new UserException(string.Format("Brak uprawnień użytkownika do odczytu dokumentu: '{0}' kontrahenta o Id: {1}", dokDB.DokNrPelny, kh_Id));
+        //  }
+        //}
+        //else if (document.IsDeleted)
+        //{
+        //  DeleteDocument(document.Id, dokManager);
+        //  return result;
+        //}
         else
           return result;
 
@@ -130,7 +133,7 @@ namespace Progress.Navireo.Managers
         suDokument.Wystawil = userName;
         //SetPersonelId(document.Id, operatorId, userName);
 
-        string uwagi = suDokument.Uwagi ?? "";
+        string uwagi = suDokument.Uwagi ?? "";        
 
         try
         {
@@ -158,10 +161,10 @@ namespace Progress.Navireo.Managers
         result.DocumentNumber = document.FullNumber;
         result.DocumentType = document.DocumentType.GetName();
 
-        if (document.IsDeleted == false)
-        {
-          SetPersonelId(document.Id, operatorId, userName);
-        }
+        //if (document.IsDeleted == false)
+        //{
+        //  SetPersonelId(document.Id, operatorId, userName);
+        //}
         if (document.IsNew)
         {
           SetIFx_ApiDokumentyZapisane(document);
