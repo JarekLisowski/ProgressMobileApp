@@ -42,6 +42,26 @@ namespace Progress.Api.Controllers
       };
     }
 
+    [HttpGet("my-invoices/{customerId}")]
+    public DocumentResponse GetMyInvoices(int? customerId)
+    {
+      var user = GetUser();
+      if (user != null && user.CechaId != null)
+      {
+        var fromDate = DateTime.Today.AddYears(-1);
+        var data = _documentRepository.GetDocumentsOwnCustomers(2, user.CechaId.Value, fromDate);
+        return new DocumentResponse()
+        {
+          Data = _mapper.Map<Document[]>(data)
+        };
+      }
+      return new DocumentResponse
+      {
+        IsError = true,
+        Message = "Not logged in"
+      };
+    }
+
     [HttpGet("document/{id}")]
     public DocumentResponse GetInvoice(int id)
     {
@@ -77,6 +97,26 @@ namespace Progress.Api.Controllers
       return new DocumentResponse()
       {
         Data = _mapper.Map<Document[]>(data)
+      };
+    }
+
+    [HttpGet("my-orders/{customerId}")]
+    public DocumentResponse GetMyOrders(int? customerId, string? dateFrom = null, string? dateTo = null, int pageSize = 100, int page = 1)
+    {
+      var user = GetUser();
+      if (user != null && user.CechaId != null)
+      {
+        var fromDate = DateTime.Today.AddYears(-1);
+        var data = _documentRepository.GetDocumentsOwnCustomers(16, user.CechaId.Value, fromDate);
+        return new DocumentResponse()
+        {
+          Data = _mapper.Map<Document[]>(data)
+        };
+      }
+      return new DocumentResponse
+      {
+        IsError = true,
+        Message = "Not logged in"
       };
     }
 

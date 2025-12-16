@@ -3,8 +3,10 @@
   public class NavireoService : BackgroundService
   {
     NavireoApplication _navireoApplication;
-    public NavireoService(IServiceProvider serviceProvider)
+    ILogger<NavireoService> _logger;
+    public NavireoService(IServiceProvider serviceProvider, ILogger<NavireoService> logger)
     {
+      _logger = logger;
       _navireoApplication = serviceProvider.GetRequiredService<NavireoApplication>();
     }
 
@@ -15,10 +17,17 @@
 
     private void Main()
     {
-      var navireo = _navireoApplication.GetNavireo();
-      var ok = navireo.Wersja;
-      var op = navireo.OperatorId;
-      var magId = navireo.MagazynId;
+      try
+      {
+        var navireo = _navireoApplication.GetNavireo();
+        var ok = navireo.Wersja;
+        var op = navireo.OperatorId;
+        var magId = navireo.MagazynId;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Nie można uruchomić Navireo");
+      }
     }
   }
 }

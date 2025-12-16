@@ -1,21 +1,28 @@
 <div #searchGroup class="input-group">
-  <input class="form-control" type="search" placeholder="Szukaj produkt lub kategorię" aria-label="Recipient's username"
-    aria-describedby="button-addon2" [(ngModel)]="searchText" />
-    <button class="btn btn-primary" type="button" id="button-addon2">Szukaj</button>
-  </div>
-  <div [class]="dropdownVisible ? 'show' : ''" class="popup-search" [style.width.px]="dropDownWidth">
-    <ul class="search-list">
-      @for (item of dropDownCategories; track item) {
-        <li>
-          <a href="{{item.link}}"> {{item.text}} </a>
-        </li>
-      }
-    </ul>
-    <ul class="search-list mt-2">
-      @for (item of dropDownProducts; track item) {
-        <li>
-          <a href="{{item.link}}"> {{item.text}} </a>
-        </li>
-      }
-    </ul>
-  </div>
+  <input class="form-control" type="search" placeholder="Szukaj produkt lub kategorię"
+    aria-label="Szukaj produkt lub kategorię" aria-describedby="button-addon2" [(ngModel)]="searchText" />
+  <button class="btn btn-primary" type="button" id="button-addon2">Szukaj</button>
+</div>
+<div [class]="dropdownVisible ? 'show' : ''" class="popup-search" [style.width.px]="dropDownWidth">
+  <ul class="search-list">
+    @for (item of dropDownCategories; track item) {
+    <li>
+      <a href="{{item.link}}"> {{item.text}} </a>
+    </li>
+    }
+  </ul>
+  <ul class="search-list">
+    @for (item of dropDownBrands; track item) {
+    <li>
+      <a href="{{item.link}}"> {{item.text}} </a>
+    </li>
+    }
+  </ul>
+  <ul class="search-list mt-2">
+    @for (item of dropDownProducts; track item) {
+    <li>
+      <a href="{{item.link}}"> {{item.text}} </a>
+    </li>
+    }
+  </ul>
+</div>

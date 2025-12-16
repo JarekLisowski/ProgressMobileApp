@@ -5,10 +5,10 @@ import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'orders',
-    imports: [DocumentsComponent],
-    templateUrl: './orders.component.html',
-    styleUrl: './orders.component.scss'
+  selector: 'orders',
+  imports: [DocumentsComponent],
+  templateUrl: './orders.component.html',
+  styleUrl: './orders.component.scss'
 })
 export class OrdersComponent implements OnInit {
 
@@ -27,22 +27,34 @@ export class OrdersComponent implements OnInit {
     this.loadData();
   }
 
-
+  showCustomerName: boolean = false;
   data: Document[] = [];
+  private dataLoaded: boolean = false;
 
   ngOnInit(): void {
-    //    this.loadData();    
+    this.loadData();    
   }
 
   loadData() {
-    if (this.customerId == 0)
+    if (this.dataLoaded)
       return;
 
-    this.apiService.getOrders(this.customerId).subscribe(x => {
-      if (x?.data != undefined) {
-        this.data = x.data;
-      }
-    });
+    this.dataLoaded = true;
+    if (this.customerId > 0) {
+
+      this.apiService.getOrders(this.customerId).subscribe(x => {
+        if (x?.data != undefined) {
+          this.data = x.data;
+        }
+      });
+    } else {
+      this.showCustomerName = true;
+      this.apiService.getOrdersOwnCustomers(this.customerId).subscribe(x => {
+        if (x?.data != undefined) {
+          this.data = x.data;
+        }
+      });
+    }
   }
 
   onDocumentSelected(id: number) {

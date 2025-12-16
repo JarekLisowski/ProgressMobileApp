@@ -8,7 +8,7 @@ import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMe
 })
 
 export class ApiService {
-  
+
 
   constructor(private apiSerivce: RESTClientService) {
   }
@@ -17,15 +17,24 @@ export class ApiService {
     return this.apiSerivce.baseUrl();
   }
 
-  getProductList(categoryId: number): Observable<ProductListResponse> {
+  getProductList(categoryId: number, onlyAvailable: boolean): Observable<ProductListResponse> {
     var request = {
-      categoryId: categoryId
+      categoryId: categoryId,
+      onlyAvailable: onlyAvailable
     };
     return this.apiSerivce.post<ProductListResponse>("api/product/list", request);
   }
 
+  getProductListByBrand(brandId: number, onlyAvailable: boolean): Observable<ProductListResponse> {
+    var request = {
+      brandId: brandId,
+      onlyAvailable: onlyAvailable
+    };
+    return this.apiSerivce.post<ProductListResponse>("api/product/listByBrand", request);
+  }
+
   getStocksForProducts(itemIds: number[]): Observable<ProductsStockResponse> {
-    var request : IProductStocksRequest = {
+    var request: IProductStocksRequest = {
       productIds: itemIds
     };
     return this.apiSerivce.post<ProductsStockResponse>("api/product/stocks", request);
@@ -40,6 +49,10 @@ export class ApiService {
 
   getCategoryList(): Observable<ProductCategoryListResponse> {
     return this.apiSerivce.post<ProductCategoryListResponse>("api/product/category/list", {});
+  }
+
+  getBrandList(): Observable<ProductCategoryListResponse> {
+    return this.apiSerivce.post<ProductCategoryListResponse>("api/product/brand/list", {});
   }
 
   getCategoryInfo(id: number): Observable<ProductCategoryInfoResponse> {
@@ -70,19 +83,27 @@ export class ApiService {
     return this.apiSerivce.get<DeliveryMethodsResponse>(`api/configuration/deliveryMethods`);
   }
 
-  sendDocument(document: IDocument):Observable<SaveDocumentResponse> {
+  sendDocument(document: IDocument): Observable<SaveDocumentResponse> {
     return this.apiSerivce.post('api/document/send', document)
   }
-  
-  getInvoices(customerId: number):Observable<DocumentResponse> {
+
+  getInvoices(customerId: number): Observable<DocumentResponse> {
     return this.apiSerivce.get(`api/document/invoices/${customerId}`)
   }
 
-  getOrders(customerId: number):Observable<DocumentResponse> {
+  getInvoicesOwnCustomers(customerId: number): Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/my-invoices/${customerId}`)
+  }
+
+  getOrders(customerId: number): Observable<DocumentResponse> {
     return this.apiSerivce.get(`api/document/orders/${customerId}`)
   }
 
-  getDocument(id: number):Observable<DocumentResponse> {
+  getOrdersOwnCustomers(customerId: number): Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/my-orders/${customerId}`)
+  }
+
+  getDocument(id: number): Observable<DocumentResponse> {
     return this.apiSerivce.get(`api/document/document/${id}`)
   }
 

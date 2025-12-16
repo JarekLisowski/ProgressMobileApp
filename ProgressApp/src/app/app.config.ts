@@ -1,10 +1,11 @@
-import { ApplicationConfig, provideZoneChangeDetection, inject, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, inject, provideAppInitializer, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideIndexedDb, DBConfig } from 'ngx-indexed-db';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { provideServiceWorker } from '@angular/service-worker';
 //import { AppConfigService } from '../services/app-config.service';
 
 const dbConfig: DBConfig  = {
@@ -60,10 +61,10 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideIndexedDb(dbConfig),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    // provideAppInitializer(() => {
-    //     const initializerFn = (initializeApp)(inject(HttpClient), inject(AppConfigService));
-    //     return initializerFn();
-    //   }),
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, 
+    provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
   ]
 };

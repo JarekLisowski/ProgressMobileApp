@@ -33,6 +33,10 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.CtwId))
 				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.CtwNazwa));
 
+			CreateMap<SlGrupaTw, ProductCategory>()
+				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.GrtId))
+				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.GrtNazwa));
+
 			CreateMap<IfxApiPromocjaZestaw, PromoSet>()
 				.ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
 				.ForMember(dst => dst.Name, opt => opt.MapFrom(src => src.Nazwa))

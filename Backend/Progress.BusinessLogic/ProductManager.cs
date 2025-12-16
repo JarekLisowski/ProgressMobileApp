@@ -10,6 +10,7 @@ namespace Progress.BusinessLogic
     IDatabaseRepository<Product, TwTowar> dbProduct;
     IDatabaseRepository<ProductImage, TwZdjecieTw> dbProductImage;
     IDatabaseRepository<ProductCategory, SlCechaTw> dbProductCategoryDictionary;
+    private IDatabaseRepository<ProductCategory, SlGrupaTw> dbProductGroup;
     IDatabaseRepository<ProductCategory, TwCechaTw> dbProductCategory;
     ProductRepository dbProductRepository;
 
@@ -21,6 +22,7 @@ namespace Progress.BusinessLogic
       IDatabaseRepository<ProductImage, TwZdjecieTw> repoTowarZdjecie,
       IDatabaseRepository<ProductCategory, TwCechaTw> repoProductCategory2,
       IDatabaseRepository<ProductCategory, SlCechaTw> repoProductCategory,
+      IDatabaseRepository<ProductCategory, SlGrupaTw> repoProductGroup,
       ProductRepository productRepository,
       IMapper autoMapper,
       IConfigurationProvider automapperConfigurationProvider
@@ -31,13 +33,20 @@ namespace Progress.BusinessLogic
       dbProductCategory = repoProductCategory2;
       dbProductRepository = productRepository;
       dbProductCategoryDictionary = repoProductCategory;
+      dbProductGroup = repoProductGroup;
       mapper = autoMapper;
       automapperConfiguration = automapperConfigurationProvider;
     }
 
-    public IEnumerable<Product> GetProductsByCategory(int id, int? stockId = null, int? stockId2 = null)
+    public IEnumerable<Product> GetProductsByCategory(int id, int? stockId = null, int? stockId2 = null, bool onlyAvailable = false)
     {
-      var productList = dbProductRepository.GetProductsByCategory(id, stockId, stockId2);
+      var productList = dbProductRepository.GetProductsByCategory(id, stockId, stockId2, onlyAvailable);
+      return productList;
+    }
+
+    public IEnumerable<Product> GetProductsByGroup(int id, int? stockId = null, int? stockId2 = null, bool onlyAvailable = false)
+    {
+      var productList = dbProductRepository.GetProductsByGroup(id, stockId, stockId2, onlyAvailable);
       return productList;
     }
 
@@ -46,6 +55,13 @@ namespace Progress.BusinessLogic
       if (string.IsNullOrWhiteSpace(search))
         return dbProductCategoryDictionary.SelectWhere(it => true).OrderBy(it => it.Name).ToArray();
       return dbProductCategoryDictionary.SelectWhere(it => it.CtwNazwa.StartsWith(search)).OrderBy(it => it.Name).ToArray();
+    }
+
+    public IEnumerable<ProductCategory> GetGroupsList(string? search)
+    {
+      if (string.IsNullOrWhiteSpace(search))
+        return dbProductGroup.SelectWhere(it => true).OrderBy(it => it.Name).ToArray();
+      return dbProductGroup.SelectWhere(it => it.GrtNazwa.StartsWith(search)).OrderBy(it => it.Name).ToArray();
     }
 
     public ProductCategory? GetCategoryInfo(int id)

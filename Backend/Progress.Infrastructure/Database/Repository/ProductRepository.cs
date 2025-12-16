@@ -12,7 +12,7 @@ namespace Progress.Infrastructure.Database.Repository
     {
     }
 
-    public IEnumerable<Product> GetProductsByCategory(int id, int? stockId = null, int? stockId2 = null)
+    public IEnumerable<Product> GetProductsByCategory(int id, int? stockId = null, int? stockId2 = null, bool onlyAvailable = false)
     {
       var dataDb = DbContext.TwCechaTws.AsNoTracking()
         .Include(it => it.ChtIdTowarNavigation)
@@ -22,11 +22,43 @@ namespace Progress.Infrastructure.Database.Repository
         .Where(it => it.ChtIdCecha == id && it.ChtIdTowarNavigation.TwZablokowany == false)
         .Select(it => it.ChtIdTowarNavigation)
         .ToArray();
-      var productList = Mapper.Map<Product[]>(dataDb);
-      foreach(var product in productList)
+
+      var productList = new List<Product>();
+      foreach (var productDb in dataDb)
       {
-        product.Stock = product.Stocks.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;
-        product.StockSecondary = product.Stocks.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
+        var stock = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;
+        var stockSecondary = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
+        if (!onlyAvailable || stock > 0 || stockSecondary > 0)
+        {
+          var product = Mapper.Map<Product>(productDb);
+          product.Stock = stock;
+          product.StockSecondary = stockSecondary;
+          productList.Add(product);
+        }
+      }
+      return productList;
+    }
+
+    public IEnumerable<Product> GetProductsByGroup(int id, int? stockId = null, int? stockId2 = null, bool onlyAvailable = false)
+    {
+      var dataDb = DbContext.TwTowars.AsNoTracking()
+          .Include(it => it.TwCena)
+          .Include(it => it.TwStans.Where(it2 => (stockId == null || stockId == it2.StMagId || stockId2 == it2.StMagId)))
+        .Where(it => it.TwIdGrupa == id && it.TwZablokowany == false)
+        .ToArray();
+
+      var productList = new List<Product>();
+      foreach (var productDb in dataDb)
+      {
+        var stock = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;
+        var stockSecondary = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
+        if (!onlyAvailable || stock > 0 || stockSecondary > 0)
+        {
+          var product = Mapper.Map<Product>(productDb);
+          product.Stock = stock;
+          product.StockSecondary = stockSecondary;
+          productList.Add(product);
+        }
       }
       return productList;
     }

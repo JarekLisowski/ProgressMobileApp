@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Customer, Document } from '../../domain/generated/apimodel';
-import { DecimalPipe } from '@angular/common';
 import { InvoicesComponent } from "../invoices/invoices.component";
 import { FormsModule } from '@angular/forms';
 import { OrdersComponent } from '../orders/orders.component';
@@ -10,7 +9,7 @@ import { OrdersComponent } from '../orders/orders.component';
 
 @Component({
     selector: 'app-customer',
-    imports: [DecimalPipe, InvoicesComponent, FormsModule, OrdersComponent],
+    imports: [InvoicesComponent, FormsModule, OrdersComponent],
     templateUrl: './customer.component.html',
     styleUrl: './customer.component.scss'
 })

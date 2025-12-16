@@ -13,6 +13,9 @@ export class DocumentsComponent {
   @Input()
   data: Document[] = [];
 
+  @Input()
+  showCustomerName: boolean = false;
+
   @Output()
   documentSelected: EventEmitter<number> = new EventEmitter<number>();
 

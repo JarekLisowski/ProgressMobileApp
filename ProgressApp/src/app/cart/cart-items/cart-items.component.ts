@@ -1,25 +1,21 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CartPromoItemWithId } from '../../../domain/cartPromoItem';
 import { CartItemWithId } from '../../../domain/cartItem';
 import { PromoContainerComponent } from "../promo-container/promo-container.component";
 import { CartItemComponent } from "../cart-item/cart-item.component";
-
 import { CartService } from '../../../services/cart.service';
-import { ProductRemoveWindowComponent } from "../../product-remove-window/product-remove-window.component";
 import { ConfirmModalWindowComponent } from "../../confirm-modal-window/confirm-modal-window.component";
 import { Transaction } from '../../../domain/transaction';
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { map, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 import { ApiService } from '../../../services/api.service';
-import { ProductStock } from '../../../domain/generated/apimodel';
 import { ProductStockInfo } from '../../../domain/productStock';
 
 @Component({
   selector: 'cart-items',
-  imports: [PromoContainerComponent, CartItemComponent, ConfirmModalWindowComponent, DecimalPipe, CurrencyPipe],
+  imports: [PromoContainerComponent, CartItemComponent, ConfirmModalWindowComponent, DecimalPipe],
   templateUrl: './cart-items.component.html',
   styleUrl: './cart-items.component.scss',
-  //changeDetection: ChangeDetectionStrategy.OnPush, 
 })
 export class CartItemsComponent implements OnInit, OnDestroy {
 

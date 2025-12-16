@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Progress.Database;
 using Progress.Domain.Model;
+using System.Data.Common;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Progress.Infrastructure.Database.Repository
 {
@@ -19,17 +21,32 @@ namespace Progress.Infrastructure.Database.Repository
 
     public Document[] GetDocuments(int dokType, int? customerId)
     {
-      if (customerId != null)
+      var data = EntitySet.AsNoTracking()
+        .Where(it => it.DokPlatnikId == customerId && it.DokTyp == dokType)
+        .OrderByDescending(it => it.DokDataWyst)
+        .ThenByDescending(it => it.DokId)
+        .ToArray();
+      if (data != null)
       {
-        var data = EntitySet.AsNoTracking()
-          .Where(it => it.DokPlatnikId == customerId && it.DokTyp == (int)dokType)
-          .OrderByDescending(it => it.DokId)
-          .ToArray();
-        if (data != null)
-        {
-          var result = Mapper.Map<Document[]>(data);
-          return result;
-        }
+        var result = Mapper.Map<Document[]>(data);
+        return result;
+      }
+      return [];
+    }
+
+    public Document[] GetDocumentsOwnCustomers(int dokType, int userCechaKhId, DateTime fromDate)
+    {
+      var data = (from khCechy in DbContext.KhCechaKhs.AsNoTracking()
+                  join dok in DbContext.IfVwDokuments.AsNoTracking() on new { khId = khCechy.CkIdKhnt, cechaId = khCechy.CkIdCecha } equals new { khId = dok.DokPlatnikId ?? 0, cechaId = userCechaKhId }
+                  where dok.DokTyp == dokType && dok.DokStatus != 2 && dok.DataWystawienia >= fromDate
+                  select dok)
+                    .OrderByDescending(it => it.DokDataWyst)
+                    .ThenByDescending(it => it.DokId)
+                    .ToArray();
+      if (data != null)
+      {
+        var result = Mapper.Map<Document[]>(data);
+        return result;
       }
       return [];
     }

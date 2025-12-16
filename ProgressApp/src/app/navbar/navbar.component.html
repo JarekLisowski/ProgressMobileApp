@@ -14,6 +14,10 @@
 								data-bs-dismiss="offcanvas">Kategorie produktów</a>
 						</li>
 						<li>
+							<a class="nav-link" href="#" [routerLink]="['/brands']"
+								data-bs-dismiss="offcanvas">Marki</a>
+						</li>
+						<li>
 							<a class="nav-link" href="#" [routerLink]="['/promos']"
 								data-bs-dismiss="offcanvas">Promocje</a>
 						</li>
@@ -37,8 +41,19 @@
 				</div>
 			</div>
 			<div class="sticky-bottom mb-5 d-block d-sm-none">
+				@if(showInstallButton) {
+				<div class="text-center mb-4">
+					<a role="button" class="nav-link" (click)="installPwa()">
+						<i class="bi bi-cloud-download fs-4"></i>
+						Zainstaluj aplikację
+					</a>
+				</div>
+				}
 				<div class="text-center">
 					<a class="nav-link" href="#" (click)="LogoutEvent.emit()" data-bs-dismiss="offcanvas">Wyloguj</a>
+				</div>
+				<div class="text-center mt-2">
+					<small class="text-muted">Wersja {{appVersion}}</small>
 				</div>
 			</div>
 		</div>

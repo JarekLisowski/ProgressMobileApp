@@ -1,34 +1,21 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ProductGrid5Component } from "../product-grid-5/product-grid-5.component";
 import { ActivatedRoute } from '@angular/router';
-import { ApiService } from '../../services/api.service';
 import { Product } from '../../domain/generated/apimodel';
+import { ApiService } from '../../services/api.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-category',
-    imports: [ProductGrid5Component, FormsModule],
-    templateUrl: './category.component.html',
-    styleUrl: './category.component.scss'
+  selector: 'app-brand',
+  imports: [ProductGrid5Component, FormsModule],
+  templateUrl: './brand.component.html',
+  styleUrl: './brand.component.scss'
 })
-export class CategoryComponent implements OnInit {
-
-  private readonly route = inject(ActivatedRoute);
+export class BrandComponent {
+private readonly route = inject(ActivatedRoute);
   private readonly api = inject(ApiService);
 
   products: Product[] = [];
-
-  private _onlyAvailable: boolean = true;
-  
-  set onlyAvailable(value: boolean) {
-    this._onlyAvailable = value;
-    this.loadCategory();
-  }
-
-  get onlyAvailable(): boolean {
-    return this._onlyAvailable;
-  }
-
 
   private _categoryName: string = "";
 
@@ -52,6 +39,18 @@ export class CategoryComponent implements OnInit {
     return  this._categoryId;
   }
 
+  private _onlyAvailable: boolean = true;
+  
+  set onlyAvailable(value: boolean) {
+    this._onlyAvailable = value;
+    this.loadCategory();
+  }
+
+  get onlyAvailable(): boolean {
+    return this._onlyAvailable;
+  }
+
+
   ngOnInit(): void {
     this.route.params.subscribe(
       x => {
@@ -61,7 +60,7 @@ export class CategoryComponent implements OnInit {
   }
 
   loadCategory() {
-    this.api.getProductList(this.categoryId, this.onlyAvailable).subscribe(x => {
+    this.api.getProductListByBrand(this.categoryId, this.onlyAvailable).subscribe(x => {
       console.log(x);
       if (x.isError == false && x.data != null)
       {
@@ -80,4 +79,3 @@ export class CategoryComponent implements OnInit {
     );
   }
 }
-

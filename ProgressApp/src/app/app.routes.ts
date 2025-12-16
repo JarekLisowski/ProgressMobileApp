@@ -18,9 +18,12 @@ import { OrdersComponent } from './orders/orders.component';
 import { OrderComponent } from './order/order.component';
 import { SummaryComponent } from './summary/summary.component';
 import { LogoffComponent } from './logoff/logoff.component';
+import { BrandsComponent } from './brands/brands.component';
+import { BrandComponent } from './brand/brand.component';
 
 export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent, canActivate: [AuthGuard] },
+    { path: 'brand/:name', component: BrandComponent, canActivate: [AuthGuard] },
     { path: 'product/:name', component: ProductDetailsComponent, canActivate: [AuthGuard] },
     { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
     { path: 'promo', component: SpecialOfferComponent, canActivate: [AuthGuard] },
@@ -28,6 +31,7 @@ export const routes: Routes = [
     { path: 'promoEdit/:editId', component: SpecialOfferEditComponent, canActivate: [AuthGuard] },
     { path: 'promoCreate/:id', component: SpecialOfferEditComponent, canActivate: [AuthGuard] },
     { path: 'categories', component: CategoriesComponent, canActivate: [AuthGuard] },
+    { path: 'brands', component: BrandsComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'stats', component: StatsComponent },
     { path: 'summary', component: SummaryComponent, canActivate: [AuthGuard] },

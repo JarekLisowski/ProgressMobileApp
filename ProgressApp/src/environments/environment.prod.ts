@@ -7,7 +7,7 @@ export interface IEnvironment {
 
 export const environment : IEnvironment = {
   production: true,
-  url: 'http://api.progress.ifox.com.pl/',
+  url: 'https://api.progress.ifox.com.pl/',
   getBackendApiUrl() {
     return this.url;
   },

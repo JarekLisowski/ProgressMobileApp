@@ -51,11 +51,18 @@ export class SearchBarComponent implements AfterViewInit {
           text: `${p.name} (${p.code})`
         }
       });
-
+      var items3 = x.brands?.map(b => {
+        return {
+          link: `/brand/` + (b.id ?? ""),
+          text: <string>b.name
+        }
+      });
       if (items1 != null)
         this.dropDownCategories = items1;
       if (items2 != null)
         this.dropDownProducts = items2;
+      if (items3 != null)
+        this.dropDownBrands = items3;
 
       this.openDropDown();
 
@@ -65,6 +72,7 @@ export class SearchBarComponent implements AfterViewInit {
   dropdownVisible: boolean = !true;
   dropDownCategories: DropDownItems[] = []
   dropDownProducts: DropDownItems[] = [];
+  dropDownBrands: DropDownItems[] = [];
 
   constructor(private apiService: ApiService) {
   }

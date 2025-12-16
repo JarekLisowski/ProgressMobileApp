@@ -10,9 +10,12 @@
       </tr>
     </thead>
     <tbody>
-      @for (item of data; track item) {
+      @for (item of data; track item.id) {
       <tr [class.highlight]="item?.paymentToBeSettled ?? 0  > 0">
         <td scope="row">
+          @if(showCustomerName) {
+          <div>{{item?.customer?.adrName}}</div>
+          }
           <a href="#" (click)="selectDocument(item); false">{{item.number}}</a><br>
           @if (item?.paymentToBeSettled ?? 0 > 0) {
           <span class="text-danger">Do zapłaty</span>

@@ -32,7 +32,7 @@ namespace Progress.Api.Controllers
       var user = GetUser();
       if (request.CategoryId != null && user != null)
       {
-        var data = _productManager.GetProductsByCategory(request.CategoryId.Value, user.StoreId, 1);
+        var data = _productManager.GetProductsByCategory(request.CategoryId.Value, user.StoreId, 1, request.OnlyAvailable ?? false);
         foreach (var item in data)
         {
           item.SetupUserPrices(user);
@@ -44,6 +44,26 @@ namespace Progress.Api.Controllers
       }
       return new ProductListResponse();
     }
+
+    [HttpPost("listByBrand")]
+    public ProductListResponse GetProductsFromBrand(ProductListRequest request)
+    {
+      var user = GetUser();
+      if (request.BrandId != null && user != null)
+      {
+        var data = _productManager.GetProductsByGroup(request.BrandId.Value, user.StoreId, 1, request.OnlyAvailable ?? false);
+        foreach (var item in data)
+        {
+          item.SetupUserPrices(user);
+        }
+        return new ProductListResponse
+        {
+          Data = _mapper.Map<Product[]>(data),
+        };
+      }
+      return new ProductListResponse();
+    }
+
 
     [AllowAnonymous]
     [HttpGet("image/{productId}")]
@@ -89,6 +109,17 @@ namespace Progress.Api.Controllers
     {
       
       var data = _productManager.GetCategoryList(search);
+      return new ProductCategoryListResponse
+      {
+        Data = _mapper.Map<ProductCategory[]>(data)
+      };
+    }
+
+    [HttpPost("brand/list")]
+    public ProductCategoryListResponse GetBrandList(string? search = null)
+    {
+
+      var data = _productManager.GetGroupsList(search);
       return new ProductCategoryListResponse
       {
         Data = _mapper.Map<ProductCategory[]>(data)
@@ -142,7 +173,7 @@ namespace Progress.Api.Controllers
           CategoryName = it.CategoryName,
         }).ToArray();
       }
-
+      result.Brands = _mapper.Map<ProductCategory[]>(_productManager.GetGroupsList(searchtext));
       return result;
     }
   }

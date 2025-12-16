@@ -1725,6 +1725,8 @@ export class ProductListRequest implements IProductListRequest {
     pageNo?: number | undefined;
     pageSize?: number | undefined;
     categoryId?: number | undefined;
+    brandId?: number | undefined;
+    onlyAvailable?: boolean | undefined;
 
     constructor(data?: IProductListRequest) {
         if (data) {
@@ -1740,6 +1742,8 @@ export class ProductListRequest implements IProductListRequest {
             this.pageNo = _data["pageNo"];
             this.pageSize = _data["pageSize"];
             this.categoryId = _data["categoryId"];
+            this.brandId = _data["brandId"];
+            this.onlyAvailable = _data["onlyAvailable"];
         }
     }
 
@@ -1755,6 +1759,8 @@ export class ProductListRequest implements IProductListRequest {
         data["pageNo"] = this.pageNo;
         data["pageSize"] = this.pageSize;
         data["categoryId"] = this.categoryId;
+        data["brandId"] = this.brandId;
+        data["onlyAvailable"] = this.onlyAvailable;
         return data;
     }
 }
@@ -1763,6 +1769,8 @@ export interface IProductListRequest {
     pageNo?: number | undefined;
     pageSize?: number | undefined;
     categoryId?: number | undefined;
+    brandId?: number | undefined;
+    onlyAvailable?: boolean | undefined;
 }
 
 export class ProductListResponse implements IProductListResponse {
@@ -2709,6 +2717,7 @@ export interface ISaveDocumentResponse {
 export class SearchResponse implements ISearchResponse {
     productCategories?: ProductCategory[] | undefined;
     products?: Product[] | undefined;
+    brands?: ProductCategory[] | undefined;
 
     constructor(data?: ISearchResponse) {
         if (data) {
@@ -2730,6 +2739,13 @@ export class SearchResponse implements ISearchResponse {
                     this.products[i] = item && !(<any>item).toJSON ? new Product(item) : <Product>item;
                 }
             }
+            if (data.brands) {
+                this.brands = [];
+                for (let i = 0; i < data.brands.length; i++) {
+                    let item = data.brands[i];
+                    this.brands[i] = item && !(<any>item).toJSON ? new ProductCategory(item) : <ProductCategory>item;
+                }
+            }
         }
     }
 
@@ -2744,6 +2760,11 @@ export class SearchResponse implements ISearchResponse {
                 this.products = [] as any;
                 for (let item of _data["products"])
                     this.products!.push(Product.fromJS(item));
+            }
+            if (Array.isArray(_data["brands"])) {
+                this.brands = [] as any;
+                for (let item of _data["brands"])
+                    this.brands!.push(ProductCategory.fromJS(item));
             }
         }
     }
@@ -2767,6 +2788,11 @@ export class SearchResponse implements ISearchResponse {
             for (let item of this.products)
                 data["products"].push(item.toJSON());
         }
+        if (Array.isArray(this.brands)) {
+            data["brands"] = [];
+            for (let item of this.brands)
+                data["brands"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -2774,6 +2800,7 @@ export class SearchResponse implements ISearchResponse {
 export interface ISearchResponse {
     productCategories?: IProductCategory[] | undefined;
     products?: IProduct[] | undefined;
+    brands?: IProductCategory[] | undefined;
 }
 
 export class StringApiResult implements IStringApiResult {

@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                 if (type != null && id != null) {
                     apiResponse.value = "Łączenie z serwererm..."
                     val apiClient = ApiClient()
-                    val url = "http://api.progress.ifox.com.pl/api/print/getPrintout/$id"
+                    val url = "https://api.progress.ifox.com.pl/api/print/getPrintout/$id"
                      //val url = "https://192.168.33.2:7228/api/print/$type/$id"
                      //val url = "http://192.168.33.2:5085/api/print/$type/$id"
                     apiClient.get(url) { response, exception ->
