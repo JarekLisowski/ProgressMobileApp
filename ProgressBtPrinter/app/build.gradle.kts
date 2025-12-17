@@ -37,6 +37,13 @@ android {
     buildFeatures {
         compose = true
     }
+
+    applicationVariants.all {
+        outputs.all {
+            // This sets the output file name to "ProgressBTPrinter.apk"
+            (this as? com.android.build.gradle.internal.api.BaseVariantOutputImpl)?.outputFileName = "ProgressBTPrinter.apk"
+        }
+    }
 }
 
 dependencies {
