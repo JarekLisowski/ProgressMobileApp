@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https"
-                    android:host="progress.ifox.com.pl" />
+                    android:host="print.progress.ifox.com.pl" />
             </intent-filter>
         </activity>
     </application>

@@ -17,7 +17,7 @@ export class PrintService {
             tap({
                 next: x => {
                     if (!x.isError && x.data) {
-                        window.open(`https://progress.ifox.com.pl/invoice/${x.data}`, '_blank');
+                        window.open(`https://print.progress.ifox.com.pl/invoice/${x.data}`, '_blank');
                     } else {
                         console.error(x.message);
                         this.loggerService.showError((x.message ?? "Nieznany błąd drukowania.") + `. Invoice ID: ${id} `);
