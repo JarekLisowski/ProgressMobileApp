@@ -1,21 +1,25 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Customer, Document } from '../../domain/generated/apimodel';
 import { InvoicesComponent } from "../invoices/invoices.component";
 import { FormsModule } from '@angular/forms';
 import { OrdersComponent } from '../orders/orders.component';
-
+import { ConfirmModalWindowComponent } from '../confirm-modal-window/confirm-modal-window.component';
+import { CartService } from '../../services/cart.service';
 
 @Component({
-    selector: 'app-customer',
-    imports: [InvoicesComponent, FormsModule, OrdersComponent],
-    templateUrl: './customer.component.html',
-    styleUrl: './customer.component.scss'
+  selector: 'app-customer',
+  imports: [InvoicesComponent, FormsModule, OrdersComponent, ConfirmModalWindowComponent],
+  templateUrl: './customer.component.html',
+  styleUrl: './customer.component.scss'
 })
 export class CustomerComponent implements OnInit {
 
+  @ViewChild('assignCustomerWindow') assignCustomerWindowRef!: ConfirmModalWindowComponent;
+
   apiService = inject(ApiService);
+  private readonly cartService = inject(CartService);
 
   customer: Customer | undefined;
   customerEdit: Customer = new Customer();
@@ -24,8 +28,7 @@ export class CustomerComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute
-  ) 
-  { 
+  ) {
 
   }
 
@@ -63,5 +66,18 @@ export class CustomerComponent implements OnInit {
 
   cancel(): void {
     this.editMode = false;
+  }
+
+  assignCustomer() {
+    this.assignCustomerWindowRef.title = "Przypisywanie klienta";
+    var message = "Przypisa klienta do bieżącej transakcji?";
+    this.assignCustomerWindowRef.buttonAcceptText = "Przypisz";
+    this.assignCustomerWindowRef.showObservable(message).subscribe(x => {
+      if (x && this.customer) {
+        this.cartService.setCustomer(this.customer).subscribe(x => {
+          console.log('Customer assigned to cart:', x);
+        });
+      }
+    });
   }
 }

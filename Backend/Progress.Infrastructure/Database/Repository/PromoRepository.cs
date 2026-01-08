@@ -18,7 +18,8 @@ namespace Progress.Infrastructure.Database.Repository
 
     public IEnumerable<PromoSet> GetPromoSetList()
     {
-      var today = overrideToday ?? DateTime.Today;
+      //var today = overrideToday ?? DateTime.Today;
+      var today = DateTime.Today;
       var data = EntitySet
         .AsNoTracking()
         .Where(it => it.DataOd <= today && it.DataDo >= today)

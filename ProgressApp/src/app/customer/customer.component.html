@@ -6,16 +6,21 @@
     <div class="d-flex justify-content-between mb-3">
       <h2>{{ customer.adrName }}</h2>
       <div class="">
-        <button class="btn btn-primary btn-sm " (click)="edit()">
+        <button class="btn btn-primary" (click)="edit()">
           <i class="bi bi-pencil-square"></i>
         </button>
       </div>
     </div>
     <div>{{ customer.adrStreet }} {{ customer.adrStreetNo }}</div>
     <div>{{ customer.adrCity }} {{ customer.adrZipCode }}</div>
-    <div>
+    <div class="d-flex justify-content-between mb-3">
       <div>
         NIP: {{ customer.adrNip }}
+      </div>
+      <div>
+         <button class="btn btn-primary  " (click)="assignCustomer()">
+          <i class="bi bi-file-earmark-person"></i>
+        </button>        
       </div>
     </div>
   </div>
@@ -87,3 +92,5 @@
   </div>
 </div>
 }
+
+<confirm-modal-window #assignCustomerWindow></confirm-modal-window>

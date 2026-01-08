@@ -20,7 +20,7 @@ namespace Progress.Infrastructure.Database.Repository
       {
         var query = from kh in DbContext.IfVwKontrahents
                     join cecha in DbContext.KhCechaKhs on kh.KhId equals cecha.CkIdKhnt
-                    where (cecha.CkIdCecha == cechaId) && (pattern == "" || kh.AdrNazwaPelna!.Contains(pattern) || kh.AdrNip!.StartsWith(pattern))
+                    where (cecha.CkIdCecha == cechaId) && (pattern == "" || kh.AdrNazwaPelna!.Contains(pattern) || kh.AdrNip!.StartsWith(pattern) || kh.AdrMiejscowosc!.StartsWith(pattern) || kh.AdrUlica!.Contains(pattern))
                     select kh;
         if (limit != null)
           query = query.OrderBy(it => it.AdrNazwa).Take(limit.Value);
