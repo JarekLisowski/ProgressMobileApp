@@ -45,13 +45,32 @@ namespace Progress.Api.Controllers
       return new ProductListResponse();
     }
 
+    [HttpPost("search-products")]
+    public ProductListResponse SearchProducts(ProductListRequest request)
+    {
+      var user = GetUser();
+      if (request.SearchText != null && user != null)
+      {
+        //var data = _productManager.SearchProduct2(request.SearchText, user.StoreId ?? 0, 1, 1000, request.OnlyAvailable ?? false);
+        //foreach (var item in data)
+        //{
+        //  item.SetupUserPrices(user);
+        //}
+        //return new ProductListResponse
+        //{
+        //  Data = _mapper.Map<Product[]>(data),
+        //};
+      }
+      return new ProductListResponse();
+    }
+
     [HttpPost("listByBrand")]
     public ProductListResponse GetProductsFromBrand(ProductListRequest request)
     {
       var user = GetUser();
       if (request.BrandId != null && user != null)
       {
-        var data = _productManager.GetProductsByGroup(request.BrandId.Value, user.StoreId, 1, request.OnlyAvailable ?? false);
+        var data = _productManager.GetProductsByGroup(request.BrandId.Value, request.CategoryId, user.StoreId, 1, request.OnlyAvailable ?? false);
         foreach (var item in data)
         {
           item.SetupUserPrices(user);
@@ -107,7 +126,7 @@ namespace Progress.Api.Controllers
     [HttpPost("category/list")]
     public ProductCategoryListResponse GetCategoryList(string? search = null)
     {
-      
+
       var data = _productManager.GetCategoryList(search);
       return new ProductCategoryListResponse
       {
@@ -115,16 +134,7 @@ namespace Progress.Api.Controllers
       };
     }
 
-    [HttpPost("brand/list")]
-    public ProductCategoryListResponse GetBrandList(string? search = null)
-    {
 
-      var data = _productManager.GetGroupsList(search);
-      return new ProductCategoryListResponse
-      {
-        Data = _mapper.Map<ProductCategory[]>(data)
-      };
-    }
 
     [HttpPost("stocks")]
     public ProductsStockResponse GetStocks(ProductStocksRequest request)
@@ -155,6 +165,37 @@ namespace Progress.Api.Controllers
       };
     }
 
+    [HttpPost("brand/list")]
+    public ProductCategoryListResponse GetBrandList(string? search = null)
+    {
+
+      var data = _productManager.GetGroupsList(search);
+      return new ProductCategoryListResponse
+      {
+        Data = _mapper.Map<ProductCategory[]>(data)
+      };
+    }
+
+    [HttpPost("brand/info/{id}")]
+    public ProductCategoryInfoResponse GetGroupInfo(int id)
+    {
+      var data = _productManager.GetGroupInfo(id);
+      return new ProductCategoryInfoResponse
+      {
+        Data = _mapper.Map<ProductCategory>(data)
+      };
+    }
+
+    [HttpPost("brand/{id}/categories")]
+    public ProductCategoryListResponse GetBrandCategories(int id)
+    {
+      var data = _productManager.GetGroupCategories(id);
+      return new ProductCategoryListResponse
+      {
+        Data = _mapper.Map<ProductCategory[]>(data)
+      };
+    }
+
     [HttpGet("search")]
     public SearchResponse Search(string searchtext)
     {
@@ -176,5 +217,15 @@ namespace Progress.Api.Controllers
       result.Brands = _mapper.Map<ProductCategory[]>(_productManager.GetGroupsList(searchtext));
       return result;
     }
+
+    [AllowAnonymous]
+    [HttpGet("CreateGroupCategories")]
+    public string CreateGroupCategories()
+    {
+      _productManager.BuildGroupCategories();
+      return "OK";
+    }
+
+
   }
 }

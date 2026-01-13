@@ -34,7 +34,8 @@ namespace Progress.Infrastructure.Database.Repository
 
     public PromoSet? GetPromoSet(int id)
     {
-      var today = overrideToday ?? DateTime.Today;
+      //var today = overrideToday ?? DateTime.Today;
+      var today = DateTime.Today;
       var data = EntitySet
         .AsNoTracking()
         .Include(it => it.IfxApiPromocjaPozycjas)
@@ -75,6 +76,7 @@ namespace Progress.Infrastructure.Database.Repository
       {
         item.Price.PriceGross = Math.Round((item.Price.PriceNet ?? 0) * (1 + item.TaxRate / 100), 2);
       }
+      products = products.OrderBy(it => it.Name).ToArray();
       return products;
     }
   }

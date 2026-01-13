@@ -21,7 +21,7 @@
           <span class="text-danger">Do zapłaty</span>
           }
         </td>
-        <td>{{item.issueDate | date:'shortDate'}}</td>
+        <td>{{item.issueDate | date:'shortDate' : '' : 'pl-PL'}}</td>
         <td class="text-end">{{item.totalGross | number:'1.2-2'}}<br />
           @if (item?.paymentToBeSettled ?? 0 > 0) {
           <span>

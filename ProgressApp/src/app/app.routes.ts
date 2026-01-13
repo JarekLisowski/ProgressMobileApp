@@ -20,6 +20,7 @@ import { SummaryComponent } from './summary/summary.component';
 import { LogoffComponent } from './logoff/logoff.component';
 import { BrandsComponent } from './brands/brands.component';
 import { BrandComponent } from './brand/brand.component';
+import { SearchProductComponent } from './search-product/search-product.component';
 
 export const routes: Routes = [
     { path: 'category/:name', component: CategoryComponent, canActivate: [AuthGuard] },
@@ -44,6 +45,7 @@ export const routes: Routes = [
     { path: 'internal-orders', component: InvoicesComponent, canActivate: [AuthGuard] },
     { path: 'internal-order/:id', component: InvoiceComponent, canActivate: [AuthGuard] },
     { path: 'saveDocumentSummary/:id', component: SaveDocSummaryComponent, canActivate: [AuthGuard] },
+    { path: 'search-product', component: SearchProductComponent, canActivate: [AuthGuard] },
     { path: 'logoff', component: LogoffComponent },
     { path: '', redirectTo: '/categories', pathMatch: 'full' },
     { path: '**', redirectTo: '/categories' }

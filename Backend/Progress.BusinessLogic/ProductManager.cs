@@ -44,9 +44,9 @@ namespace Progress.BusinessLogic
       return productList;
     }
 
-    public IEnumerable<Product> GetProductsByGroup(int id, int? stockId = null, int? stockId2 = null, bool onlyAvailable = false)
+    public IEnumerable<Product> GetProductsByGroup(int id, int? categoryId, int? stockId = null, int? stockId2 = null, bool onlyAvailable = false)
     {
-      var productList = dbProductRepository.GetProductsByGroup(id, stockId, stockId2, onlyAvailable);
+      var productList = dbProductRepository.GetProductsByGroup(id, categoryId, stockId, stockId2, onlyAvailable);
       return productList;
     }
 
@@ -67,6 +67,12 @@ namespace Progress.BusinessLogic
     public ProductCategory? GetCategoryInfo(int id)
     {
       var category = dbProductCategoryDictionary.SelectWhere(it => it.CtwId == id).FirstOrDefault();
+      return category;
+    }
+
+    public ProductCategory? GetGroupInfo(int id)
+    {
+      var category = dbProductGroup.SelectWhere(it => it.GrtId == id).FirstOrDefault();
       return category;
     }
 
@@ -96,12 +102,27 @@ namespace Progress.BusinessLogic
     {
       try
       {
-        var bycode = dbProduct.SelectWhere(it => it.TwSymbol.StartsWith(searchtext) && it.TwZablokowany == false, true).Take(10);
+        var bycode = dbProduct.SelectWhere(it => it.TwSymbol.StartsWith(searchtext) && it.TwZablokowany == false && it.TwSprzedazMobilna == true , true).Take(10);
         var byName = dbProductRepository.SearchProduct(searchtext, topCount - bycode.Count());
         var result = new List<Product>(bycode);
         result.AddRange(byName);
         return result.DistinctBy(it => it.Id).ToArray();
       } catch(Exception ex)
+      {
+        return [];
+      }
+    }
+
+    public Product[] SearchProduct2(string searchtext, int storeId, int storeId2, int count, bool onlyAvailable)
+    {
+      try
+      {
+        //var bycode = dbProduct.SelectWhere(it => it.TwSymbol.StartsWith(searchtext) && it.TwZablokowany == false && it.TwSprzedazMobilna == true, true).Take(10);
+        var result = dbProductRepository.SearchProduct(searchtext, count, storeId, storeId2);        
+        return result.DistinctBy(it => it.Id).ToArray();
+        return [];
+      }
+      catch (Exception ex)
       {
         return [];
       }
@@ -120,5 +141,18 @@ namespace Progress.BusinessLogic
         return [];
       }
     }
+
+    public void BuildGroupCategories()
+    {
+      var groups = GetGroupsList(null);
+      foreach (var item in groups)
+      {
+        var categories = dbProductRepository.GetCategoriesInGroup(item.Id, false);
+        dbProductRepository.AddGroupCategories(item.Id, categories);
+      }
+    }
+
+    public ProductCategory[] GetGroupCategories(int id)
+      => dbProductRepository.GetCategoriesInGroup(id);
   }
 }

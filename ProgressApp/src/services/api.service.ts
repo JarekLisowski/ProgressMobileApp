@@ -8,7 +8,7 @@ import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMe
 })
 
 export class ApiService {
-
+  
 
   constructor(private apiSerivce: RESTClientService) {
   }
@@ -16,6 +16,15 @@ export class ApiService {
   baseUrl() {
     return this.apiSerivce.baseUrl();
   }
+
+  searchProducts(text: string, onlyAvailable: boolean): Observable<ProductListResponse> {
+    var request: IProductListRequest = {
+      searchText: text,
+      onlyAvailable: onlyAvailable
+    };
+    return this.apiSerivce.post<ProductListResponse>("api/product/search-products", request);
+  }
+
 
   getProductList(categoryId: number, onlyAvailable: boolean): Observable<ProductListResponse> {
     var request = {
@@ -25,9 +34,10 @@ export class ApiService {
     return this.apiSerivce.post<ProductListResponse>("api/product/list", request);
   }
 
-  getProductListByBrand(brandId: number, onlyAvailable: boolean): Observable<ProductListResponse> {
+  getProductListByBrand(brandId: number, categoryId: number | null, onlyAvailable: boolean): Observable<ProductListResponse> {
     var request = {
       brandId: brandId,
+      categoryId: categoryId,
       onlyAvailable: onlyAvailable
     };
     return this.apiSerivce.post<ProductListResponse>("api/product/listByBrand", request);
@@ -57,6 +67,16 @@ export class ApiService {
 
   getCategoryInfo(id: number): Observable<ProductCategoryInfoResponse> {
     return this.apiSerivce.post<ProductCategoryInfoResponse>(`api/product/category/info/${id}`, {});
+  }
+
+  
+  getBrandInfo(id: number): Observable<ProductCategoryInfoResponse> {
+    return this.apiSerivce.post<ProductCategoryInfoResponse>(`api/product/brand/info/${id}`, {});
+  }
+  
+
+  getBrandCategories(brandId: number): Observable<ProductCategoryListResponse> {
+    return this.apiSerivce.post<ProductCategoryListResponse>(`api/product/brand/${brandId}/categories`, {});
   }
 
   getPromoList(): Observable<PromoSetListResponse> {
@@ -160,5 +180,7 @@ export class ApiService {
   search(searchText: string): Observable<SearchResponse> {
     return this.apiSerivce.get<SearchResponse>(`api/product/search?searchtext=${searchText}`);
   }
+
+  
 
 }

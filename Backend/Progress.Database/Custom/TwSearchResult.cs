@@ -6,5 +6,7 @@
     public int TwId { get; set; }
     public string TwSymbol { get; set; } = string.Empty;
     public string TwNazwa { get; set; } = string.Empty;
+    public bool TwZablokowany {  get; set; }
+    public bool TwSprzedazMobilna { get; set; }
   }
 }

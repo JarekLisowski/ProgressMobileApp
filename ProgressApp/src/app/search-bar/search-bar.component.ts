@@ -4,10 +4,10 @@ import { ApiService } from '../../services/api.service';
 import { DropDownItems } from '../../domain/dropDownItem';
 
 @Component({
-    selector: 'search-bar',
-    imports: [FormsModule],
-    templateUrl: './search-bar.component.html',
-    styleUrl: './search-bar.component.scss'
+  selector: 'search-bar',
+  imports: [FormsModule],
+  templateUrl: './search-bar.component.html',
+  styleUrl: './search-bar.component.scss'
 })
 export class SearchBarComponent implements AfterViewInit {
 
@@ -92,5 +92,10 @@ export class SearchBarComponent implements AfterViewInit {
     }
     this.dropdownVisible = true;
   }
+
+  search() {
+    window.location.href = `/search-product?search=${this.searchText}`;
+  }
+
 
 }

@@ -1727,6 +1727,7 @@ export class ProductListRequest implements IProductListRequest {
     categoryId?: number | undefined;
     brandId?: number | undefined;
     onlyAvailable?: boolean | undefined;
+    searchText?: string | undefined;
 
     constructor(data?: IProductListRequest) {
         if (data) {
@@ -1744,6 +1745,7 @@ export class ProductListRequest implements IProductListRequest {
             this.categoryId = _data["categoryId"];
             this.brandId = _data["brandId"];
             this.onlyAvailable = _data["onlyAvailable"];
+            this.searchText = _data["searchText"];
         }
     }
 
@@ -1761,6 +1763,7 @@ export class ProductListRequest implements IProductListRequest {
         data["categoryId"] = this.categoryId;
         data["brandId"] = this.brandId;
         data["onlyAvailable"] = this.onlyAvailable;
+        data["searchText"] = this.searchText;
         return data;
     }
 }
@@ -1771,6 +1774,7 @@ export interface IProductListRequest {
     categoryId?: number | undefined;
     brandId?: number | undefined;
     onlyAvailable?: boolean | undefined;
+    searchText?: string | undefined;
 }
 
 export class ProductListResponse implements IProductListResponse {
