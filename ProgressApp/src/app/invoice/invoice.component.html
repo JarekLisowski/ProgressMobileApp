@@ -1,3 +1,5 @@
-<document [document]="invoice" (onPay)="pay()" (onPrint)="print()"></document>
+<document [document]="invoice" [paymentInProgress]="paymentInProgress" (onPay)="pay()" (onPrint)="printInvoice()"></document>
 
 <pay-modal #payWindow [document]="invoice"></pay-modal>
+
+<confirm-modal-window #printReceiptWindow></confirm-modal-window>

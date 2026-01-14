@@ -50,10 +50,10 @@ namespace Progress.Navireo.Controllers
     }
 
     [HttpPost("pay")]
-    public ApiResult SettleDocument(PaymentRequest request)
+    public SaveDocumentResponse SettleDocument(PaymentRequest request)
     {
       if (request?.Payment == null)
-        return new ApiResult
+        return new SaveDocumentResponse
         {
           IsError = true,
           Message = "Brak danych"
@@ -62,16 +62,17 @@ namespace Progress.Navireo.Controllers
       try
       {
         var documentSettlement = request.Payment.ToNavireoDocumentSettlement();
-        _financeManager.SettleDocument(request.OperatorId, documentSettlement);
-        return new ApiResult
+        var wplataId = _financeManager.SettleDocument(request.OperatorId, documentSettlement);
+        return new SaveDocumentResponse
         {
-          Message = "Zapłacono"
+          Message = "Zapłacono",
+          PayDocumentId = wplataId ?? 0
         };
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex);
-        return new ApiResult
+        return new SaveDocumentResponse
         {
           IsError = true,
           Message = ex.Message

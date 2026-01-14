@@ -39,11 +39,16 @@
   <div class="row">
     <div class="col-3">Do zapł.:</div>
     <div class="col-4 text-end fw-bold">{{document?.paymentToBeSettled | number : '1.2-2'}} PLN</div>
-    @if ((document?.paymentToBeSettled ?? 0) > 0) {
-      <div class="col-5">
+    <div class="col-5">
+      @if (paymentInProgress) {
+        <span>
+          Proszę czekać...
+        </span>
+      } 
+      @else {  
         <input type="button" class="btn btn-primary btn-sm" value="Zapłać" (click)="pay()">
-      </div>
-    }
+      }
+    </div>
   </div>
 }
 

@@ -101,7 +101,7 @@ namespace Progress.Api
       return "Error";
     }
 
-    internal async Task<ApiResult> AddPayment(Payment payment, int userId)
+    internal async Task<SaveDocumentResponse> AddPayment(Payment payment, int userId)
     {
       var httpClient = GetHttpClient();
       var request = new PaymentRequest
@@ -115,10 +115,10 @@ namespace Progress.Api
       {
         if (result.IsSuccessStatusCode)
         {
-          var apiResult = await result.Content.ReadFromJsonAsync<ApiResult>();
+          var apiResult = await result.Content.ReadFromJsonAsync<SaveDocumentResponse>();
           if (apiResult != null) 
             return apiResult;
-          return new ApiResult
+          return new SaveDocumentResponse
           {
             IsError = true,
             Message = "Nieznany błąd: brak danych"
@@ -127,13 +127,13 @@ namespace Progress.Api
         var stream = new StreamReader(result.Content.ReadAsStream());
         var data = stream.ReadToEnd();
         Console.WriteLine(data);
-        return new ApiResult
+        return new SaveDocumentResponse
         {
           IsError = true,
           Message = $"{(int)result.StatusCode}: {result.ReasonPhrase}"
         };
       }
-      return new ApiResult
+      return new SaveDocumentResponse
       { 
         IsError = true,
         Message = "Nieznany błąd"      

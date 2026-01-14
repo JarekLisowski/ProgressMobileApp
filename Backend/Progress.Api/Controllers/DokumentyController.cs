@@ -6,6 +6,7 @@ using Progress.Domain.Api;
 using Progress.Domain.Api.Response;
 using Progress.Infrastructure.Database.Repository;
 using System.Globalization;
+using System.Runtime.Intrinsics.Arm;
 
 namespace Progress.Api.Controllers
 {
@@ -33,9 +34,14 @@ namespace Progress.Api.Controllers
     }
 
     [HttpGet("invoices/{customerId}")]
-    public DocumentResponse GetInvoices(int? customerId)
+    public DocumentResponse GetInvoices(int? customerId, string? from = null, string? to = null)
     {
-      var data = _documentRepository.GetDocuments(2, customerId);
+      var dfp = CultureInfo.InvariantCulture.DateTimeFormat;
+      if (from == null || !DateTime.TryParse(from, dfp, out var dateFrom))
+        dateFrom = DateTime.Today.Subtract(TimeSpan.FromDays(365));
+      if (to == null || !DateTime.TryParse(to, dfp, out var dateTo))
+        dateTo = DateTime.Today;
+      var data = _documentRepository.GetDocuments(2, customerId, dateFrom, dateTo);
       return new DocumentResponse()
       {
         Data = _mapper.Map<Document[]>(data)
@@ -43,13 +49,17 @@ namespace Progress.Api.Controllers
     }
 
     [HttpGet("my-invoices/{customerId}")]
-    public DocumentResponse GetMyInvoices(int? customerId)
+    public DocumentResponse GetMyInvoices(int? customerId, string from, string to)
     {
       var user = GetUser();
       if (user != null && user.CechaId != null)
       {
-        var fromDate = DateTime.Today.AddYears(-1);
-        var data = _documentRepository.GetDocumentsOwnCustomers(2, user.CechaId.Value, fromDate);
+        var dfp = CultureInfo.InvariantCulture.DateTimeFormat;
+        if (from == null || !DateTime.TryParse(from, dfp, out var dateFrom))
+          dateFrom = DateTime.Today.Subtract(TimeSpan.FromDays(365));
+        if (to == null || !DateTime.TryParse(to, dfp, out var dateTo))
+          dateTo = DateTime.Today;
+        var data = _documentRepository.GetDocumentsOwnCustomers(2, user.CechaId.Value, dateFrom, dateTo);
         return new DocumentResponse()
         {
           Data = _mapper.Map<Document[]>(data)
@@ -91,9 +101,14 @@ namespace Progress.Api.Controllers
     }
 
     [HttpGet("orders/{customerId}")]
-    public DocumentResponse GetOrders(int? customerId, string? dateFrom = null, string? dateTo = null, int pageSize = 100, int page = 1)
+    public DocumentResponse GetOrders(int? customerId, string? from = null, string? to = null, int pageSize = 100, int page = 1)
     {
-      var data = _documentRepository.GetDocuments(16, customerId);
+      var dfp = CultureInfo.InvariantCulture.DateTimeFormat;
+      if (from == null || !DateTime.TryParse(from, dfp, out var dateFrom))
+        dateFrom = DateTime.Today.Subtract(TimeSpan.FromDays(365));
+      if (to == null || !DateTime.TryParse(to, dfp, out var dateTo))
+        dateTo = DateTime.Today;
+      var data = _documentRepository.GetDocuments(16, customerId, dateFrom, dateTo);
       return new DocumentResponse()
       {
         Data = _mapper.Map<Document[]>(data)
@@ -101,13 +116,17 @@ namespace Progress.Api.Controllers
     }
 
     [HttpGet("my-orders/{customerId}")]
-    public DocumentResponse GetMyOrders(int? customerId, string? dateFrom = null, string? dateTo = null, int pageSize = 100, int page = 1)
+    public DocumentResponse GetMyOrders(int? customerId, string? from = null, string? to = null, int pageSize = 100, int page = 1)
     {
       var user = GetUser();
       if (user != null && user.CechaId != null)
       {
-        var fromDate = DateTime.Today.AddYears(-1);
-        var data = _documentRepository.GetDocumentsOwnCustomers(16, user.CechaId.Value, fromDate);
+        var dfp = CultureInfo.InvariantCulture.DateTimeFormat;
+        if (from == null || !DateTime.TryParse(from, dfp, out var dateFrom))
+          dateFrom = DateTime.Today.Subtract(TimeSpan.FromDays(365));
+        if (to == null || !DateTime.TryParse(to, dfp, out var dateTo))
+          dateTo = DateTime.Today;
+        var data = _documentRepository.GetDocumentsOwnCustomers(16, user.CechaId.Value, dateFrom, dateTo);
         return new DocumentResponse()
         {
           Data = _mapper.Map<Document[]>(data)
@@ -136,7 +155,7 @@ namespace Progress.Api.Controllers
     }
 
     [HttpPost("pay")]
-    public async Task<ApiResult> PostPayment(Payment payment)
+    public async Task<SaveDocumentResponse> PostPayment(Payment payment)
     {
       var userId = GetUserId();
       if (userId != null)
@@ -148,14 +167,14 @@ namespace Progress.Api.Controllers
         }
         catch(Exception ex)
         {
-          return new ApiResult
+          return new SaveDocumentResponse
           {
             IsError = true,
             Message = ex.Message,
           };
         }
       }
-      return new ApiResult
+      return new SaveDocumentResponse
       {
         IsError = true,
         Message = "No user"

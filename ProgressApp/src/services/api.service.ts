@@ -107,12 +107,12 @@ export class ApiService {
     return this.apiSerivce.post('api/document/send', document)
   }
 
-  getInvoices(customerId: number): Observable<DocumentResponse> {
-    return this.apiSerivce.get(`api/document/invoices/${customerId}`)
+  getInvoices(customerId: number, dateFrom: string, dateTo: string): Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/invoices/${customerId}?from=${dateFrom}&to=${dateTo}`)
   }
 
-  getInvoicesOwnCustomers(customerId: number): Observable<DocumentResponse> {
-    return this.apiSerivce.get(`api/document/my-invoices/${customerId}`)
+  getInvoicesOwnCustomers(customerId: number, dateFrom: string, dateTo: string): Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/my-invoices/${customerId}?from=${dateFrom}&to=${dateTo}`)
   }
 
   getOrders(customerId: number): Observable<DocumentResponse> {
@@ -139,8 +139,8 @@ export class ApiService {
     return this.apiSerivce.post<StringApiResult>(`api/customer/update`, customer);
   }
 
-  payForInvoice(payment: IPayment): Observable<ApiResult> {
-    return this.apiSerivce.post<ApiResult>(`api/document/pay/`, payment);
+  payForInvoice(payment: IPayment): Observable<SaveDocumentResponse> {
+    return this.apiSerivce.post<SaveDocumentResponse>(`api/document/pay/`, payment);
   }
 
   printInvoiceRequest(id: number): Observable<PrintRequestResponse> {

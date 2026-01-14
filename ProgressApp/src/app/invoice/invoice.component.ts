@@ -6,16 +6,19 @@ import { DocumentComponent } from "../document/document.component";
 import { PayModalComponent } from "../pay-modal/pay-modal.component";
 import { PrintService } from '../../services/printService';
 import { LoggerService } from '../../services/loggerService';
+import { ConfirmModalWindowComponent } from '../confirm-modal-window/confirm-modal-window.component';
 
 @Component({
-    selector: 'invoice',
-    imports: [DocumentComponent, PayModalComponent],
-    templateUrl: './invoice.component.html',
-    styleUrl: './invoice.component.scss'
+  selector: 'invoice',
+  imports: [DocumentComponent, PayModalComponent, ConfirmModalWindowComponent],
+  templateUrl: './invoice.component.html',
+  styleUrl: './invoice.component.scss'
 })
 export class InvoiceComponent implements OnInit {
 
   @ViewChild('payWindow') payWindowRef!: PayModalComponent;
+
+  @ViewChild('printReceiptWindow') printReceiptWindowRef!: ConfirmModalWindowComponent;
 
   route = inject(ActivatedRoute);
   apiService = inject(ApiService);
@@ -24,6 +27,8 @@ export class InvoiceComponent implements OnInit {
 
   invoice: Document | undefined;
   printInProgress = false;
+  paymentInProgress = false;
+  errorMessage: string = ''; 
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -51,14 +56,26 @@ export class InvoiceComponent implements OnInit {
   }
 
   doPay(payment: IPayment) {
-    this.apiService.payForInvoice(payment).subscribe(x => {
-      if (!x.isError && this.invoice?.id) {
-        this.loadData(this.invoice?.id);
+    this.paymentInProgress = true;
+    this.apiService.payForInvoice(payment).subscribe({
+      next: x => {
+        if (!x.isError && this.invoice?.id) {
+          this.loadData(this.invoice?.id);
+          if (x.payDocumentId) {
+            this.printCashReceiptWindow(x.payDocumentId);
+          }
+        }
+        this.paymentInProgress = false;
+      },
+      error: err => {
+        console.error('Payment error', err);
+        this.paymentInProgress = false;
+        this.errorMessage = err ?? "Błąd podczas przetwarzania płatności.";
       }
     });
   }
 
-  print() {
+  printInvoice() {
     if (this.invoice?.id) {
       this.printInProgress = true;
       this.printService.printInvoice(this.invoice.id).subscribe(x => {
@@ -67,5 +84,34 @@ export class InvoiceComponent implements OnInit {
       });
     }
   }
+
+  printCashReceiptWindow(paymentId: number) {
+    this.printReceiptWindowRef.title = "Drukowanie?";
+    var message = "Wydrukpować potwierdzenie wpłaty?";
+    this.printReceiptWindowRef.buttonAcceptText = "Drukuj";
+    this.printReceiptWindowRef.showObservable(message).subscribe(x => {
+      if (x) {
+        this.printCashReceipt(paymentId);
+      }
+    });
+  }
+
+  printCashReceipt(paymentId: number) {
+    if (!this.printInProgress && paymentId != null) {
+      this.printInProgress = true;
+      this.printService.printCashReceipt(paymentId ?? 0).subscribe({
+        next: x => {
+          console.log(x);
+          this.printInProgress = false;
+        },
+        error: err => {
+          console.error(err);
+          this.printInProgress = false;
+          this.errorMessage = err ?? "Błąd drukowania.";
+        }
+      });
+    }
+  }
+
 
 }

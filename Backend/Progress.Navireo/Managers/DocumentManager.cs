@@ -131,7 +131,6 @@ namespace Progress.Navireo.Managers
 
         var userName = $"{pd_User.UzImie} {pd_User.UzNazwisko}".Trim();
         suDokument.Wystawil = userName;
-        //SetPersonelId(document.Id, operatorId, userName);
 
         string uwagi = suDokument.Uwagi ?? "";        
 
@@ -161,10 +160,10 @@ namespace Progress.Navireo.Managers
         result.DocumentNumber = document.FullNumber;
         result.DocumentType = document.DocumentType.GetName();
 
-        //if (document.IsDeleted == false)
-        //{
-        //  SetPersonelId(document.Id, operatorId, userName);
-        //}
+        if (document.IsDeleted == false)
+        {
+          SetPersonelId(document.Id, operatorId, userName);
+        }
         if (document.IsNew)
         {
           SetIFx_ApiDokumentyZapisane(document);
@@ -391,11 +390,11 @@ namespace Progress.Navireo.Managers
           Logger.Log(LogType.Exception, string.Format("Nie udało się ustawić PersonelId: {0} na dokumencie o Id: {1}", documentId, operatorId), operatorId);
 
         var nz_finanse = dbContext.NzFinanses.Where(x => x.NzfIdDokumentAuto == documentId);
-        //foreach (var nzf in nz_finanse)
-        //{
-        //  nzf.NzfIdWystawil = operatorId;
-        //  nzf.NzfWystawil = userName;
-        //}
+        foreach (var nzf in nz_finanse)
+        {
+          nzf.NzfIdWystawil = operatorId;
+          nzf.NzfWystawil = userName;
+        }
         dbContext.SaveChanges();
       }
     }
@@ -709,7 +708,7 @@ namespace Progress.Navireo.Managers
           string deliveryComment = string.Format("[Dostawa:{0}]", dostawa.Name);
           string comment = suDokument.Uwagi ?? "";
           if (!comment.Contains(deliveryComment))
-            suDokument.Uwagi = deliveryComment + suDokument.Uwagi;
+            suDokument.Uwagi = deliveryComment + " " + suDokument.Uwagi;
         }
       }
     }

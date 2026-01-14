@@ -152,7 +152,7 @@ namespace Progress.Navireo.Managers
     /// <returns>Suma przyjętej gotówki</returns>
     private decimal SumaPrzyjetejGotowki(int operatorId, DateTime dateFrom, DateTime dateTo)
     {
-      var nzf = dbContext.NzFinanses.Where(x => x.NzfIdWystawil == operatorId && x.NzfTyp == 17 && x.NzfData >= dateFrom && x.NzfData < dateTo);
+      var nzf = dbContext.NzFinanses.Where(x => x.NzfIdWystawil == operatorId && x.NzfTyp == 17 && x.NzfData >= dateFrom && x.NzfData <= dateTo);
 
       return nzf.ToList().Sum(x => x.NzfWartosc);
     }
@@ -166,7 +166,7 @@ namespace Progress.Navireo.Managers
     /// <param name="settlement">Rozliczenie</param>
     /// <param name="przelew">Czy przelew</param>
     /// <returns></returns>
-    public bool SettleDocument(int operatorId, DocumentSettlement settlement, bool przelew = false)
+    public int? SettleDocument(int operatorId, DocumentSettlement settlement, bool przelew = false)
     {
       if (settlement.Value == 0)
         throw new Exception("Brak podanej kwoty TotalGross dokumentu");
@@ -220,7 +220,7 @@ namespace Progress.Navireo.Managers
               int wplataId = RozliczNaleznosc(finManager, nal, settlement.Number, settlement.Value, settlement.IssueDate, (int)pd_Uzytkownik.UzIdKasy, przelew, karta);
               SetWystawil(wplataId, pd_Uzytkownik);
               //result.Add(new KeyValuePair<string, int>(settlement.GUID, wplataId));
-
+              return wplataId;
             }
             finally
             {
@@ -228,7 +228,7 @@ namespace Progress.Navireo.Managers
               nal = null;
             }
           }
-          return true;
+          return 0;
         }
         else
         {
@@ -248,7 +248,7 @@ namespace Progress.Navireo.Managers
             kp.Zapisz();
             int wplataId = kp.Identyfikator;
             SetWystawil(wplataId, pd_Uzytkownik);
-            return true;
+            return wplataId;
           }
           finally
           {

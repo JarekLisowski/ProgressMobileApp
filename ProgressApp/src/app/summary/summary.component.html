@@ -76,7 +76,14 @@
       </table>
     </div>
   </div>
-  } @else {
+  } @else if (loading)
+  {
+  <div class="alert alert-info mt-4">
+    Ładowanie danych...
+  </div>
+  }
+  @else 
+  {
   <div class="alert alert-info mt-4">
     Brak danych do wyświetlenia. Wybierz zakres dat i kliknij Odśwież.
   </div>

@@ -70,7 +70,7 @@ export class CustomerComponent implements OnInit {
 
   assignCustomer() {
     this.assignCustomerWindowRef.title = "Przypisywanie klienta";
-    var message = "Przypisa klienta do bieżącej transakcji?";
+    var message = "Przypisać klienta do bieżącej transakcji?";
     this.assignCustomerWindowRef.buttonAcceptText = "Przypisz";
     this.assignCustomerWindowRef.showObservable(message).subscribe(x => {
       if (x && this.customer) {

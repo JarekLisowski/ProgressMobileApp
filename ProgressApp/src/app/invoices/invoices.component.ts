@@ -34,6 +34,11 @@ export class InvoicesComponent implements OnInit {
   data: Document[] = [];
   private dataLoaded: boolean = false;
 
+  dateRanges = ['Dzisiaj', 'Ostatnie 30 dni', 'Ostatni rok', 'Niestandardowy'];
+  selectedRange: string = 'Ostatnie 30 dni';
+  dateFrom: string | null = new Date().toISOString().split('T')[0];
+  dateTo: string | null = new Date().toISOString().split('T')[0];
+
   ngOnInit(): void {
     this.loadData();
   }
@@ -44,7 +49,7 @@ export class InvoicesComponent implements OnInit {
 
     this.dataLoaded = true;
     if (this.customerId > 0) {
-      this.apiService.getInvoices(this.customerId).subscribe(x => {
+      this.apiService.getInvoices(this.customerId, this.dateFrom ?? '', this.dateTo ?? '').subscribe(x => {
         if (x?.data != undefined) {
           this.allData = x.data;
           this.data = x.data;
@@ -53,7 +58,7 @@ export class InvoicesComponent implements OnInit {
     }
     else {
       this.showCustomerName = true;
-      this.apiService.getInvoicesOwnCustomers(this.customerId).subscribe(x => {
+      this.apiService.getInvoicesOwnCustomers(this.customerId, this.dateFrom ?? '', this.dateTo ?? '').subscribe(x => {
         if (x?.data != undefined) {
           this.allData = x.data;
           this.data = x.data;
@@ -63,8 +68,6 @@ export class InvoicesComponent implements OnInit {
   }
 
   onFilterChanged() {
-    //this.dataLoaded = false;
-    //this.loadData();
     if (this.onlyUnpaid) {
       this.data = this.allData.filter(x => x.paymentToBeSettled ?? 0 > 0);
     } else {
@@ -76,5 +79,37 @@ export class InvoicesComponent implements OnInit {
     this.router.navigate(['/invoice', id]);
   }
 
+  onCustomDateRangeChange() {
+    this.dataLoaded = false;
+    this.loadData();
+  }
 
+  onDateRangeChange(range: string) {
+    this.selectedRange = range;
+    this.setDateRange();
+    this.dataLoaded = false;
+    this.loadData();
+  }
+
+  private setDateRange() {
+    const today = new Date();
+    switch (this.selectedRange) {
+      case 'Dzisiaj':
+        this.dateFrom = today.toISOString().split('T')[0];
+        this.dateTo = today.toISOString().split('T')[0];
+        break;
+      case 'Ostatnie 30 dni':
+        const thirtyDaysAgo = new Date(today);
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        this.dateFrom = thirtyDaysAgo.toISOString().split('T')[0];
+        this.dateTo = today.toISOString().split('T')[0];
+        break;
+      case 'Ostatni rok':
+        const yearAgo = new Date(today);
+        yearAgo.setDate(yearAgo.getDate() - 365);
+        this.dateFrom = yearAgo.toISOString().split('T')[0];
+        this.dateTo = today.toISOString().split('T')[0];
+        break;
+    }
+  }
 }

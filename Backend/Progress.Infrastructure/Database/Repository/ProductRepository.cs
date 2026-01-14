@@ -29,7 +29,7 @@ namespace Progress.Infrastructure.Database.Repository
       {
         var stock = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;
         var stockSecondary = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
-        if (!onlyAvailable || stock > 0 || stockSecondary > 0)
+        if (!onlyAvailable || stock > 0)
         {
           var product = Mapper.Map<Product>(productDb);
           product.Stock = stock;
@@ -58,7 +58,7 @@ namespace Progress.Infrastructure.Database.Repository
       {
         var stock = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;
         var stockSecondary = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
-        if (!onlyAvailable || stock > 0 || stockSecondary > 0)
+        if (!onlyAvailable || stock > 0)
         {
           var product = Mapper.Map<Product>(productDb);
           product.Stock = stock;

@@ -23,6 +23,8 @@ export class SummaryComponent implements OnInit {
   dateRanges = ['Dzisiaj', 'Wczoraj', 'Bieżący tydzień', 'Bieżący miesiąc', 'Niestandardowy'];
   selectedRange: string = 'Dzisiaj';
 
+  loading: boolean = false;
+
   ngOnInit(): void {
     this.setDateRange();
     this.loadSummary();
@@ -30,13 +32,20 @@ export class SummaryComponent implements OnInit {
 
   loadSummary() {
     if (this.dateFrom && this.dateTo) {
-      this.apiService.getSaleSummary(this.dateFrom, this.dateTo).subscribe(summary => {
-        console.log(summary);
-        if (summary && summary.data) {
-          this.saleSummary = summary.data;
+      this.loading = true;
+      this.apiService.getSaleSummary(this.dateFrom, this.dateTo).subscribe({
+        next: summary => {
+          this.loading = false;
+          console.log(summary);
+          if (summary && summary.data) {
+            this.saleSummary = summary.data;
+          }
+        },
+        error: err => {
+          console.error(err);
+          this.loading = false;
         }
-      }
-      );
+      });
     }
   }
 

@@ -3,7 +3,7 @@
 Data: {{IssueDate | format_date: "dd.MM.yyyy"}}
 -----------------------------------------------------------------
 Sprzedawca:
-  {{Seller.AdrName}}
+  {{Seller.AdrNameFull}}
   {{Seller.AdrStreet}} {{Seller.AdrStreetNo}}
   {{Seller.AdrZipCode}} {{Seller.AdrCity}}
   NIP: {{Seller.AdrNip}}
@@ -11,7 +11,7 @@ Sprzedawca:
   BDO:000343350
 
 Nabywca:
-  {{Customer.AdrName}}
+  {{Customer.AdrNameFull}}
   {{Customer.AdrStreet}} {{Customer.AdrStreetNo}}
   {{Customer.AdrZipCode}} {{Customer.AdrCity}}
   NIP: {{Customer.AdrNip}}
@@ -19,17 +19,17 @@ Nabywca:
 Symbol              Nazwa
   C. Netto  Ilość   J.m.   %VAT    Wart. netto   Wart. brutto  P
 -----------------------------------------------------------------
-{% for item in Items -%}
-{{item.Product.Code | alignLeft:20}}{{item.Product.Name | alignLeft:70}}
+{%- for item in Items %}
+{{item.Product.Code | alignLeft:20}}{{item.Product.Name | alignLeft:45}}
 {{item.PriceNet | format_number:"N2" | alignRight:10}}{{item.Quantity | format_number:"N2" | alignRight:7}}{{item.Unit | alignRight:7}}{{item.TaxRate | format_number:"N2" | alignRight:7}}{{item.LineNet | format_number:"N2" | alignRight:15}}{{item.LineGross | format_number:"N2" | alignRight:15}}{% if item.PromoSetId > 0 %}P{% endif %}
-{%- endfor %}
+{% endfor -%}
 -----------------------------------------------------------------
 Podusumowanie VAT
     Stawka VAT         Wart. netto      Kwota VAT   Wart. brutto
 -----------------------------------------------------------------
-{% for item in VatSummary -%}
+{%- for item in VatSummary %}
 {{item.RateName | alignRight:15}}{{item.Net | format_number:"N2" | alignRight:20}}{{item.Tax | format_number:"N2" | alignRight:15}}{{item.Gross| format_number:"N2" | alignRight:15}}
-{%- endfor %}
+{% endfor -%}
 -----------------------------------------------------------------
 Razem     {{TotalNet | format_number:"N2" | alignRight:25}}{{TotalTax | format_number:"N2" | alignRight:15}}{{TotalGross | format_number:"N2" | alignRight:15}}
 

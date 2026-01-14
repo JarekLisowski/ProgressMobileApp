@@ -3,4 +3,27 @@
    <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" [(ngModel)]="onlyUnpaid" (change)="onFilterChanged()">
   <label class="form-check-label" for="switchCheckChecked">Tylko niezapłacone</label>
 </div>
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="dateRange" class="form-label">Okres:</label>
+      <select class="form-select" id="dateRange" [ngModel]="selectedRange" (ngModelChange)="onDateRangeChange($event)">
+        @for (range of dateRanges; track range) {
+        <option [value]="range">{{ range }}</option>
+        }
+      </select>
+    </div>
+    @if (selectedRange === 'Niestandardowy') {
+    <div class="col-md-3 mt-2">
+      <label for="dateFrom" class="form-label">Od</label>
+      <input type="date" class="form-control" id="dateFrom" [(ngModel)]="dateFrom">
+    </div>
+    <div class="col-md-3 mt-2">
+      <label for="dateTo" class="form-label">Do</label>
+      <input type="date" class="form-control" id="dateTo" [(ngModel)]="dateTo">
+    </div>
+    <div class="col-md-3 mt-2 d-flex align-items-end">
+      <button class="btn btn-primary" (click)="onCustomDateRangeChange()">Odśwież</button>
+    </div>
+    }
+  </div>
 <documents [data]="data" [showCustomerName]="showCustomerName" (documentSelected)="onDocumentSelected($event)"></documents>

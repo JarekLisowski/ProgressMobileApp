@@ -19,10 +19,10 @@ namespace Progress.Infrastructure.Database.Repository
       _dokItemRepository = dokItemRepository;
     }
 
-    public Document[] GetDocuments(int dokType, int? customerId)
+    public Document[] GetDocuments(int dokType, int? customerId, DateTime from, DateTime to)
     {
       var data = EntitySet.AsNoTracking()
-        .Where(it => it.DokPlatnikId == customerId && it.DokTyp == dokType)
+        .Where(it => it.DokPlatnikId == customerId && it.DokTyp == dokType && it.DokDataWyst >= from && it.DokDataWyst <= to)
         .OrderByDescending(it => it.DokDataWyst)
         .ThenByDescending(it => it.DokId)
         .ToArray();
@@ -34,11 +34,11 @@ namespace Progress.Infrastructure.Database.Repository
       return [];
     }
 
-    public Document[] GetDocumentsOwnCustomers(int dokType, int userCechaKhId, DateTime fromDate)
+    public Document[] GetDocumentsOwnCustomers(int dokType, int userCechaKhId, DateTime fromDate, DateTime toDate)
     {
       var data = (from khCechy in DbContext.KhCechaKhs.AsNoTracking()
                   join dok in DbContext.IfVwDokuments.AsNoTracking() on new { khId = khCechy.CkIdKhnt, cechaId = khCechy.CkIdCecha } equals new { khId = dok.DokPlatnikId ?? 0, cechaId = userCechaKhId }
-                  where dok.DokTyp == dokType && dok.DokStatus != 2 && dok.DataWystawienia >= fromDate
+                  where dok.DokTyp == dokType && dok.DokStatus != 2 && dok.DokDataWyst >= fromDate && dok.DokDataWyst <= toDate
                   select dok)
                     .OrderByDescending(it => it.DokDataWyst)
                     .ThenByDescending(it => it.DokId)

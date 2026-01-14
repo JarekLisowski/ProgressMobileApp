@@ -15,6 +15,7 @@ export class DocumentComponent {
 
   @Input() document: Document | undefined;
   @Input() printButton: boolean = true;
+  @Input() paymentInProgress: boolean = false;
 
   @Output() onPay: EventEmitter<any> = new EventEmitter();
   @Output() onPrint: EventEmitter<any> = new EventEmitter();

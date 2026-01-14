@@ -6,7 +6,7 @@
   </a>
 </div>
 <div class="mt-4">
-  @if (docType == 'Invoice') {
+  @if (docType == 'Invoice' || docType == 'Faktura') {
     <button class="btn me-3" [ngClass]="{'btn-primary': !printInProgress, 'btn-secondary': printInProgress}" [disabled]="printInProgress" (click)="printInvoice()">
       Drukuj fakturę
     </button>

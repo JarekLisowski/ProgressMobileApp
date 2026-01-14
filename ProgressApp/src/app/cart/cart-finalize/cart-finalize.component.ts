@@ -18,11 +18,9 @@ export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly cartService = inject(CartService);
   private readonly apiService = inject(ApiService);
   private readonly elementRef = inject(ElementRef);
-  //private intersectionObserver: IntersectionObserver | undefined;
 
   @Output() SaveTransaction = new EventEmitter<any>();
 
-  //transaction: Transaction | undefined;
   cartItems: CartItem[] = [];
   deliveryMethod: DeliveryMethod | undefined;
   secondPaymentMethod: PaymentMethod | undefined;
@@ -30,6 +28,9 @@ export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
   private _paymentMethods: PaymentMethod[] = [];
   @Input() saving: boolean = false;
   @Input() errorMessage: string = "";
+
+  outOfStock: boolean = false;
+  outOfStockSubscription: Subscription | undefined;
 
   get nazwaDokumentu(): string {
     switch (this.transaction?.document) {
@@ -62,6 +63,17 @@ export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
     return sum
   }
 
+  get comment(): string {
+    return this.transaction?.comment || '';
+  }
+
+  get savePossible(): boolean {
+    if (this.isInvoice && this.outOfStock) {
+      return false;
+    }
+    return true;
+  }
+
   transaction: Transaction | undefined;
   private subscription: Subscription | undefined;
 
@@ -92,41 +104,25 @@ export class CartFinalizeComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     });
+
+    this.outOfStockSubscription = this.cartService.subscribeOutOfStock$().subscribe(value => {
+      this.outOfStock = value;
+      console.log("Out of stock status updated: " + value);
+    });
+
   }
 
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+    if (this.outOfStockSubscription) {
+      this.outOfStockSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit(): void {
-    // this.intersectionObserver = new IntersectionObserver(entries => {
-    //   if (entries[0].isIntersecting) {
-    //     this.loadTransactionData();
-    //   }
-    // });
-    // this.intersectionObserver.observe(this.elementRef.nativeElement);
   }
-
-  // ngOnDestroy(): void {
-  //   if (this.intersectionObserver) {
-  //     this.intersectionObserver.disconnect();
-  //   }
-  // }
-
-  // loadTransactionData() {
-  //   console.log("Loading transaction data!");
-  //   this.cartService.getCartItems().subscribe(x => {
-  //     this.cartItems = x;
-  //   });
-  //   this.cartService.getCurrentTransaction().subscribe(x => {
-  //     this.transaction = x;
-  //     this.deliveryMethod = this._deliveryMethods.find(x => x.id == this.transaction?.deliveryMethod);
-  //     this.secondPaymentMethod = this._paymentMethods.find(x => x.id == this.transaction?.secondPaymentMethod);
-  //     this.loadDeliveryMethods();
-  //   });
-  // }
 
   loadDeliveryMethods() {
     this.apiService.getDeliveryMethods().subscribe(delivery => {
