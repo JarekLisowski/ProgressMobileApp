@@ -67,7 +67,7 @@ namespace Progress.Infrastructure.Database.Repository
                    TaxRate = vat.VatStawka,
                    Price = new Price
                    {
-                     PriceNet = promo_poz.Gratis ? 0 : promo_poz.CenaNetto > 0 ? promo_poz.CenaNetto : tc.TcCenaNetto1 ?? 0,
+                     PriceNet = promo_poz.Gratis ? promo_poz.CenaNetto : promo_poz.CenaNetto > 0 ? promo_poz.CenaNetto : tc.TcCenaNetto2 ?? 0,
                      TaxPercent = vat.VatStawka
                    }
                  };

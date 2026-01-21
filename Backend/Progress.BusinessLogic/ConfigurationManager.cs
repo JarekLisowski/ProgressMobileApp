@@ -38,8 +38,8 @@ namespace Progress.BusinessLogic
                    Id = delivery.Id,
                    Name = delivery.Nazwa,
                    TwId = delivery.TwId,
-                   PriceGross = cena.TcCenaBrutto1 ?? 0,
-                   PriceNet = cena.TcCenaNetto1 ?? 0,
+                   PriceGross = cena.TcCenaBrutto2 ?? 0,
+                   PriceNet = cena.TcCenaNetto2 ?? 0,
                    TaxRate = vat.VatStawka,
                    MaxValue = delivery.MaxWartosc,
                    MinValue = delivery.MinWartosc
