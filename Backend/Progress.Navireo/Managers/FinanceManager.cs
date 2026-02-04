@@ -173,6 +173,7 @@ namespace Progress.Navireo.Managers
 
       //var result = new List<KeyValuePair<string, int>>();
       InsERT.FinDokumenty naleznosci = null;
+      InsERT.FinDokumenty naleznosci2 = null;
       InsERT.FinManager finManager = null;
       try
       {
@@ -217,9 +218,8 @@ namespace Progress.Navireo.Managers
               nal = (InsERT.FinDokument)_oNal;
               if (nal.WartoscBiezaca < settlement.Value)
                 throw new Exception(string.Format("Wartość rozliczenia: {1} jest wyższa od kwoty należności: {0}", nal.WartoscBiezaca, settlement.Value));
-              int wplataId = RozliczNaleznosc(finManager, nal, settlement.Number, settlement.Value, settlement.IssueDate, (int)pd_Uzytkownik.UzIdKasy, przelew, karta);
-              SetWystawil(wplataId, pd_Uzytkownik);
-              //result.Add(new KeyValuePair<string, int>(settlement.GUID, wplataId));
+              int wplataId = RozliczNaleznosc(finManager, nal, settlement.Number, settlement.Value, settlement.IssueDate, (int)pd_Uzytkownik.UzIdKasy, operatorId, przelew, karta);
+              //SetWystawil(wplataId, pd_Uzytkownik);
               return wplataId;
             }
             finally
@@ -313,7 +313,7 @@ namespace Progress.Navireo.Managers
     /// Rozlicza dokument - dodaje wpłatę
     /// </summary>
     /// <returns></returns>
-    private static int RozliczNaleznosc(InsERT.FinManager finManager, InsERT.FinDokument nal, int numer, decimal kwotaSplaty, DateTime data, int kasaId, bool przelew = true, int? fpKartaId = null)
+    private static int RozliczNaleznosc(InsERT.FinManager finManager, InsERT.FinDokument nal, int numer, decimal kwotaSplaty, DateTime data, int kasaId, int operatorId, bool przelew = true, int? fpKartaId = null)
     {
       InsERT.FinDokument wplata = null;
       InsERT.FinRozliczenie rozliczenie = null;
@@ -326,6 +326,7 @@ namespace Progress.Navireo.Managers
           finCesja.KartaId = fpKartaId.Value;
           finCesja.DataRozrachunku = DateTime.Today;
           finCesja.KwotaSplaty = kwotaSplaty;
+          finCesja.WystawilId = operatorId;
           nal.Rozliczenia.RozliczKarta(finCesja);
           finCesja.ZapiszCesje();
           nal.Zapisz();
@@ -610,6 +611,16 @@ namespace Progress.Navireo.Managers
       {
         wplata.NzfIdWystawil = pd_Uzytkownik.UzId;
         wplata.NzfWystawil = wplacil;
+        dbContext.SaveChanges();
+      }
+    }
+
+    private void SetCesjaDokumentPowiazany(int cesjaId, int dokId)
+    {
+      var wplata = dbContext.NzFinanses.FirstOrDefault(x => x.NzfId == cesjaId);
+      if (wplata != null)
+      {
+        wplata.NzfIdDokumentAuto = dokId;
         dbContext.SaveChanges();
       }
     }
