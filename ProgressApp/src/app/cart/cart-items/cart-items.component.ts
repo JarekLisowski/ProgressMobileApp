@@ -168,6 +168,20 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     });
   }
 
+  clearCart() {
+    this.removeProductWindowRef.title = "Usuwanie wszystkich produktów";
+    var message = "Czy na pewno chcesz usunąć wszystkie produkty z koszyka?";
+    this.removeProductWindowRef.buttonAcceptText = "Usuń";
+    this.removeProductWindowRef.showObservable(message).subscribe(x => {
+      if (x) {
+        this.cartService.clearCart().subscribe(() => {
+          console.log('All cart items removed');
+          //this.loadCart();
+        });
+      }
+    });
+  }
+
   getItemStockInfo(productId: number): ProductStockInfo | undefined {
     return this.productStocksMap.get(productId);
   }

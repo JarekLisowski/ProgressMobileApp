@@ -762,12 +762,12 @@ public partial class NavireoDbContext : DbContext
               .HasMaxLength(100)
               .IsUnicode(false)
               .HasColumnName("dok_SelloSymbol");
-      entity.Property(e => e.DokSesjaKseF)
-              .HasMaxLength(64)
-              .IsUnicode(false)
-              .HasColumnName("dok_SesjaKSeF");
-      entity.Property(e => e.DokSesjaKseFid).HasColumnName("dok_SesjaKSeFId");
-      entity.Property(e => e.DokSrodowiskoKseF).HasColumnName("dok_SrodowiskoKSeF");
+      //entity.Property(e => e.DokSesjaKseF)
+      //        .HasMaxLength(64)
+      //        .IsUnicode(false)
+      //        .HasColumnName("dok_SesjaKSeF");
+      //entity.Property(e => e.DokSesjaKseFid).HasColumnName("dok_SesjaKSeFId");
+      //entity.Property(e => e.DokSrodowiskoKseF).HasColumnName("dok_SrodowiskoKSeF");
       entity.Property(e => e.DokStatus).HasColumnName("dok_Status");
       entity.Property(e => e.DokStatusBlok).HasColumnName("dok_StatusBlok");
       entity.Property(e => e.DokStatusEx)

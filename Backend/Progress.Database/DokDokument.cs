@@ -299,11 +299,11 @@ public partial class DokDokument
 
     public string? DokWegielNumerOswiadczenia { get; set; }
 
-    public string? DokSesjaKseF { get; set; }
+    //public string? DokSesjaKseF { get; set; }
 
     public string? DokIdPrzetwarzaniaKseF { get; set; }
 
-    public int? DokSrodowiskoKseF { get; set; }
+    //public int? DokSrodowiskoKseF { get; set; }
 
     public string? DokBladKseF { get; set; }
 
@@ -319,7 +319,7 @@ public partial class DokDokument
 
     public string? DokFiskalizacjaIdUrzadzenia { get; set; }
 
-    public int? DokSesjaKseFid { get; set; }
+    //public int? DokSesjaKseFid { get; set; }
 
     public DateTime? DokDataWystawieniaKseF { get; set; }
 
