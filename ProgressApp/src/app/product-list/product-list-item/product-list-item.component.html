@@ -1,0 +1,39 @@
+<div class="row  border-top pt-1 pb-1">
+    <div class="col-10 overflow-x-hidden fs-6 fw-medium">
+        <a href="product/{{data?.id}}">{{data?.name}}</a>
+    </div>
+    <div class="col-2 text-end text-muted small overflow-x-hidden">
+        {{data?.code}}
+    </div>
+</div>
+
+<div class="row product-list mb-2">
+    <div class="col">
+        <div>
+            <span class="text-dark fw-medium">B: {{data?.price?.priceGross | number:'1.2-2'}}
+                {{data?.price?.currencyName}}</span>
+        </div>
+        <div>
+            <span class="text-dark">N: {{data?.price?.priceNet | number:'1.2-2'}}
+                {{data?.price?.currencyName}}</span>
+        </div>
+    </div>
+    <div class="col">
+        <div>
+            <span [ngClass]="{'text-danger': data?.stock == 0, 'text-success  fw-medium': (data?.stock ?? 0)> 0}">
+                Stan: {{data?.stock | number:'1.0-0'}}
+            </span>
+        </div>
+        <div>
+            <span
+                [ngClass]="{'text-danger': data?.stockSecondary == 0, 'text-success fw-medium': (data?.stockSecondary ?? 0)> 0}">
+                Główny: {{data?.stockSecondary | number:'1.0-0'}}
+            </span>
+        </div>
+    </div>
+    <div class="col text-end">
+        <button (click)="addToCart()" type="button" class="btn btn-sm btn-primary">
+            <i class="bi bi-cart-check"></i>
+        </button>
+    </div>
+</div>

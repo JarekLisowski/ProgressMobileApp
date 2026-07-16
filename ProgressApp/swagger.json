@@ -261,6 +261,20 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -300,6 +314,20 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -431,14 +459,14 @@
             }
           },
           {
-            "name": "dateFrom",
+            "name": "from",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "dateTo",
+            "name": "to",
             "in": "query",
             "schema": {
               "type": "string"
@@ -460,6 +488,14 @@
               "type": "integer",
               "format": "int32",
               "default": 1
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -503,14 +539,14 @@
             }
           },
           {
-            "name": "dateFrom",
+            "name": "from",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "dateTo",
+            "name": "to",
             "in": "query",
             "schema": {
               "type": "string"
@@ -532,6 +568,14 @@
               "type": "integer",
               "format": "int32",
               "default": 1
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -652,17 +696,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResult"
+                  "$ref": "#/components/schemas/SaveDocumentResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResult"
+                  "$ref": "#/components/schemas/SaveDocumentResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResult"
+                  "$ref": "#/components/schemas/SaveDocumentResponse"
                 }
               }
             }
@@ -1176,44 +1220,6 @@
         }
       }
     },
-    "/api/product/brand/list": {
-      "post": {
-        "tags": [
-          "Product"
-        ],
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductCategoryListResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductCategoryListResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductCategoryListResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/product/stocks": {
       "post": {
         "tags": [
@@ -1302,6 +1308,124 @@
         }
       }
     },
+    "/api/product/brand/list": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/brand/info/{id}": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryInfoResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryInfoResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryInfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/brand/{id}/categories": {
+      "post": {
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryListResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryListResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCategoryListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/product/search": {
       "get": {
         "tags": [
@@ -1333,6 +1457,35 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/CreateGroupCategories": {
+      "get": {
+        "tags": [
+          "Product"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -1515,32 +1668,6 @@
   },
   "components": {
     "schemas": {
-      "ApiResult": {
-        "type": "object",
-        "properties": {
-          "isError": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "morePages": {
-            "type": "boolean"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "itemsPerPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "Customer": {
         "type": "object",
         "properties": {
@@ -1938,6 +2065,10 @@
           "issueDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "statusReal": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2372,6 +2503,10 @@
             "type": "number",
             "format": "double"
           },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
           "price": {
             "$ref": "#/components/schemas/Price"
           },
@@ -2526,6 +2661,13 @@
           },
           "searchText": {
             "type": "string",
+            "nullable": true
+          },
+          "codes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           }
         },

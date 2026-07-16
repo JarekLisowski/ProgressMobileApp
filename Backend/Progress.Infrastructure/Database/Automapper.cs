@@ -17,7 +17,7 @@ namespace Progress.Infrastructure.Database
 				.ForMember(dst => dst.Prices, opt => opt.MapFrom((src, dst) => CreatePriceDictionary(src.TwCena)))
 				.ForMember(dst => dst.Stock, opt => opt.MapFrom((src, dst) => GetStan(src)))
 				.ForMember(dst => dst.Stocks, opt => opt.MapFrom((src, dst) => src.TwStans))
-				;
+				.ForMember(dst => dst.Type, opt => opt.MapFrom((src, dst) => src.TwRodzaj == 1 ? "product" : "service"));
 
 			CreateMap<TwStan, ProductStock>();
 

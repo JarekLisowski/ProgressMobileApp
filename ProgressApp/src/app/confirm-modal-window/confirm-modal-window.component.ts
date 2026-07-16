@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { Observable, Subject, tap } from 'rxjs';
 
 @Component({
     selector: 'confirm-modal-window',
-    imports: [],
+    imports: [FormsModule],
     templateUrl: './confirm-modal-window.component.html',
     styleUrl: './confirm-modal-window.component.scss'
 })
@@ -17,9 +18,14 @@ export class ConfirmModalWindowComponent implements OnDestroy {
   @Input() message: string = '';
   @Input() buttonRejectText: string = 'Anuluj';
   @Input() buttonAcceptText: string = 'Ok';
+  @Input() checkbox1Text: string = '';
+  @Input() checkbox2Text: string = '';
 
   @Output() onAccept: EventEmitter<any> = new EventEmitter();
   @Output() onReject: EventEmitter<any> = new EventEmitter();
+
+  public checkBox1Value: boolean = false;
+  public checkBox2Value: boolean = false;
 
   private subject: Subject<any> | null = null;
 

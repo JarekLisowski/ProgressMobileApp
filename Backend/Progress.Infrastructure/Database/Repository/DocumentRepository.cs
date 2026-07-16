@@ -19,10 +19,13 @@ namespace Progress.Infrastructure.Database.Repository
       _dokItemRepository = dokItemRepository;
     }
 
-    public Document[] GetDocuments(int dokType, int? customerId, DateTime from, DateTime to)
+    public Document[] GetDocuments(int dokType, int? customerId, DateTime from, DateTime to, int? statusZK)
     {
+      bool wszystkie;
+      List<int> statusy;
+      GetZKStatusList(statusZK, out wszystkie, out statusy);
       var data = EntitySet.AsNoTracking()
-        .Where(it => it.DokPlatnikId == customerId && it.DokTyp == dokType && it.DokDataWyst >= from && it.DokDataWyst <= to)
+        .Where(it => it.DokPlatnikId == customerId && it.DokTyp == dokType && it.DokDataWyst >= from && it.DokDataWyst <= to && (wszystkie || statusy.Contains(it.StatusReal)))
         .OrderByDescending(it => it.DokDataWyst)
         .ThenByDescending(it => it.DokId)
         .ToArray();
@@ -34,11 +37,16 @@ namespace Progress.Infrastructure.Database.Repository
       return [];
     }
 
-    public Document[] GetDocumentsOwnCustomers(int dokType, int userCechaKhId, DateTime fromDate, DateTime toDate)
+    //statusZK: null - wszystkie, 1 - niezrealizowane, 2 - zrealizowane
+    public Document[] GetDocumentsOwnCustomers(int dokType, int userCechaKhId, DateTime fromDate, DateTime toDate, int? statusZK)
     {
+      bool wszystkie;
+      List<int> statusy;
+      GetZKStatusList(statusZK, out wszystkie, out statusy);
+
       var data = (from khCechy in DbContext.KhCechaKhs.AsNoTracking()
                   join dok in DbContext.IfVwDokuments.AsNoTracking() on new { khId = khCechy.CkIdKhnt, cechaId = khCechy.CkIdCecha } equals new { khId = dok.DokPlatnikId ?? 0, cechaId = userCechaKhId }
-                  where dok.DokTyp == dokType && dok.DokStatus != 2 && dok.DokDataWyst >= fromDate && dok.DokDataWyst <= toDate
+                  where dok.DokTyp == dokType && dok.DokStatus != 2 && dok.DokDataWyst >= fromDate && dok.DokDataWyst <= toDate && (wszystkie || statusy.Contains(dok.StatusReal))
                   select dok)
                     .OrderByDescending(it => it.DokDataWyst)
                     .ThenByDescending(it => it.DokId)
@@ -49,6 +57,24 @@ namespace Progress.Infrastructure.Database.Repository
         return result;
       }
       return [];
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="statusZK">null - wszystkie, 1 - niezrealizowane, 2 - zrealizowane</param>
+    /// <param name="wszystkie"></param>
+    /// <param name="statusy"></param>
+    private static void GetZKStatusList(int? statusZK, out bool wszystkie, out List<int> statusy)
+    {
+      wszystkie = false;
+      statusy = new List<int>();
+      if (statusZK == null || statusZK == 0)
+        wszystkie = true;
+      else if (statusZK == 1)
+        statusy = [0, 1, 3, 4, 5]; //niezrealizowane
+      else if (statusZK == 2)
+        statusy = [2]; //zrealizowane
     }
 
     public Document[] GetDocuments(int dokType, int definiowalnyId, int userId)

@@ -37,7 +37,17 @@
         </div>
       </div>
       <div class="modal-body">
-        @for (item of promoProduct; track item) {
+        @if (promoProduct.length > 1) {
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Szukaj produktu..." [(ngModel)]="searchTerm" (input)="filterProducts()" />
+            @if (searchTerm) {
+              <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            }
+          </div>
+        }
+        @for (item of filteredPromoProducts; track item) {
           <app-special-offer-product-item [data]="item" (quantityChangedEvent)="quantityChanged()"></app-special-offer-product-item>
         }
       </div>

@@ -1,2 +1,9 @@
 <h5>Zamówienia</h5>
+<div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckChecked" checked [(ngModel)]="notRealizedOnly" >
+  <label class="form-check-label" for="switchCheckChecked">Tylko niezrealizowane</label>
+</div>
+@if (!hideCustomerSelect) {
+  <customer-select (customerSelectedEvent)="customerSelected($event)" [customer]="customer"></customer-select>
+}
 <documents [data]="data" [showCustomerName]="showCustomerName" (documentSelected)="onDocumentSelected($event)"></documents>

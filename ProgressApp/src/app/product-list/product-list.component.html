@@ -1,0 +1,7 @@
+<div class="px-1 mt-3">
+  @for (item of items; track item) {
+  <product-list-item [data]="item" (addToCartEvent)="addToCart($event)">
+  </product-list-item>
+  }
+  <app-add-product-window #addWindow></app-add-product-window>
+</div>

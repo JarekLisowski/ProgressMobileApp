@@ -40,6 +40,27 @@ namespace Progress.Infrastructure.Database.Repository
       return productList;
     }
 
+    public IEnumerable<Product> GetProductsByCodes(string[] codes, int? stockId = null)
+    {
+      var dataDb = DbContext.TwTowars.AsNoTracking()        
+        .Include(it => it.TwStans.Where(it2 => (stockId == null || stockId == it2.StMagId) ) )
+        .Include(it => it.TwCena)
+        .Where(it =>  codes.Contains(it.TwSymbol) && it.TwZablokowany == false && it.TwSprzedazMobilna == true)
+        .OrderBy(it => it.TwSymbol)
+        .Select(it => it)
+        .ToArray();
+
+      var productList = new List<Product>();
+      foreach (var productDb in dataDb)
+      {
+        var stock = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;        
+        var product = Mapper.Map<Product>(productDb);
+        product.Stock = stock;
+        productList.Add(product);
+      }
+      return productList;
+    }
+
     public IEnumerable<Product> GetProductsByGroup(int id, int? categoryId = null, int? stockId = null, int? stockId2 = null, bool onlyAvailable = false)
     {
       var dataDb = DbContext.TwTowars.AsNoTracking()

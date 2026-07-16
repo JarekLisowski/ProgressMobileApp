@@ -27,12 +27,18 @@ namespace Progress.Api.Controllers
     }
 
     [HttpPost("list")]
-    public ProductListResponse GetProductsFromCategory(ProductListRequest request)
+    public ProductListResponse GetProductsList(ProductListRequest request)
     {
       var user = GetUser();
-      if (request.CategoryId != null && user != null)
+      if (user != null)
       {
-        var data = _productManager.GetProductsByCategory(request.CategoryId.Value, user.StoreId, 1, request.OnlyAvailable ?? false);
+        IEnumerable<Domain.Model.Product> data = new List<Domain.Model.Product>();
+        if (request.CategoryId.HasValue)
+          data = _productManager.GetProductsByCategory(request.CategoryId.Value, user.StoreId, 1, request.OnlyAvailable ?? false);
+        else if (request.Codes?.Any() == true)
+        {
+          data = _productManager.GetProductsByCode(request.Codes, user.StoreId);
+        }
         foreach (var item in data)
         {
           item.SetupUserPrices(user);

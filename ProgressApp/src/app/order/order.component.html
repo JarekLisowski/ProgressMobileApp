@@ -1,1 +1,11 @@
-<document [document]="order" [printButton]="false"></document>
+<div class="position-relative">
+    <div class="position-absolute top-0 end-0 me-2">
+        <input type="button" class="btn btn-sm btn-primary" value="Do koszyka" (click)="AddToCart()" />
+    </div>
+    <document [document]="order" [printButton]="false"></document>
+</div>
+
+<confirm-modal-window #confirmModal
+    checkbox1Text="Usun wszystkie produkty z koszyka",
+    checkbox2Text="Przypisz kontrahenta z dokumentu"
+></confirm-modal-window>

@@ -11,7 +11,7 @@ export class AppConfigService {
     
     private _config: any;
 
-    version = "1.2.1";
+    version = "2026.2";
 
     constructor() {
         this._config = environment;
@@ -19,5 +19,16 @@ export class AppConfigService {
 
     public getConfig() : IEnvironment {        
         return this._config
+    }
+
+    private readonly VIEW_STYLE_KEY = 'viewStyle';
+
+    public get viewStyle(): number {
+        const stored = localStorage.getItem(this.VIEW_STYLE_KEY);
+        return stored !== null ? Number(stored) : 0;
+    }
+
+    public set viewStyle(value: number) {
+        localStorage.setItem(this.VIEW_STYLE_KEY, value.toString());
     }
 }

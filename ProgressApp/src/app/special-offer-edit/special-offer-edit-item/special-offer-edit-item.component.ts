@@ -6,14 +6,34 @@ import { Modal } from 'bootstrap';
 import { SpecialOfferProductItemComponent } from "../special-offer-product-item/special-offer-product-item.component";
 import { ProductPromoItem } from '../../../domain/ProductPromoItem';
 import { PromoItemEdit } from '../../../domain/specialOfferEdit';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-special-offer-edit-item',
-    imports: [NgClass, SpecialOfferProductItemComponent],
+    imports: [NgClass, SpecialOfferProductItemComponent, FormsModule],
     templateUrl: './special-offer-edit-item.component.html',
     styleUrl: './special-offer-edit-item.component.scss'
 })
 export class SpecialOfferEditItemComponent implements AfterViewInit {
+searchTerm: string = '';
+  filteredPromoProducts: ProductPromoItem[] = [];
+
+  filterProducts() {
+    const term = (this.searchTerm || '').trim().toLowerCase();
+    if (!term) {
+      this.filteredPromoProducts = this.promoProduct;
+    } else {
+      this.filteredPromoProducts = this.promoProduct.filter(item =>
+        (item.name?.toLowerCase().includes(term) ?? false) ||
+        (item.code?.toLowerCase().includes(term) ?? false)
+      );
+    }
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.filterProducts();
+  }
 
   @Input() promoItemEdit!: PromoItemEdit;
   @Input() promoSetId!: number | undefined;
@@ -97,6 +117,7 @@ export class SpecialOfferEditItemComponent implements AfterViewInit {
         this.maxQuantity = this.promoItemEdit?.quantity ?? 1;
         this.updateQuantity();
         this.isModified = false;
+        this.filterProducts();
         if (this.promoSetId == undefined || this.promoSetId == 0) {
           this.setSingleItems();
         }

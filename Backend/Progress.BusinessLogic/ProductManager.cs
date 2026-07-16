@@ -154,5 +154,8 @@ namespace Progress.BusinessLogic
 
     public ProductCategory[] GetGroupCategories(int id)
       => dbProductRepository.GetCategoriesInGroup(id);
+
+    public IEnumerable<Product> GetProductsByCode(string[] codes, int? storeId)
+      => dbProductRepository.GetProductsByCodes(codes, storeId);
   }
 }

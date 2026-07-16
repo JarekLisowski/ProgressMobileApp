@@ -6,7 +6,19 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          {{message}}
+          <div>
+            {{message}}
+          </div>
+          <div>
+            @if(checkbox1Text != "") {
+              <input type="checkbox" [(ngModel)]="checkBox1Value" /> {{checkbox1Text}}
+            }
+          </div>
+          <div>
+            @if (checkbox2Text != "") {
+              <input type="checkbox" [(ngModel)]="checkBox2Value" /> {{checkbox2Text}}
+            }
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" (click)="clickAccept()">{{buttonAcceptText}}</button>

@@ -1,17 +1,20 @@
-import { Component, inject, Inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { DocumentsComponent } from "../documents/documents.component";
-import { Document } from '../../domain/generated/apimodel';
+import { Customer, Document } from '../../domain/generated/apimodel';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CustomerSelectComponent } from '../customer-select/customer-select.component';
 
 @Component({
   selector: 'invoices',
-  imports: [DocumentsComponent, FormsModule],
+  imports: [DocumentsComponent, CustomerSelectComponent, FormsModule],
   templateUrl: './invoices.component.html',
   styleUrl: './invoices.component.scss'
 })
 export class InvoicesComponent implements OnInit {
+
+  @ViewChild(CustomerSelectComponent) custemrSelection!: CustomerSelectComponent;
 
   router = inject(Router);
   apiService = inject(ApiService);
@@ -29,6 +32,9 @@ export class InvoicesComponent implements OnInit {
     this.loadData();
   }
 
+  @Input()
+  public hideCustomerSelect: boolean = false;
+
   showCustomerName: boolean = false;
   allData: Document[] = [];
   data: Document[] = [];
@@ -38,13 +44,14 @@ export class InvoicesComponent implements OnInit {
   selectedRange: string = 'Ostatnie 30 dni';
   dateFrom: string | null = new Date().toISOString().split('T')[0];
   dateTo: string | null = new Date().toISOString().split('T')[0];
+  customer: Customer | undefined;
 
   ngOnInit(): void {
     this.loadData();
   }
 
-  loadData() {
-    if (this.dataLoaded)
+  loadData(forceReload: boolean = false) {
+    if (this.dataLoaded && !forceReload)
       return;
 
     this.dataLoaded = true;
@@ -112,4 +119,18 @@ export class InvoicesComponent implements OnInit {
         break;
     }
   }
+
+  customerSelected($event: Customer) {
+    this.customer = $event;
+    if (this.customer == null || this.customer.id == undefined) {
+      this.customerId = 0;
+    }
+    else
+    {
+      this.customerId = this.customer.id;
+    }
+    this.loadData(true);
+  }
+
+
 }

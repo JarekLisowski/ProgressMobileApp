@@ -27,4 +27,6 @@ public class Document
   public decimal TotalTax { get; set; }
 
   public string PaymentInfo { get; set; } = string.Empty;
+  public int StatusReal { get; set; } // 2 - zrealizowany, 5 - niezrealizowany
+
 }

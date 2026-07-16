@@ -1,7 +1,21 @@
-{{customer?.adrName}}
-<a href="#" (click)="select(); false">Zmień</a>
+<div class="parent-container border rounded-1 px-2 py-1">
+    <div class="content-left">
+        <a href="#" (click)="select(); false">{{customer?.adrName}}</a>
+        @if (customer == null) {
+        <a href="#" (click)="select(); false">Wybierz kontrahenta</a>
+        }
+    </div>
+    <div class="icon-right">
+        @if (customer != null) {
+        <span class="ms-2">
+            <a href="#" (click)="clearCustomer(); false" class=""><i class="bi bi-x-lg"></i></a>
+        </span>
+        }
+    </div>
+</div>
 
-<div class="modal fade" #selectProductModal id="selectProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+<div class="modal fade" #selectProductModal id="selectProductModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,7 +25,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <customer-list (customerSelectedEvent)="customerSelected($event)" (customerAddEvent)="customerAdd($event)"></customer-list>
+                <customer-list (customerSelectedEvent)="customerSelected($event)"
+                    (customerAddEvent)="customerAdd($event)"></customer-list>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zamknij</button>

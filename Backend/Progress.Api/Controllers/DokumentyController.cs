@@ -41,7 +41,7 @@ namespace Progress.Api.Controllers
         dateFrom = DateTime.Today.Subtract(TimeSpan.FromDays(365));
       if (to == null || !DateTime.TryParse(to, dfp, out var dateTo))
         dateTo = DateTime.Today;
-      var data = _documentRepository.GetDocuments(2, customerId, dateFrom, dateTo);
+      var data = _documentRepository.GetDocuments(2, customerId, dateFrom, dateTo, null);
       return new DocumentResponse()
       {
         Data = _mapper.Map<Document[]>(data)
@@ -59,7 +59,7 @@ namespace Progress.Api.Controllers
           dateFrom = DateTime.Today.Subtract(TimeSpan.FromDays(365));
         if (to == null || !DateTime.TryParse(to, dfp, out var dateTo))
           dateTo = DateTime.Today;
-        var data = _documentRepository.GetDocumentsOwnCustomers(2, user.CechaId.Value, dateFrom, dateTo);
+        var data = _documentRepository.GetDocumentsOwnCustomers(2, user.CechaId.Value, dateFrom, dateTo, null);
         return new DocumentResponse()
         {
           Data = _mapper.Map<Document[]>(data)
@@ -100,23 +100,25 @@ namespace Progress.Api.Controllers
       }
     }
 
+    //statusZK: null,0 - wszystkie, 1 - niezrealizowane, 2 - zrealizowane
     [HttpGet("orders/{customerId}")]
-    public DocumentResponse GetOrders(int? customerId, string? from = null, string? to = null, int pageSize = 100, int page = 1)
+    public DocumentResponse GetOrders(int? customerId, string? from = null, string? to = null, int pageSize = 100, int page = 1, int? status = null)
     {
       var dfp = CultureInfo.InvariantCulture.DateTimeFormat;
       if (from == null || !DateTime.TryParse(from, dfp, out var dateFrom))
         dateFrom = DateTime.Today.Subtract(TimeSpan.FromDays(365));
       if (to == null || !DateTime.TryParse(to, dfp, out var dateTo))
         dateTo = DateTime.Today;
-      var data = _documentRepository.GetDocuments(16, customerId, dateFrom, dateTo);
+      var data = _documentRepository.GetDocuments(16, customerId, dateFrom, dateTo, status);
       return new DocumentResponse()
       {
         Data = _mapper.Map<Document[]>(data)
       };
     }
-
+    
+    //statusZK: null,0 - wszystkie, 1 - niezrealizowane, 2 - zrealizowane
     [HttpGet("my-orders/{customerId}")]
-    public DocumentResponse GetMyOrders(int? customerId, string? from = null, string? to = null, int pageSize = 100, int page = 1)
+    public DocumentResponse GetMyOrders(int? customerId, string? from = null, string? to = null, int pageSize = 100, int page = 1, int? status = null)
     {
       var user = GetUser();
       if (user != null && user.CechaId != null)
@@ -126,7 +128,7 @@ namespace Progress.Api.Controllers
           dateFrom = DateTime.Today.Subtract(TimeSpan.FromDays(365));
         if (to == null || !DateTime.TryParse(to, dfp, out var dateTo))
           dateTo = DateTime.Today;
-        var data = _documentRepository.GetDocumentsOwnCustomers(16, user.CechaId.Value, dateFrom, dateTo);
+        var data = _documentRepository.GetDocumentsOwnCustomers(16, user.CechaId.Value, dateFrom, dateTo, status);
         return new DocumentResponse()
         {
           Data = _mapper.Map<Document[]>(data)

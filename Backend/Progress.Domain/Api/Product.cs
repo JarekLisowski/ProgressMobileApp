@@ -8,7 +8,7 @@ public class Product
   public string Description { get; set; } = string.Empty;
   public decimal Stock { get; set; }
   public decimal StockSecondary { get; set; }
-
+  public string Type { get; set; } = string.Empty;
   public Price Price { get; set; } = new();
   public Dictionary<int, Price> Prices { get; set; } = new Dictionary<int, Price>();
   public string CategoryName { get; set; } = string.Empty;

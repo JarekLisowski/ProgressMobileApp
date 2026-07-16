@@ -6,5 +6,6 @@
     public int? BrandId { get; set; }
     public bool? OnlyAvailable { get; set; }
     public string? SearchText { get; set; }
+    public string[]? Codes { get; set; }
   }
 }

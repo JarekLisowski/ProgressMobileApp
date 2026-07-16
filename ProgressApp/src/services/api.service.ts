@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { RESTClientService } from "./RESTClient.service";
 import { Observable } from "rxjs";
-import { ApiResult, Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IPayment, IProductListRequest, IProductStocksRequest, LoginResponse, Payment, PaymentMethodsResponse, PrintRequestResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, ProductsStockResponse, ProductStock, PromoResponse, PromoSetListResponse, PromoSetResponse, SaleSummaryResponse, SaveDocumentResponse, SearchResponse, StringApiResult } from "../domain/generated/apimodel";
+import { Customer, CustomerListResponse, CustomerResponse, DeliveryMethodsResponse, DocumentResponse, IDocument, IPayment, IProductListRequest, IProductStocksRequest, LoginResponse, Payment, PaymentMethodsResponse, PrintRequestResponse, Product, ProductCategoryInfoResponse, ProductCategoryListResponse, ProductListRequest, ProductListResponse, ProductResponse, ProductsStockResponse, ProductStock, PromoResponse, PromoSetListResponse, PromoSetResponse, SaleSummaryResponse, SaveDocumentResponse, SearchResponse, StringApiResult } from "../domain/generated/apimodel";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,13 @@ export class ApiService {
     var request = {
       categoryId: categoryId,
       onlyAvailable: onlyAvailable
+    };
+    return this.apiSerivce.post<ProductListResponse>("api/product/list", request);
+  }
+  
+  getProductListByCodes(productCodes: string[], onlyAvailable: boolean): Observable<ProductListResponse> {
+    var request = {
+      codes: productCodes
     };
     return this.apiSerivce.post<ProductListResponse>("api/product/list", request);
   }
@@ -115,12 +122,12 @@ export class ApiService {
     return this.apiSerivce.get(`api/document/my-invoices/${customerId}?from=${dateFrom}&to=${dateTo}`)
   }
 
-  getOrders(customerId: number): Observable<DocumentResponse> {
-    return this.apiSerivce.get(`api/document/orders/${customerId}`)
+  getOrders(customerId: number, status: number | null): Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/orders/${customerId}?status=${status}`)
   }
 
-  getOrdersOwnCustomers(customerId: number): Observable<DocumentResponse> {
-    return this.apiSerivce.get(`api/document/my-orders/${customerId}`)
+  getOrdersOwnCustomers(customerId: number, status: number | null): Observable<DocumentResponse> {
+    return this.apiSerivce.get(`api/document/my-orders/${customerId}?status=${status}`)
   }
 
   getDocument(id: number): Observable<DocumentResponse> {

@@ -18,4 +18,5 @@ public class Product
   public string Unit { get; set; } = "szt.";
   public decimal StockSecondary { get; set; }
   public ProductStock[] Stocks { get; set; } = [];
+  public string Type { get; set; } = "product";
 }

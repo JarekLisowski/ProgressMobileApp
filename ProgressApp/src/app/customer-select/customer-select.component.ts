@@ -4,10 +4,10 @@ import { CustomerListComponent } from "../customer-list/customer-list.component"
 import { Customer } from '../../domain/generated/apimodel';
 
 @Component({
-    selector: 'customer-select',
-    imports: [CustomerListComponent],
-    templateUrl: './customer-select.component.html',
-    styleUrl: './customer-select.component.scss'
+  selector: 'customer-select',
+  imports: [CustomerListComponent],
+  templateUrl: './customer-select.component.html',
+  styleUrl: './customer-select.component.scss'
 })
 export class CustomerSelectComponent implements AfterViewInit {
 
@@ -38,6 +38,11 @@ export class CustomerSelectComponent implements AfterViewInit {
 
   customerAdd($event: any) {
     this.modal.hide();
+  }
+
+  clearCustomer() {
+    this.customer = undefined;
+    this.customerSelectedEvent.emit(this.customer);
   }
 
 }

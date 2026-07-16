@@ -9,10 +9,17 @@
             <span class="fw-light text-dark">{{data?.code}}</span>
          </div>
       </div>
-      <div class="text-center position-relative img-container border-bottom mb-2">
-         <a href="product/{{data?.id}}">
-            <img class="product-image" src="{{data?.imgUrl}}" />
-         </a>
+      <div>
+         <div class="text-center position-relative img-container border-bottom mb-2">
+            <a href="product/{{data?.id}}">
+               <img class="product-image" src="{{data?.imgUrl}}" />
+            </a>
+            <div class="position-absolute bottom-0 end-0 m-2">
+               <button (click)="addToCart()" type="button" class="btn btn-sm btn-primary">
+                  <i class="bi bi-cart-check"></i>
+               </button>
+            </div>
+         </div>
       </div>
       <div class="row">
          <div class="col">
@@ -31,10 +38,12 @@
                {{data?.price?.currencyName}}</span>
          </div>
          <div class="col">
-            <span [ngClass]="{'text-danger': data?.stockSecondary == 0, 'text-success fw-medium': (data?.stockSecondary ?? 0)> 0}">
+            <span
+               [ngClass]="{'text-danger': data?.stockSecondary == 0, 'text-success fw-medium': (data?.stockSecondary ?? 0)> 0}">
                Główny: {{data?.stockSecondary | number:'1.0-0'}}
             </span>
          </div>
       </div>
    </div>
 </div>
+<app-add-product-window #addWindow></app-add-product-window>

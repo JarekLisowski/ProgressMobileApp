@@ -1,0 +1,19 @@
+.parent-container {
+  display: flex;
+  align-items: center; /* Vertically centers the elements */
+  width: 100%;
+  gap: 12px;           /* Optional: Adds space between the text and icon */
+}
+.content-left {
+  flex: 1;             /* Tells it to grow and occupy all remaining space */
+  min-width: 0;        /* CRITICAL: Allows flex child to shrink below its content's size, preventing overflow */
+  
+  /* Optional: Truncate long text with an ellipsis (...) if it's too wide */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.icon-right {
+  flex-shrink: 0;      /* CRITICAL: Prevents this div from shrinking under flex pressure */
+  margin-left: auto;   /* Pushes it to the far right if flex: 1 doesn't fill the space */
+}

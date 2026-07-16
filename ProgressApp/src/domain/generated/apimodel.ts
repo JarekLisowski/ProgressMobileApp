@@ -10,58 +10,6 @@
 
 
 
-export class ApiResult implements IApiResult {
-    isError?: boolean;
-    message?: string | undefined;
-    morePages?: boolean;
-    totalPages?: number | undefined;
-    itemsPerPage?: number | undefined;
-
-    constructor(data?: IApiResult) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.isError = _data["isError"];
-            this.message = _data["message"];
-            this.morePages = _data["morePages"];
-            this.totalPages = _data["totalPages"];
-            this.itemsPerPage = _data["itemsPerPage"];
-        }
-    }
-
-    static fromJS(data: any): ApiResult {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApiResult();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["isError"] = this.isError;
-        data["message"] = this.message;
-        data["morePages"] = this.morePages;
-        data["totalPages"] = this.totalPages;
-        data["itemsPerPage"] = this.itemsPerPage;
-        return data;
-    }
-}
-
-export interface IApiResult {
-    isError?: boolean;
-    message?: string | undefined;
-    morePages?: boolean;
-    totalPages?: number | undefined;
-    itemsPerPage?: number | undefined;
-}
-
 export class Customer implements ICustomer {
     id?: number;
     code?: string | undefined;
@@ -542,6 +490,7 @@ export class Document implements IDocument {
     userId?: number | undefined;
     userName?: string | undefined;
     issueDate?: Date;
+    statusReal?: number;
 
     constructor(data?: IDocument) {
         if (data) {
@@ -586,6 +535,7 @@ export class Document implements IDocument {
             this.userId = _data["userId"];
             this.userName = _data["userName"];
             this.issueDate = _data["issueDate"] ? new Date(_data["issueDate"].toString()) : <any>undefined;
+            this.statusReal = _data["statusReal"];
         }
     }
 
@@ -622,6 +572,7 @@ export class Document implements IDocument {
         data["userId"] = this.userId;
         data["userName"] = this.userName;
         data["issueDate"] = this.issueDate ? this.issueDate.toISOString() : <any>undefined;
+        data["statusReal"] = this.statusReal;
         return data;
     }
 }
@@ -647,6 +598,7 @@ export interface IDocument {
     userId?: number | undefined;
     userName?: string | undefined;
     issueDate?: Date;
+    statusReal?: number;
 }
 
 export enum DocumentEnum {
@@ -1427,6 +1379,7 @@ export class Product implements IProduct {
     description?: string | undefined;
     stock?: number;
     stockSecondary?: number;
+    type?: string | undefined;
     price?: Price;
     prices?: { [key: string]: Price; } | undefined;
     categoryName?: string | undefined;
@@ -1463,6 +1416,7 @@ export class Product implements IProduct {
             this.description = _data["description"];
             this.stock = _data["stock"];
             this.stockSecondary = _data["stockSecondary"];
+            this.type = _data["type"];
             this.price = _data["price"] ? Price.fromJS(_data["price"]) : <any>undefined;
             if (_data["prices"]) {
                 this.prices = {} as any;
@@ -1495,6 +1449,7 @@ export class Product implements IProduct {
         data["description"] = this.description;
         data["stock"] = this.stock;
         data["stockSecondary"] = this.stockSecondary;
+        data["type"] = this.type;
         data["price"] = this.price ? this.price.toJSON() : <any>undefined;
         if (this.prices) {
             data["prices"] = {};
@@ -1520,6 +1475,7 @@ export interface IProduct {
     description?: string | undefined;
     stock?: number;
     stockSecondary?: number;
+    type?: string | undefined;
     price?: IPrice;
     prices?: { [key: string]: IPrice; } | undefined;
     categoryName?: string | undefined;
@@ -1728,6 +1684,7 @@ export class ProductListRequest implements IProductListRequest {
     brandId?: number | undefined;
     onlyAvailable?: boolean | undefined;
     searchText?: string | undefined;
+    codes?: string[] | undefined;
 
     constructor(data?: IProductListRequest) {
         if (data) {
@@ -1746,6 +1703,11 @@ export class ProductListRequest implements IProductListRequest {
             this.brandId = _data["brandId"];
             this.onlyAvailable = _data["onlyAvailable"];
             this.searchText = _data["searchText"];
+            if (Array.isArray(_data["codes"])) {
+                this.codes = [] as any;
+                for (let item of _data["codes"])
+                    this.codes!.push(item);
+            }
         }
     }
 
@@ -1764,6 +1726,11 @@ export class ProductListRequest implements IProductListRequest {
         data["brandId"] = this.brandId;
         data["onlyAvailable"] = this.onlyAvailable;
         data["searchText"] = this.searchText;
+        if (Array.isArray(this.codes)) {
+            data["codes"] = [];
+            for (let item of this.codes)
+                data["codes"].push(item);
+        }
         return data;
     }
 }
@@ -1775,6 +1742,7 @@ export interface IProductListRequest {
     brandId?: number | undefined;
     onlyAvailable?: boolean | undefined;
     searchText?: string | undefined;
+    codes?: string[] | undefined;
 }
 
 export class ProductListResponse implements IProductListResponse {
