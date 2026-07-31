@@ -15,7 +15,6 @@ import { ProductStockInfo } from "../domain/productStock";
 export class CartService {
 
     private readonly storeTransaction = 'transaction';
-    //private currentTransaction: Transaction | undefined;
 
     private _transaction$: BehaviorSubject<Transaction> = new BehaviorSubject<Transaction>(new Transaction());
     private _cartItems$: BehaviorSubject<CartItemWithId[]> = new BehaviorSubject<CartItemWithId[]>([]);
@@ -57,26 +56,6 @@ export class CartService {
             this._promoItems$.next(items);
         });
     }
-
-    // Add this as a private helper method within your service/class
-    // private _updateCartState$(): Observable<void> {
-    //     // 1. Refresh Promo Items
-    //     return this.getPromoItems().pipe(
-    //         switchMap(promoItems => {
-    //             this._promoItems$.next(promoItems);
-    //             // 2. Refresh Cart Items (Chained using switchMap for sequential async calls)
-    //             return this.getCartItems();
-    //         }),
-    //         switchMap(cartItems => {
-    //             this._cartItems$.next(cartItems);
-    //             // 3. Recalculate Totals (Chained)
-    //             return this.calculateTotalTransactionValues();
-    //         }),
-    //         // 4. Map to nothing (or to the final required type if necessary). 
-    //         // Here we use map to complete the chain and return void.
-    //         map(() => undefined)
-    //     );
-    // }
 
     private _updateCartState$(): Observable<void> {
         return this.getPromoItems().pipe(
@@ -164,71 +143,6 @@ export class CartService {
         );
     }
 
-    // addItemToCart(product: Product, quantity: number, stock: number | undefined): Observable<CartChangeResult> {
-    //     var res = this.dbService.getAllByIndex<CartItemWithId>('cart', 'code', IDBKeyRange.only(product.code)).pipe(
-    //         tap(x => {
-    //             console.log(x);
-    //         }),
-    //         map(itemsWithCode => itemsWithCode.find(item => item.promoSetId == 0)),
-    //         switchMap(itemExistsingOrEmpty => {
-    //             if (itemExistsingOrEmpty) {
-    //                 var quantityToSet = itemExistsingOrEmpty.quantity + quantity;
-    //                 return this.updateCartItemQuntity(itemExistsingOrEmpty.id, quantityToSet, stock);
-    //             }
-    //             else {
-    //                 var message = "Artykuł został dodany do koszyka.";
-    //                 var quantityToAdd = quantity;
-    //                 if (stock != undefined && stock < quantity) {
-    //                     quantityToAdd = stock;
-    //                     message = "Ilość dodana do koszyja została ograniczona do maksymalnej dostępnej ilości: " + stock + ".";
-    //                 }
-    //                 var cartItem: CartItem =
-    //                 {
-    //                     productId: product.id ?? 0,
-    //                     name: product.name ?? "",
-    //                     code: product.code ?? "",
-    //                     priceNet: product.price?.priceNet ?? 0,
-    //                     priceGross: product.price?.priceGross ?? 0,
-    //                     taxRate: product.price?.taxPercent ?? 23,
-    //                     quantity: quantityToAdd,
-    //                     promoSetId: 0,
-    //                     promoItemId: 0,
-    //                     imageUrl: "",
-    //                     stock: undefined,
-    //                     sumNetto: this.round2((product.price?.priceNet ?? 0) * quantityToAdd),
-    //                     sumGross: this.round2(((product.price?.priceNet ?? 0) * quantityToAdd) * (1 + (product.price?.taxPercent ?? 23) / 100)),
-    //                 };
-    //                 return this.dbService.add('cart', cartItem).pipe(
-    //                     switchMap(addedItem => {
-    //                         console.log("Add item to cart: " + addedItem.name + " " + addedItem.quantity);
-    //                         return this.getPromoItems().pipe(
-    //                             switchMap(promoItems => {
-    //                                 this._promoItems$.next(promoItems);
-    //                                 return this.getCartItems().pipe(
-    //                                     switchMap(cartItems => {
-    //                                         this._cartItems$.next(cartItems);
-    //                                         return this.calculateTotalTransactionValues().pipe(
-    //                                             switchMap(y => {
-    //                                                 //of(addedItem)
-    //                                                 var result = new CartChangeResult();
-    //                                                 result.productId = addedItem.productId;
-    //                                                 result.quantity = addedItem.quantity;
-    //                                                 result.message = message;
-    //                                                 return of(result);
-    //                                             })
-    //                                         );
-    //                                     })
-    //                                 );
-    //                             })
-    //                         );
-    //                     })
-    //                 );
-    //             }
-    //         }),
-    //     );
-    //     return res;
-    // }
-
     updateCartItemQuntity(id: number, quantity: number, stock: number | undefined): Observable<CartChangeResult> {
         return this.dbService.getByID<CartItemWithId>('cart', id).pipe(
             switchMap(cartItem => {
@@ -310,32 +224,6 @@ export class CartService {
         );
     }
 
-    // removeItemFromCart(id: number): Observable<any> {
-    //     console.log("Removing item from cart: " + id);
-    //     return this.dbService.delete('cart', id).pipe(
-    //         switchMap(x => {
-    //             console.log("Cart item removed from cart: " + id);
-    //             return this.getPromoItems().pipe(
-    //                 switchMap(promoItems => {
-    //                     console.log("Cart item removed - update promo items: ");
-    //                     this._promoItems$.next(promoItems);
-    //                     return this.getCartItems().pipe(
-    //                         switchMap(cartItems => {
-    //                             console.log("Cart item removed - update cart items: ");
-    //                             this._cartItems$.next(cartItems);
-    //                             return this.calculateTotalTransactionValues().pipe(
-    //                                 switchMap(y => of(id))
-    //                             );
-    //                         })
-    //                     );
-    //                 })
-    //             );
-    //         })
-    //     );
-    // }
-
-
-
     addOrUpdatePromoSetOnCart(promoSet: SpecialOfferEdit): Observable<CartPromoItemWithId> {
         if (promoSet.id != undefined && promoSet.id > 0) {
             var res = this.removePromoSetFromCart(promoSet.id).pipe(
@@ -392,31 +280,6 @@ export class CartService {
         );
     }
 
-    // private addItemsToCart(cartItems: CartItem[]): Observable<number[]> {
-    //     cartItems.forEach(item => {
-    //         item.sumNetto = this.round2(item.priceNet * item.quantity);
-    //         item.sumGross = this.round2(item.sumNetto * (1 + (item.taxRate) / 100));
-    //     });
-    //     return this.dbService.bulkAdd<CartItem>('cart', cartItems).pipe(
-    //         switchMap(addedIds => {
-    //             console.log("Add promo items to cart: " + addedIds.length);
-    //             return this.getPromoItems().pipe(
-    //                 switchMap(promoItems => {
-    //                     this._promoItems$.next(promoItems);
-    //                     return this.getCartItems().pipe(
-    //                         switchMap(cartItems => {
-    //                             this._cartItems$.next(cartItems);
-    //                             return this.calculateTotalTransactionValues().pipe(
-    //                                 switchMap(y => of(addedIds))
-    //                             );
-    //                         })
-    //                     );
-    //                 })
-    //             );
-    //         })
-    //     );
-    // }
-
     removePromoSetFromCart(promoSetId: number): Observable<number> {
         return this.dbService.deleteAllByIndex('cart', 'promoSetId', IDBKeyRange.only(promoSetId)).pipe(
             switchMap(() =>
@@ -429,28 +292,6 @@ export class CartService {
             )
         );
     }
-
-    // removePromoSetFromCart(promoSetId: number): Observable<any> {
-    //     return this.dbService.deleteAllByIndex('cart', 'promoSetId', IDBKeyRange.only(promoSetId)).pipe(
-    //         switchMap(x => {
-    //             return this.dbService.delete('promoSet', promoSetId).pipe(
-    //                 switchMap(y => this.getPromoItems().pipe(
-    //                     switchMap(promoItems => {
-    //                         this._promoItems$.next(promoItems);
-    //                         return this.getCartItems().pipe(
-    //                             switchMap(cartItems => {
-    //                                 this._cartItems$.next(cartItems);
-    //                                 return this.calculateTotalTransactionValues().pipe(
-    //                                     switchMap(z => of(promoSetId))
-    //                                 );
-    //                             })
-    //                         );
-    //                     })
-    //                 ))
-    //             )
-    //         })
-    //     )
-    // }
 
     getPromoItems(): Observable<CartPromoItemWithId[]> {
         return this.dbService.getAll<CartPromoItemWithId>('promoSet');

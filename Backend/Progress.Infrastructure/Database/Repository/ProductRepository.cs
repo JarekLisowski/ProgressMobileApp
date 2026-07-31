@@ -96,6 +96,7 @@ namespace Progress.Infrastructure.Database.Repository
         .Include(it => it.TwCena)
         .Include(it => it.TwStans.Where(it2 => (stockId == null || stockId == it2.StMagId || stockId2 == it2.StMagId) ))
         .Include(it => it.TwCechaTws).ThenInclude(it => it.ChtIdCechaNavigation)
+        .Include(it => it.TwIdVatSpNavigation)
         .FirstOrDefault(it => it.TwId == id && it.TwZablokowany == false && it.TwSprzedazMobilna == true && it.TwRodzaj == 1);
       if (productDb != null)
       {
@@ -108,6 +109,12 @@ namespace Progress.Infrastructure.Database.Repository
           product.CategoryId = productDb.TwCechaTws.FirstOrDefault()?.ChtIdCechaNavigation.CtwId ?? 0;
           product.Stock = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId)?.StStan ?? 0;
           product.StockSecondary = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
+          product.TaxRate = productDb.TwIdVatSpNavigation?.VatStawka ?? 23;
+          product.TaxName = productDb.TwIdVatSpNavigation?.VatNazwa ?? "";
+          foreach(var item in product.Prices)
+          {
+            item.Value.TaxPercent = product.TaxRate;
+          }
         }
         return product;
       }
