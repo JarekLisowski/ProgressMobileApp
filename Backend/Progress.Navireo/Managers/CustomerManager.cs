@@ -22,12 +22,11 @@ namespace Progress.Navireo.Managers
       this.navireoApplication = navireoApplication;
     }
 
-    public List<KeyValuePair<string, int>> UpdateCustomer(int operatorId, Business business)
+    public int? UpdateCustomer(int operatorId, Business business)
     {
       if (NavireoInstance == null)
         return null;
 
-      List<KeyValuePair<string, int>> resultList = new List<KeyValuePair<string, int>>();
       InsERT.Kontrahent kontrahentNav = null;
       InsERT.PracownikKh pracownikNav = null;
       InsERT.KhCechy khCechy = null;
@@ -165,7 +164,6 @@ namespace Progress.Navireo.Managers
 
         kontrahentNav.Zapisz();
         business.Id = kontrahentNav.Identyfikator;
-        resultList.Add(new KeyValuePair<string, int>(business.GUID, business.Id));
         kontrahentNav.Zamknij();
         Marshal.ReleaseComObject(kontrahentNav);
         kontrahentNav = null;
@@ -185,7 +183,7 @@ namespace Progress.Navireo.Managers
         if (khCechy != null) Marshal.ReleaseComObject(khCechy);
         khCechy = null;
       }
-      return resultList;
+      return business.Id;
     }
   }
 }

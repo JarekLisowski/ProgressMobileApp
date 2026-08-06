@@ -57,6 +57,19 @@
       <label for="nip" class="form-label">NIP: </label>
       <input id="nip" class="form-control" [(ngModel)]="customerEdit.adrNip" />
     </div>
+    <div class="mb-3">
+      <label for="tel" class="form-label">Telefon: </label>
+      <input id="tel" class="form-control" [(ngModel)]="customerEdit.adrTel" />
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">email: </label>
+      <input id="email" class="form-control" [(ngModel)]="customerEdit.email" />
+    </div>
+    @if (errorMessage) {
+      <div class="alert alert-danger my-3" role="alert">
+        {{ errorMessage }}
+      </div>
+    }
     <br>
     <input type="button" class="btn btn-primary me-3" (click)="save()" value="Zapisz" />
     <button class="btn btn-secondary" (click)="cancel()">Anuluj</button>

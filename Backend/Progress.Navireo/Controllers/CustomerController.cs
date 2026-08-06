@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Progress.Domain.Api.Request;
+using Progress.Domain.Api.Response;
 using Progress.Domain.Extensions;
+using Progress.Domain.Navireo;
 using Progress.Navireo.Managers;
 
 namespace Progress.Navireo.Controllers
@@ -16,23 +18,35 @@ namespace Progress.Navireo.Controllers
       _customerManager = customerManager;
     }
 
-    [HttpPost("update")]
-    public object UpdateCustomer(UpdateCustomerRequest request)
+    [HttpPost("save")]
+    public SaveCustomerResponse SaveCustomer(UpdateCustomerRequest request)
     {
       try
       {
         var customer = request.Customer.ToNavireoCustomer();
         if (customer != null)
         {
-          _customerManager.UpdateCustomer(request.OperatorId, customer);
+          var result = _customerManager.UpdateCustomer(request.OperatorId, customer);
+          return new SaveCustomerResponse
+          {
+            CustomerId = result ?? 0,
+            IsError = result == 0
+          };
         }
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex);
-        throw;
+        return new SaveCustomerResponse
+        {          
+          IsError = true,
+          Message = ex.Message
+        };
       }
-      return "OK";
+      return new SaveCustomerResponse
+      {
+        IsError = true
+      };
     }
   }
 }

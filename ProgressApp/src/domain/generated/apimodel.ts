@@ -2618,6 +2618,62 @@ export interface ISaleSummaryResponse {
     data?: ISaleSummary;
 }
 
+export class SaveCustomerResponse implements ISaveCustomerResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    customerId?: number;
+
+    constructor(data?: ISaveCustomerResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.isError = _data["isError"];
+            this.message = _data["message"];
+            this.morePages = _data["morePages"];
+            this.totalPages = _data["totalPages"];
+            this.itemsPerPage = _data["itemsPerPage"];
+            this.customerId = _data["customerId"];
+        }
+    }
+
+    static fromJS(data: any): SaveCustomerResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaveCustomerResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["isError"] = this.isError;
+        data["message"] = this.message;
+        data["morePages"] = this.morePages;
+        data["totalPages"] = this.totalPages;
+        data["itemsPerPage"] = this.itemsPerPage;
+        data["customerId"] = this.customerId;
+        return data;
+    }
+}
+
+export interface ISaveCustomerResponse {
+    isError?: boolean;
+    message?: string | undefined;
+    morePages?: boolean;
+    totalPages?: number | undefined;
+    itemsPerPage?: number | undefined;
+    customerId?: number;
+}
+
 export class SaveDocumentResponse implements ISaveDocumentResponse {
     isError?: boolean;
     message?: string | undefined;
@@ -2773,62 +2829,6 @@ export interface ISearchResponse {
     productCategories?: IProductCategory[] | undefined;
     products?: IProduct[] | undefined;
     brands?: IProductCategory[] | undefined;
-}
-
-export class StringApiResult implements IStringApiResult {
-    isError?: boolean;
-    message?: string | undefined;
-    morePages?: boolean;
-    totalPages?: number | undefined;
-    itemsPerPage?: number | undefined;
-    data?: string | undefined;
-
-    constructor(data?: IStringApiResult) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.isError = _data["isError"];
-            this.message = _data["message"];
-            this.morePages = _data["morePages"];
-            this.totalPages = _data["totalPages"];
-            this.itemsPerPage = _data["itemsPerPage"];
-            this.data = _data["data"];
-        }
-    }
-
-    static fromJS(data: any): StringApiResult {
-        data = typeof data === 'object' ? data : {};
-        let result = new StringApiResult();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["isError"] = this.isError;
-        data["message"] = this.message;
-        data["morePages"] = this.morePages;
-        data["totalPages"] = this.totalPages;
-        data["itemsPerPage"] = this.itemsPerPage;
-        data["data"] = this.data;
-        return data;
-    }
-}
-
-export interface IStringApiResult {
-    isError?: boolean;
-    message?: string | undefined;
-    morePages?: boolean;
-    totalPages?: number | undefined;
-    itemsPerPage?: number | undefined;
-    data?: string | undefined;
 }
 
 export class User implements IUser {

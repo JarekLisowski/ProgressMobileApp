@@ -199,7 +199,7 @@
         }
       }
     },
-    "/api/customer/update": {
+    "/api/customer/save": {
       "post": {
         "tags": [
           "Customer"
@@ -229,17 +229,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResult"
+                  "$ref": "#/components/schemas/SaveCustomerResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResult"
+                  "$ref": "#/components/schemas/SaveCustomerResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StringApiResult"
+                  "$ref": "#/components/schemas/SaveCustomerResponse"
                 }
               }
             }
@@ -3094,6 +3094,36 @@
         },
         "additionalProperties": false
       },
+      "SaveCustomerResponse": {
+        "type": "object",
+        "properties": {
+          "isError": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "morePages": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "itemsPerPage": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "SaveDocumentResponse": {
         "type": "object",
         "properties": {
@@ -3158,36 +3188,6 @@
             "items": {
               "$ref": "#/components/schemas/ProductCategory"
             },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "StringApiResult": {
-        "type": "object",
-        "properties": {
-          "isError": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "morePages": {
-            "type": "boolean"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "itemsPerPage": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "data": {
-            "type": "string",
             "nullable": true
           }
         },

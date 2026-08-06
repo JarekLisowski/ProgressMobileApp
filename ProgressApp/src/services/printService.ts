@@ -36,7 +36,7 @@ export class PrintService {
             tap({
                 next: x => {
                     if (!x.isError && x.data) {
-                        window.open(`https://progress.ifox.com.pl/cashReceipt/${x.data}`, '_blank');
+                        window.open(`https://print.progress.ifox.com.pl/cashReceipt/${x.data}`, '_blank');
                     } else {
                         this.loggerService.showError((x.message ?? "Nieznany błąd drukowania.") + `. KP ID: ${id} `);
                     }

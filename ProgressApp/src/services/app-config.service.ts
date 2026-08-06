@@ -11,7 +11,7 @@ export class AppConfigService {
     
     private _config: any;
 
-    version = "2026.2";
+    version = "2026.4";
 
     constructor() {
         this._config = environment;

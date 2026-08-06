@@ -25,6 +25,7 @@ export class CustomerComponent implements OnInit {
   customerEdit: Customer = new Customer();
   editMode = false;
   customerId: number = 0;
+  errorMessage: string = '';
 
   constructor(
     private route: ActivatedRoute
@@ -35,12 +36,7 @@ export class CustomerComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id && id > 0) {
-      this.apiService.getCustomer(id).subscribe(customer => {
-        this.customer = customer.data;
-        console.log(this.customer);
-        if (this.customer?.id != undefined)
-          this.customerId = this.customer.id;
-      });
+      this.loadCustomer(id);
     }
     else if (id == 0) {
       this.customerEdit = new Customer();
@@ -48,23 +44,46 @@ export class CustomerComponent implements OnInit {
     }
   }
 
+  loadCustomer(id: number): void {
+    this.apiService.getCustomer(id).subscribe(customer => {
+      this.customer = customer.data;
+      console.log(this.customer);
+      if (this.customer?.id != undefined)
+          this.customerId = this.customer.id;
+    });
+  }
+
   edit(): void {
     this.customerEdit = JSON.parse(JSON.stringify(this.customer));
+    this.errorMessage = '';
     this.editMode = true;
   }
 
   save(): void {
     console.log('Saving customer:', this.customerEdit);
+    this.errorMessage = '';
     if (this.customerEdit) {
-      this.apiService.addOrUpdateCustomer(this.customerEdit).subscribe(x => {
-        console.log(x);
-        this.customer = this.customerEdit;
+      this.apiService.addOrUpdateCustomer(this.customerEdit).subscribe({
+        next: (x) => {
+          console.log(x);
+          if (x.isError == false && x.customerId != undefined) {
+            this.loadCustomer(x.customerId);
+            this.editMode = false;
+          } else {
+            console.error('Error saving customer:', x.message);
+            this.errorMessage = x.message || 'Błąd podczas zapisywania kontrahenta.';
+          }
+        },
+        error: (err) => {
+          console.error('Error saving customer:', err);
+          this.errorMessage = typeof err === 'string' ? err : (err?.message || 'Błąd podczas zapisywania kontrahenta.');
+        }
       });
     }
-    this.editMode = false;
   }
 
   cancel(): void {
+    this.errorMessage = '';
     this.editMode = false;
   }
 

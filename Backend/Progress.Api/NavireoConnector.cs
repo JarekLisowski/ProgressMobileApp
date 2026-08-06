@@ -78,7 +78,7 @@ namespace Progress.Api
       };
     }
 
-    internal async Task<string> SaveCustomer(Customer customer, int userId)
+    internal async Task<SaveCustomerResponse> SaveCustomer(Customer customer, int userId)
     {
       var httpClient = GetHttpClient();
       var request = new UpdateCustomerRequest
@@ -92,13 +92,24 @@ namespace Progress.Api
       {
         if (result.IsSuccessStatusCode)
         {
-          return "Kontrahent został zapisany";
+          var apiResult = await result.Content.ReadFromJsonAsync<SaveCustomerResponse>();
+          if (apiResult != null)
+            return apiResult;
         }
         var stream = new StreamReader(result.Content.ReadAsStream());
         var data = stream.ReadToEnd();
+        return new SaveCustomerResponse
+        {
+          IsError = true,
+          Message = data
+        };
         Console.WriteLine(data);
       }
-      return "Error";
+      return new SaveCustomerResponse
+      {
+        IsError = true,
+        Message = "Empty response"
+      };
     }
 
     internal async Task<SaveDocumentResponse> AddPayment(Payment payment, int userId)

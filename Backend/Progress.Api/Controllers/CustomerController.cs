@@ -57,8 +57,8 @@ namespace Progress.Api.Controllers
       return new CustomerListResponse();
     }
 
-    [HttpPost("update")]
-    public async Task<ApiResult<string>> Update(Customer customer)
+    [HttpPost("save")]
+    public async Task<SaveCustomerResponse> Save(Customer customer)
     {
       try
       {
@@ -66,18 +66,18 @@ namespace Progress.Api.Controllers
         if (userId != null)
         {
           var resutl = await _navireoConnector.SaveCustomer(customer, userId.Value);
-          return new ApiResult<string>("OK");
+          return resutl;
         }
       }
       catch (Exception ex)
       {
-        return new ApiResult<string>
+        return new SaveCustomerResponse
         {
           IsError = true,
           Message = ex.Message
         };
       }
-      return new ApiResult<string>
+      return new SaveCustomerResponse
       {
         IsError = true,
         Message = "Nieokreœlony b³¹d"
