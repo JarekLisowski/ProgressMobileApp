@@ -30,11 +30,13 @@
             <!-- price -->
             <div>
                <span>Netto: </span>
-               <span class="fw-bold text-dark">{{product?.price?.priceNet | number:'1.2-2'}} {{product?.price?.currencyName}}</span>
+               <span class="fw-bold text-dark">{{product?.price?.priceNet | number:'1.2-2'}}
+                  {{product?.price?.currencyName}}</span>
             </div>
             <div>
                <span>Brutto: </span>
-               <span class="fw-bold text-dark">{{product?.price?.priceGross | number:'1.2-2'}} {{product?.price?.currencyName}}</span>
+               <span class="fw-bold text-dark">{{product?.price?.priceGross | number:'1.2-2'}}
+                  {{product?.price?.currencyName}}</span>
             </div>
             <div class="mt-2 mb-2">
                kategoria: <a href="/category/{{product?.categoryId}}">{{product?.categoryName}}</a>
@@ -67,6 +69,8 @@
          <div>
             {{product?.description}}
          </div>
+         <hr class="my-6" />
+         <div [innerHTML]="product?.fullDescription | extractHtmlBody" class="product-description"></div>
       </div>
    </div>
 </div>

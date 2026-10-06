@@ -316,7 +316,7 @@ export class CartService {
                 } else {
                     // If the store is empty, create a new default transaction.
                     const newTransaction: Transaction = new Transaction();
-
+                    newTransaction.transactionId = crypto.randomUUID();
                     // Add the new transaction to the database.
                     // The 'add' method returns the key of the newly added object.
                     // We then retrieve the full object using the key (or assume the input object is sufficient).
@@ -333,6 +333,11 @@ export class CartService {
         );
     }
 
+    clearCurrentTransaction(): Observable<any> {
+        const transaction = this.getCurrentTransaction();
+        return this.clearTransaction(transaction);
+    }
+
     clearTransaction(transaction: Transaction): Observable<any> {
         return this.dbService.clear('transaction').pipe(
             switchMap(x => this.getFirstOrCreateTransaction()),
@@ -341,7 +346,7 @@ export class CartService {
         );
     }
 
-    clearCart(): Observable<any> {
+    private clearCart(): Observable<any> {
         return this.dbService.clear('cart').pipe(
             switchMap(x => {
                 this._cartItems$.next([]);

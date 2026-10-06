@@ -29,7 +29,8 @@ export class InvoicesComponent implements OnInit {
   @Input()
   public set customerId(value: number) {
     this._customerId = value;
-    this.loadData();
+    if (this.initiated)
+      this.loadData();
   }
 
   @Input()
@@ -39,6 +40,7 @@ export class InvoicesComponent implements OnInit {
   allData: Document[] = [];
   data: Document[] = [];
   private dataLoaded: boolean = false;
+  initiated: boolean = false;
 
   dateRanges = ['Dzisiaj', 'Ostatnie 30 dni', 'Ostatni rok', 'Niestandardowy'];
   selectedRange: string = 'Ostatnie 30 dni';
@@ -47,6 +49,8 @@ export class InvoicesComponent implements OnInit {
   customer: Customer | undefined;
 
   ngOnInit(): void {
+    this.initiated = true;
+    this.setDateRange();
     this.loadData();
   }
 
@@ -125,8 +129,7 @@ export class InvoicesComponent implements OnInit {
     if (this.customer == null || this.customer.id == undefined) {
       this.customerId = 0;
     }
-    else
-    {
+    else {
       this.customerId = this.customer.id;
     }
     this.loadData(true);

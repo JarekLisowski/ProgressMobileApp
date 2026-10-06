@@ -111,6 +111,7 @@ namespace Progress.Infrastructure.Database.Repository
           product.StockSecondary = productDb.TwStans.FirstOrDefault(it => it.StMagId == stockId2)?.StStan ?? 0;
           product.TaxRate = productDb.TwIdVatSpNavigation?.VatStawka ?? 23;
           product.TaxName = productDb.TwIdVatSpNavigation?.VatNazwa ?? "";
+          product.FullDescription = productDb.TwCharakter ?? "";
           foreach(var item in product.Prices)
           {
             item.Value.TaxPercent = product.TaxRate;

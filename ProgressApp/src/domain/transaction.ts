@@ -7,7 +7,7 @@ export class Transaction {
     deliveryMethod: number | undefined;
     comment: string = '';
     cashAmount: number = 0;
-    secondMethodAmount: number = 0;    
+    secondMethodAmount: number = 0;
     packagesNumber: number = 0;
     itemsNet: number = 0;
     itemsGross: number = 0;
@@ -18,5 +18,5 @@ export class Transaction {
     paymentDueDays: number = 14;
     deliveryServiceId: number | undefined;
     deliveryTaxRate: number = 23;
-;
+    transactionId: string = '';
 }

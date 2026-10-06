@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Progress.Navireo.Managers;
 
 namespace Progress.Navireo
 {
@@ -23,6 +24,7 @@ namespace Progress.Navireo
 			builder.Services.AddTransient<Helpers.Logger>();
 			builder.Services.AddSingleton<Navireo.NavireoApplication>();
 			builder.Services.AddHostedService<Navireo.NavireoService>();
+			builder.Services.AddSingleton<PersistantData>();
 
 			var app = builder.Build();
 

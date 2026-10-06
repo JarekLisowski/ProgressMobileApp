@@ -8,12 +8,13 @@ import { CartService } from '../../services/cart.service';
 import { ProductAddedWindowComponent } from "../product-added-window/product-added-window.component";
 import { QuantityComponent } from "../quantity/quantity.component";
 import { DecimalPipe } from '@angular/common';
+import { ExtractHtmlBodyPipe } from '../common/extractHtmlBodyPipe';
 
 @Component({
-    selector: 'app-product-details',
-    imports: [SlickCarouselModule, FormsModule, ProductAddedWindowComponent, QuantityComponent, DecimalPipe],
-    templateUrl: './product-details.component.html',
-    styleUrl: './product-details.component.scss'
+  selector: 'app-product-details',
+  imports: [SlickCarouselModule, FormsModule, ProductAddedWindowComponent, QuantityComponent, DecimalPipe, ExtractHtmlBodyPipe],
+  templateUrl: './product-details.component.html',
+  styleUrl: './product-details.component.scss'
 })
 export class ProductDetailsComponent implements OnInit {
 
@@ -27,8 +28,8 @@ export class ProductDetailsComponent implements OnInit {
 
   _productId: number = 0;
 
-  slideConfig = { 
-    slidesToShow: 1, 
+  slideConfig = {
+    slidesToShow: 1,
     slidesToScroll: 1,
     listHeight: 200
   };
@@ -87,7 +88,7 @@ export class ProductDetailsComponent implements OnInit {
 
   quantityChanged(quantity: number) {
     if (this.quantity >= 0) {
-      if (quantity > this.quantityMax) 
+      if (quantity > this.quantityMax)
         quantity = this.quantityMax;
       this.quantity = quantity;
     }

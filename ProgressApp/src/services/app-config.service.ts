@@ -8,16 +8,16 @@ import { IEnvironment } from "../environments/environment.prod";
     }
 )
 export class AppConfigService {
-    
+
     private _config: any;
 
-    version = "2026.4";
+    version = "2026.5";
 
     constructor() {
         this._config = environment;
     }
 
-    public getConfig() : IEnvironment {        
+    public getConfig(): IEnvironment {
         return this._config
     }
 

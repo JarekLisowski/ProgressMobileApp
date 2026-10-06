@@ -2495,6 +2495,10 @@
             "type": "string",
             "nullable": true
           },
+          "fullDescription": {
+            "type": "string",
+            "nullable": true
+          },
           "stock": {
             "type": "number",
             "format": "double"

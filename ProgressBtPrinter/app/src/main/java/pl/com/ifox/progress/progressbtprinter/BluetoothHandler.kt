@@ -20,6 +20,11 @@ import java.util.UUID
 
 class BluetoothHandler(private val activity: ComponentActivity) {
 
+    companion object {
+        private const val CHUNK_SIZE = 512
+        private const val DELAY_MS = 100L
+    }
+
     private val bluetoothAdapter: BluetoothAdapter? by lazy { BluetoothAdapter.getDefaultAdapter() }
     private var bluetoothSocket: BluetoothSocket? = null
     private var outputStream: OutputStream? = null
@@ -149,10 +154,18 @@ class BluetoothHandler(private val activity: ComponentActivity) {
     fun print(text: String) {
         val connectionResult = findAndConnectDevice()
         if (connectionResult == "OK") {
-            setupPrinter();
+            setupPrinter()
             val cp852Charset = Charset.forName("CP852")
-            val dataToPrint = text.toByteArray(cp852Charset)
-            sendData(dataToPrint)
+            val chunks = text.chunked(CHUNK_SIZE)
+            for (chunk in chunks) {
+                val dataToPrint = chunk.toByteArray(cp852Charset)
+                sendData(dataToPrint)
+                try {
+                    Thread.sleep(DELAY_MS)
+                } catch (e: InterruptedException) {
+                    Log.e("Bluetooth", "Interrupted during chunk delay: ${e.localizedMessage}")
+                }
+            }
             closeConnection()
         } else {
             Log.e("Bluetooth", "Could not print. Connection failed: $connectionResult")
@@ -162,8 +175,19 @@ class BluetoothHandler(private val activity: ComponentActivity) {
     fun print(data: ByteArray) {
         val connectionResult = findAndConnectDevice()
         if (connectionResult == "OK") {
-            setupPrinter();
-            sendData(data)
+            setupPrinter()
+            var offset = 0
+            while (offset < data.size) {
+                val length = minOf(CHUNK_SIZE, data.size - offset)
+                val chunk = data.copyOfRange(offset, offset + length)
+                sendData(chunk)
+                offset += length
+                try {
+                    Thread.sleep(DELAY_MS)
+                } catch (e: InterruptedException) {
+                    Log.e("Bluetooth", "Interrupted during chunk delay: ${e.localizedMessage}")
+                }
+            }
             closeConnection()
         } else {
             Log.e("Bluetooth", "Could not print. Connection failed: $connectionResult")

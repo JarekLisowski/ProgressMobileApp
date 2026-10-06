@@ -50,7 +50,7 @@ export class OrderComponent implements OnInit {
         const steps: Observable<any>[] = [];
 
         if (this.confirmModalRef.checkBox1Value) {
-          steps.push(this.cartService.clearCart());
+          steps.push(this.cartService.clearCurrentTransaction());
         }
 
         if (this.confirmModalRef.checkBox2Value && this.order?.customer) {

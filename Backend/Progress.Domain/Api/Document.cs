@@ -23,5 +23,6 @@ public class Document
   public string UserName { get; set; } = "";
   public DateTime IssueDate { get; set; } = DateTime.Today;
   public int StatusReal { get; set; } // 2 - zrealizowany, 5 - niezrealizowany
+  public string UUID { get; set; } = "";
 
 }

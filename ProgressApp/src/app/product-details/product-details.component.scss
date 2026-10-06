@@ -1,15 +1,30 @@
 .carousel-container {
   /* Set a fixed height for the container */
-  height: 300px; /* Adjust this value as needed */
+  height: 300px;
+  /* Adjust this value as needed */
   width: 100%;
-  overflow: hidden; /* Important to prevent overflow if images are larger */
+  overflow: hidden;
+  /* Important to prevent overflow if images are larger */
 }
 
 .carousel .slick-list,
 .carousel .slick-track {
-  height: 100%; /* Ensure slick components take full height of container */
+  height: 100%;
+  /* Ensure slick components take full height of container */
 }
 
 .carousel {
   //height: 300px;
+}
+
+.product-description {
+  line-height: 1.6;
+
+  p {
+    margin-bottom: 0.75rem;
+  }
+
+  strong {
+    color: #212529;
+  }
 }

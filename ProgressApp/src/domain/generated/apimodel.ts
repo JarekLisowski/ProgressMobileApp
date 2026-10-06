@@ -1377,6 +1377,7 @@ export class Product implements IProduct {
     code?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
+    fullDescription?: string | undefined;
     stock?: number;
     stockSecondary?: number;
     type?: string | undefined;
@@ -1414,6 +1415,7 @@ export class Product implements IProduct {
             this.code = _data["code"];
             this.name = _data["name"];
             this.description = _data["description"];
+            this.fullDescription = _data["fullDescription"];
             this.stock = _data["stock"];
             this.stockSecondary = _data["stockSecondary"];
             this.type = _data["type"];
@@ -1447,6 +1449,7 @@ export class Product implements IProduct {
         data["code"] = this.code;
         data["name"] = this.name;
         data["description"] = this.description;
+        data["fullDescription"] = this.fullDescription;
         data["stock"] = this.stock;
         data["stockSecondary"] = this.stockSecondary;
         data["type"] = this.type;
@@ -1473,6 +1476,7 @@ export interface IProduct {
     code?: string | undefined;
     name?: string | undefined;
     description?: string | undefined;
+    fullDescription?: string | undefined;
     stock?: number;
     stockSecondary?: number;
     type?: string | undefined;

@@ -6,6 +6,7 @@ public class Product
   public string Code { get; set; } = string.Empty;
   public string Name { get; set; } = string.Empty;
   public string Description { get; set; } = string.Empty;
+  public string FullDescription { get; set; } = string.Empty;
   public decimal Stock { get; set; }
   public decimal StockSecondary { get; set; }
   public string Type { get; set; } = string.Empty;

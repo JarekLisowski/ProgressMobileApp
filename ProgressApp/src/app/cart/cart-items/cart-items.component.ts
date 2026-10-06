@@ -174,7 +174,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     this.removeProductWindowRef.buttonAcceptText = "Usuń";
     this.removeProductWindowRef.showObservable(message).subscribe(x => {
       if (x) {
-        this.cartService.clearCart().subscribe(() => {
+        this.cartService.clearCurrentTransaction().subscribe(() => {
           console.log('All cart items removed');
           //this.loadCart();
         });
